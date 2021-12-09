@@ -1,0 +1,25 @@
+.month {
+  display: table;
+}
+.week {
+  display: table-row;
+}
+.day {
+  border: 1px solid black;
+  width: 150px;
+  height: 150px;
+  display: table-cell;
+}
+.date {
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 2px;
+  text-align: center;
+  float: left;
+  border: 1px solid black;
+}
+.prev-mo, .next-mo {
+  background-color: rgba(0,0,0,.1);
+}
