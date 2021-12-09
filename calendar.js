@@ -43,11 +43,9 @@ function addDay(date, week) {
 function drawCalendar(dates) {
   var month = $('<div class="month"></div>');
   var week = addWeek(month);
-  calendarParent.append(month);
-
   var endOfWeek1 = dates[6];
   var startOWeek6 = dates[35];
-
+  calendarParent.append(month);
   $.each(dates, function(i, date) {
     addDay(date, week);
     if ((i + 1) % 7 === 0) {
