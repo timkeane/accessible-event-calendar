@@ -1,36 +1,36 @@
-﻿date,name,detail
-2022-01-01,event 1,event details go here 1
-2022-01-02,event 2,event details go here 2
-2022-01-07,event 3,event details go here 3
-2022-01-08,event 4,event details go here 4
-2022-01-09,event 5,event details go here 5
-2022-01-10,event 6,event details go here 6
-2022-01-11,event 7,event details go here 7
-2022-01-12,event 8,event details go here 8
-2022-01-13,event 9,event details go here 9
-2022-01-14,event 10,event details go here 10
-2022-01-15,event 11,event details go here 11
-2022-01-16,event 12,event details go here 12
-2022-01-17,event 13,event details go here 13
-2022-01-18,event 14,event details go here 14
-2022-01-19,event 15,event details go here 15
-2022-01-20,event 16,event details go here 16
-2022-01-21,event 17,event details go here 17
-2022-01-22,event 18,event details go here 18
-2022-01-23,event 19,event details go here 19
-2022-01-27,event 20,event details go here 20
-2022-01-28,event 21,event details go here 21
-2022-01-29,event 22,event details go here 22
-2022-01-30,event 23,event details go here 23
-2022-01-31,event 24,event details go here 24
-2022-02-01,event 25,event details go here 25
-2022-02-02,event 26,event details go here 26
-2022-02-03,event 27,event details go here 27
-2022-02-04,event 28,event details go here 28
-2022-02-05,event 29,event details go here 29
-2022-02-06,event 30,event details go here 30
-2022-02-07,event 31,event details go here 31
-2022-02-08,event 32,event details go here 32
-2022-02-13,event 33,event details go here 33
-2022-02-14,event 34,event details go here 34
-2022-02-15,event 35,event details go here 35
+﻿date,start,end,name,detail,sponsor
+2021-12-01,2am,3ap,event 1,,sponsor 1
+2021-12-02,12am,3am,event 2,event details go here 2,sponsor 2
+2021-12-07,12pm,1:30 PM,event 3,event details go here 3,sponsor 3
+2021-12-08,,,event 4,event details go here 4,sponsor 4
+2021-12-09,,,event 5,event details go here 5,sponsor 5
+2021-12-10,10:00,11:30,event 6,event details go here 6,sponsor 6
+2021-12-10,12:00,14:00,event 7,event details go here 7,sponsor 7
+2021-12-10,20:00,20:30,event 8,event details go here 8,sponsor 8
+2021-12-13,,,event 9,event details go here 9,sponsor 9
+2021-12-14,,,event 10,event details go here 10,sponsor 10
+2021-12-15,,,event 11,event details go here 11,sponsor 11
+2021-12-16,,,event 12,event details go here 12,sponsor 12
+2021-12-17,,,event 13,event details go here 13,sponsor 13
+2021-12-18,,,event 14,event details go here 14,sponsor 14
+2021-12-19,,,event 15,event details go here 15,sponsor 15
+2021-12-20,,,event 16,event details go here 16,sponsor 16
+2021-12-21,,,event 17,event details go here 17,sponsor 17
+2021-12-22,,,event 18,event details go here 18,sponsor 18
+2021-12-23,,,event 19,event details go here 19,sponsor 19
+2021-12-27,,,event 20,event details go here 20,sponsor 20
+2021-12-28,,,event 21,event details go here 21,sponsor 21
+2021-12-29,,,event 22,event details go here 22,sponsor 22
+2021-12-30,,,event 23,event details go here 23,sponsor 23
+2021-12-31,,,event 24,event details go here 24,sponsor 24
+2022-02-01,,,event 25,event details go here 25,sponsor 25
+2022-02-02,,,event 26,event details go here 26,sponsor 26
+2022-02-03,,,event 27,event details go here 27,sponsor 27
+2022-02-04,,,event 28,event details go here 28,sponsor 28
+2022-02-05,,,event 29,event details go here 29,sponsor 29
+2022-02-06,,,event 30,event details go here 30,sponsor 30
+2022-02-07,,,event 31,event details go here 31,sponsor 31
+2022-02-08,,,event 32,event details go here 32,sponsor 32
+2022-02-13,,,event 33,event details go here 33,sponsor 33
+2022-02-14,,,event 34,event details go here 34,sponsor 34
+2022-02-15,,,event 35,event details go here 35,sponsor 35

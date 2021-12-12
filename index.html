@@ -1,15 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>calendar</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.4.0/papaparse.min.js"></script>
-  <script src="calendar.js"></script>
-  <link href="calendar.css" rel="stylesheet">
+  <script src="./calendar.js"></script>
+  <link href="./calendar.css" rel="stylesheet">
+  <style>
+    #calendar {
+      margin: auto;
+    }
+    .calendar td .sponsor {
+      display: none;
+    }
+    .calendar-detail .sponsor {
+      color: blue;
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
-  <div id="cal"></div>
+  <div id="calendar"></div>
   <script>
-    getCalendar($('#cal'), 'calendar.csv');
+
+    var CustomCalendar = function(options) {
+      return CsvEventCalendar.call(this, options);
+    };
+
+    CustomCalendar.prototype.eventHtml = function(calEvent) {
+      var html = CsvEventCalendar.prototype.eventHtml.call(this, calEvent);
+      var sponsor = $('<div class="sponsor"></div>')
+        .html('<strong>Sponsor:</strong> ' + calEvent.sponsor);
+      sponsor.insertAfter(html.find('h4'));
+      return html;
+    };
+
+    new CustomCalendar({
+      container: $('#calendar'), 
+      url: './calendar.csv',
+      selectionChanged: function(day) {
+        console.log('selectionChanged', day);
+      },
+      monthChanged: function(month) {
+        console.log('monthChanged', month);
+      }
+    });
+
   </script>
 </body>
 </html>
