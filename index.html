@@ -36,14 +36,11 @@
       return html;
     };
 
-    new CustomCalendar({
+    var customCalendar = new CustomCalendar({
       container: $('#calendar'), 
       url: './calendar.csv',
       selectionChanged: function(day) {
         console.log('selectionChanged', day);
-      },
-      monthChanged: function(month) {
-        console.log('monthChanged', month);
       }
     });
 

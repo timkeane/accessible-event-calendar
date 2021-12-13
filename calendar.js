@@ -6,10 +6,10 @@
 function CsvEventCalendar(options) {
   var me = this;
 
-  this.eventsByDay = {};
+  this.eventsIndex = {weeks: {}};
   this.container = $(options.container).addClass('calendar');
   this.selectionChanged = options.selectionChanged || function() {};
-  this.detail = $(options.detail).addClass('calendar-detail');
+  this.dayViewContainer = $(options.detail).addClass('day-view');
   this.today = new Date();
 
   this.state = {
@@ -44,7 +44,7 @@ function CsvEventCalendar(options) {
     this.container.find('input').val(key);
     this.selectionChanged({
       date: key,
-      events: this.eventsByDay[key] || []
+      events: this.eventsIndex[key] || []
     });
   };
 
@@ -78,10 +78,10 @@ function CsvEventCalendar(options) {
   };
 
   this.buildHeader = function() {
-    var back = $('<button class="back-mo" aria-label="previous month"><span>Previous</span></button>')
+    var back = $('<button class="back" aria-label="previous month"><span>Previous</span></button>')
       .data('mo-delta', -1)
       .on('click', this.changeMonth.bind(this));
-    var fwd = $('<button class="fwd-mo" aria-label="next month"><span>Next</span></button>')
+    var fwd = $('<button class="fwd" aria-label="next month"><span>Next</span></button>')
       .data('mo-delta', 1)
       .on('click', this.changeMonth.bind(this));
     var input = $('<input type="date">').val(this.state.key);
@@ -129,7 +129,7 @@ function CsvEventCalendar(options) {
   };
 
   this.buildMonth = function() {
-    var month = $('<table class="month"><thead><tr></tr></thead><tbody></tbody></table>');
+    var month = $('<table class="month-view"><thead><tr></tr></thead><tbody></tbody></table>');
     this.container.append(month);
     $.each(CsvEventCalendar.DAY_NAMES, function(d, dayName) {
       var th = $('<th></th>')
@@ -152,13 +152,13 @@ function CsvEventCalendar(options) {
   };
 
   this.returnToCalendar = function() {
-    this.detail.removeClass('active').addClass('inactive');
-    this.container.find('.month, .controls').removeClass('inactive').addClass('active');
+    this.dayViewContainer.removeClass('active').addClass('inactive');
+    this.container.find('.month-view, .controls').removeClass('inactive').addClass('active');
   };
 
   this.wordyDate = function(key, dayName) {
     var date = key.split('-');
-    var dayName = dayName || this.dayNode(key).attr('data-name');
+    var dayName = dayName || this.dayNode(key).attr('data-day-name');
     var month = date[1] - 1;
     var dayNum = date[2] - 0;
     var year = date[0];
@@ -192,14 +192,14 @@ function CsvEventCalendar(options) {
     var close = $('<button class="close" aria-label="return to calendar"></button>')
       .on('click', this.returnToCalendar.bind(this));
     var events = dayNode.find('.content');
-    this.detail.empty()
+    this.dayViewContainer.empty()
       .append(close)
       .append(events.html())
       .append(!events.find('.event').length && 'No events scheduled on this day');
     this.state.day = this.dateNumber(key);
     this.select(key);
-    this.container.find('.month, .controls').removeClass('active').addClass('inactive');
-    this.detail.removeClass('inactive').addClass('active');
+    this.container.find('.month-view, .controls').removeClass('active').addClass('inactive');
+    this.dayViewContainer.removeClass('inactive').addClass('active');
   };
 
   this.addDay = function(name, date, week) {
@@ -211,7 +211,7 @@ function CsvEventCalendar(options) {
     var day = $('<td class="day"></td>')
       .addClass(date.monthClass + '-mo')
       .attr('data-date-key', date.key)
-      .attr('data-name', name)
+      .attr('data-day-name', name)
       .append($($('<div class="content"></div>').append(h3)))
       .on('click', function() {
         me.showDetail(key);
@@ -260,22 +260,22 @@ function CsvEventCalendar(options) {
     var detail = this.container.find('.detail');
     if (detail.length) {
       detail.remove();
-      this.detail = [];
+      this.dayViewContainer = [];
     }
-    this.container.find('.month').remove();
+    this.container.find('.month-view').remove();
     this.previousMonth(dates);
     this.currentMonth(dates);
     this.nextMonth(dates);
     this.drawCalendar(dates);
-    if (!this.detail.length) {
-      this.detail = $('<div class="calendar-detail"></div>');
-      this.container.append(this.detail);
+    if (!this.dayViewContainer.length) {
+      this.dayViewContainer = $('<div class="day-view"></div>');
+      this.container.append(this.dayViewContainer);
     }
-    this.detail.addClass('inactive');
+    this.dayViewContainer.addClass('inactive');
   }; 
 
-  this.sortByTime = function(events) {
-    var fmt = CsvEventCalendar.timeFormat
+  this.sortByStartTime = function(events) {
+    var fmt = CsvEventCalendar.timeFormat;
     events.sort(function(event1, event2) {
       var time1 = fmt(event1.start);
       var time2 = fmt(event2.start);
@@ -288,12 +288,28 @@ function CsvEventCalendar(options) {
     });
   };
 
+  this.sortByDate = function(events) {
+    events.sort(function(event1, event2) {
+      var date1 = event1.date;
+      var date2 = event2.date;
+      if (date1 < date2) {
+        return -1;
+      } else if (date1 < date2) {
+        return 1;
+      }
+      return 0;
+    });
+    while(!events[0].date) {
+      events.shift();
+    }
+  };
+
   this.populateCalendar = function() {
     var calendarEvents = {};
     $('.day').each(function(i, dayNode) {
       var key = $(dayNode).attr('data-date-key');
       var content = $(dayNode).find('.content');
-      var events = me.eventsByDay[key];
+      var events = me.eventsIndex[key];
       if (events) {
         calendarEvents[key] = events;
         $(dayNode).addClass('has-events');
@@ -310,12 +326,30 @@ function CsvEventCalendar(options) {
     return calendarEvents;
   };
 
+  this.weekNumber = function(key) {
+    var date = new Date(key + 'T00:00');
+    var oneJan = new Date(date.getFullYear(),0,1);
+    var numberOfDays = Math.floor((date - oneJan) / (24 * 60 * 60 * 1000));
+    return Math.ceil(( date.getDay() + 1 + numberOfDays) / 7);
+  };
+
   this.indexCalendarData = function(response) {
-    $.each(response.data, function(i, calEvent) {
+    var calEvents = response.data;
+    this.sortByDate(calEvents);
+    var year = this.yearNumber(calEvents[0].date);
+    var week = this.weekNumber(calEvents[0].date);
+    me.eventsIndex.weeks[year] = {};
+    me.eventsIndex.weeks[year][week] = [];
+    $.each(calEvents, function(i, calEvent) {
       var key = calEvent.date;
-      me.eventsByDay[key] = me.eventsByDay[key] || [];
-      me.eventsByDay[key].push(calEvent);
-      me.sortByTime(me.eventsByDay[key]);
+      me.eventsIndex[key] = me.eventsIndex[key] || [];
+      me.eventsIndex[key].push(calEvent);
+      me.sortByStartTime(me.eventsIndex[key]);
+      me.eventsIndex.weeks[year] = me.eventsIndex.weeks[year] || {};
+      me.eventsIndex.weeks[year][week] = me.eventsIndex.weeks[year][week] || {};
+      me.eventsIndex.weeks[year][week][key] = me.eventsIndex[key];
+      year = me.yearNumber(key);
+      week = me.weekNumber(key);
     });
     this.monthChanged({
       year: this.state.year,
