@@ -186,10 +186,11 @@ function CsvEventCalendar(options) {
     var dayNode = this.dayNode(key);
     var close = $('<button class="close" aria-label="return to calendar"></button>')
       .on('click', this.returnToCalendar.bind(this));
-    var html = dayNode.find('.content').html();
+    var events = dayNode.find('.content');
     this.detail.empty()
       .append(close)
-      .append(html || 'No events on me day');
+      .append(events.html())
+      .append(!events.find('.event').length && 'No events on this day');
     this.state.day = this.dateNumber(key);
     this.select(key);
     this.container.find('.month, .controls').removeClass('active').addClass('inactive');
