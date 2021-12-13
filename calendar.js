@@ -294,7 +294,7 @@ function CsvEventCalendar(options) {
       var key = $(dayNode).attr('data-date-key');
       var content = $(dayNode).find('.content');
       var events = me.eventsByDay[key];
-      if (events) {
+      if (events.length) {
         calendarEvents[key] = events;
         $(dayNode).addClass('has-events');
         $.each(events, function(e, calEvent) {
