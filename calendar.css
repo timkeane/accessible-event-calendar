@@ -93,7 +93,7 @@
 }
 .calendar .day .content {
   height: 100px;
-  overflow: auto;
+  overflow: hidden;
 }
 .calendar .month .event,
 .calendar-detail .event {
