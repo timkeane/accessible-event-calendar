@@ -1,3 +1,8 @@
+/*
+ *  Thanks to Amit Gupta for the calendar grid algorithm!
+ *  https://dev.to/amitgupta15/create-a-responsive-calendar-with-vanilla-javascript-and-css-grid-35ih
+ */
+
 function CsvEventCalendar(options) {
   var me = this;
 
