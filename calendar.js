@@ -296,11 +296,15 @@ function CsvEventCalendar(options) {
       var events = me.eventsByDay[key];
       if (events) {
         calendarEvents[key] = events;
+        $(dayNode).addClass('has-events');
         $.each(events, function(e, calEvent) {
-          $(dayNode).addClass('has-events');
           content.append(me.eventHtml(calEvent))
             .data('calendar-event', calEvent);
         });
+      } else {
+        var h3 = $(dayNode).find(h3);
+        var label = h3.attr('aria-label');
+        h3.attr('aria-label', label + ' has no events scheduled');
       }
     });
     return calendarEvents;
