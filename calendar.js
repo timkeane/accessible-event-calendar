@@ -85,9 +85,9 @@ function CsvEventCalendar(options) {
     var moShort = $('<span class="short">' + month.substr(0, 3) + '</span>');
     var controls = $('<div class="controls"></div>')
       .append($('<h2></h2>').append([moLong, moShort]))
+      .append(input)
       .append(back)
-      .append(fwd)
-      .append(input);
+      .append(fwd);
     this.container.append(controls);
     input.on('change', function(domEvent) {
       me.showDetail($(domEvent.currentTarget).val());
@@ -189,7 +189,6 @@ function CsvEventCalendar(options) {
     var html = dayNode.find('.content').html();
     this.detail.empty()
       .append(close)
-      .append('<h3>' + me.wordyDate(key) + '</h3>')
       .append(html || 'No events on me day');
     this.state.day = this.dateNumber(key);
     this.select(key);
@@ -201,16 +200,17 @@ function CsvEventCalendar(options) {
     var key = date.key;
     var h3 = $('<h3></h3>')
       .attr('aria-label', this.wordyDate(key, name))
-      .html(this.dateNumber(key));
+      .append('<span class="long">' + this.wordyDate(key, name) + '</span>')
+      .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<td class="day"></td>')
       .addClass(date.monthClass + '-mo')
       .attr('data-date-key', date.key)
       .attr('data-name', name)
-      .append(h3)
+      .append($($('<div class="content"></div>').append(h3)))
       .on('click', function() {
         me.showDetail(key);
       });
-    week.append(day.append($('<div class="content"></div>')));
+    week.append(day);
   };
 
   this.monthNumber = function(key) {
@@ -265,6 +265,7 @@ function CsvEventCalendar(options) {
       this.detail = $('<div class="calendar-detail"></div>');
       this.container.append(this.detail);
     }
+    this.detail.addClass('inactive');
   }; 
 
   this.sortByTime = function(events) {
