@@ -195,7 +195,7 @@ function CsvEventCalendar(options) {
     this.detail.empty()
       .append(close)
       .append(events.html())
-      .append(!events.find('.event').length && 'No events on this day');
+      .append(!events.find('.event').length && 'No events scheduled on this day');
     this.state.day = this.dateNumber(key);
     this.select(key);
     this.container.find('.month, .controls').removeClass('active').addClass('inactive');
@@ -294,7 +294,7 @@ function CsvEventCalendar(options) {
       var key = $(dayNode).attr('data-date-key');
       var content = $(dayNode).find('.content');
       var events = me.eventsByDay[key];
-      if (events.length) {
+      if (events) {
         calendarEvents[key] = events;
         $(dayNode).addClass('has-events');
         $.each(events, function(e, calEvent) {
@@ -302,9 +302,9 @@ function CsvEventCalendar(options) {
             .data('calendar-event', calEvent);
         });
       } else {
-        var h3 = $(dayNode).find(h3);
+        var h3 = $(dayNode).find('h3');
         var label = h3.attr('aria-label');
-        h3.attr('aria-label', label + ' has no events scheduled');
+        h3.attr('aria-label', label + ' (no events scheduled)');
       }
     });
     return calendarEvents;
