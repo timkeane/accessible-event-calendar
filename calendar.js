@@ -468,11 +468,10 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   var parts = time.split(':');
   for (var i = 0; i < parts.length; i++) {
     parts[i] = parseInt(parts[i]);
-    if (parts[i].length === 1) {
+    if (('' + parts[i]).length === 1) {
       parts[i] = '0' + parts[i];
     }
   }
-  console.warn(parts);
   if (time.toUpperCase().indexOf('M') > -1) {
     if (parseInt(parts[0]) === 12) {
       parts[0] = '00';

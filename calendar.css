@@ -167,3 +167,7 @@
 .calendar .view.week .day.selected-week {
   display: block;
 }
+.calendar .event .time strong,
+.calendar .event .time span {
+  margin-right: 5px;
+}
