@@ -475,7 +475,6 @@ CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thurs
 CsvEventCalendar.timeFormat = function(time, ampm) {
   if (time.trim().length === 0) return ''; 
   var parts = time.split(':');
-  console.warn(parts)
   if (time.toUpperCase().indexOf('M') > -1) {
     if (parseInt(parts[0]) === 12) {
       parts[0] = '00';
