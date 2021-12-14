@@ -475,6 +475,7 @@ CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thurs
 CsvEventCalendar.timeFormat = function(time, ampm) {
   if (time.trim().length === 0) return ''; 
   var parts = time.split(':');
+  console.warn(parts)
   if (time.toUpperCase().indexOf('M') > -1) {
     if (parseInt(parts[0]) === 12) {
       parts[0] = '00';
@@ -488,6 +489,11 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   }
   if (parts.length < 2) {
     parts.push('00');
+  } else {
+    parts[1] = parseInt(parts[1]);    
+    if (parts[1].length === 1) {
+      parts[1] = '0' + parts[1];
+    }
   }
   var hh24 = parts.join(':');
   var suffix = ' AM';
