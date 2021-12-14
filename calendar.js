@@ -93,7 +93,6 @@ function CsvEventCalendar(options) {
     var newKey = this.dateKey(date);
     var dayNode = this.dayNode(newKey);
     this.updateState({key: newKey});
-    
   };
 
   this.navigate = function(domEvent) {
@@ -103,8 +102,8 @@ function CsvEventCalendar(options) {
     this.view(view);
   };
 
-  this.title = function(node) {
-    var key = this.state.key();
+  this.title = function(options) {
+    var key = options.key || this.state.key();
     var year = this.yearNumber(key);
     var month = this.monthName(key);
     var m = month.substr(0, 3);
@@ -118,10 +117,9 @@ function CsvEventCalendar(options) {
       },
       day: day + ' ' + month + ' ' + date + ', ' + year
     }
-    $(node).find('.day').html(title.day);
-    $(node).find('.month .long').html(title.month.long);
-    $(node).find('.month .short').html(title.month.short);
-    // console.warn(title);
+    $(options.node).find('.day').html(title.day);
+    $(options.node).find('.month .long').html(title.month.long);
+    $(options.node).find('.month .short').html(title.month.short);
     return title;
   };
 
@@ -207,14 +205,6 @@ function CsvEventCalendar(options) {
     return week;
   };
 
-  this.wordyDate = function(key) {
-    var year = this.yearNumber(key);
-    var month = this.monthName(key);
-    var date = this.dateNumber(key);
-    var day = this.dayName(key);
-    return day + ' ' + month + ' ' + date + ', ' + year;
-  };
-
   this.stateChange = function(key) {
     var month = this.state.month + 1;
     if (month < 10) month = '0' + month;
@@ -267,7 +257,7 @@ function CsvEventCalendar(options) {
   this.view = function(view) {
     this.updateState({view: view});
     this[view + 'View']();
-    this.title(this.container.find('.controls h2'));
+    this.title({node: this.container.find('.controls h2')});
     this.container.find('.month-view, .week-view, .day-view').removeClass('active').addClass('inactive');
     this.container.find('.' + view + '-view').removeClass('inactive').addClass('active');
     this.container.find('.controls .fwd').attr({
@@ -288,9 +278,10 @@ function CsvEventCalendar(options) {
 
   this.addDay = function(date, week) {
     var key = date.key;
+    var title = this.title({key: key}).day;
     var h3 = $('<h3></h3>')
-      .attr('aria-label', this.wordyDate(key))
-      .append('<span class="long">' + this.wordyDate(key) + '</span>')
+      .attr('aria-label', title)
+      .append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<td class="day"></td>')
       .addClass(date.monthClass + '-mo')
@@ -376,7 +367,7 @@ function CsvEventCalendar(options) {
     }
     this.container.append('<div class="week-view"></div>');
     this.populateCalendar();
-  }; 
+  };
 
   this.sortByStartTime = function(events) {
     var fmt = CsvEventCalendar.timeFormat;
@@ -424,7 +415,8 @@ function CsvEventCalendar(options) {
         });
       } else {
         var h3 = $(dayNode).find('h3');
-        h3.attr('aria-label', me.wordyDate(key) + ' (no events scheduled)');
+        var title = me.title({key: key}).day;
+        h3.attr('aria-label', title + ' (no events scheduled)');
       }
     });
     var dayNode = this.dayNode(this.state.key());

@@ -68,8 +68,9 @@
   .calendar th .short {
   display: none;
 }
-.calendar .month-view .month-view .day {
+.calendar .month-view .day {
     vertical-align: top;
+    padding: 0;
 }
 .calendar .month-view .day.selected,
 .calendar .week-view .day.selected {
@@ -81,6 +82,10 @@
   font-size: 14px;
   font-weight: bold;
   padding: 2px;
+}
+.calendar .month-view .day h3 {
+  border-right: 1px solid white;
+  border-left: 1px solid white;
 }
 .calendar .month-view .day h3,
 .calendar .week-view .day h3 {
