@@ -104,6 +104,10 @@
   overflow: hidden;
 }
 
+.calendar .view.month .day .no-events {
+  display: none;
+}
+
 .calendar .view.month .day.selected {
   border-color: orange;
   box-shadow: inset 0px 0px 0px 3px orange;

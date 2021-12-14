@@ -6,7 +6,7 @@
 function CsvEventCalendar(options) {
   var me = this;
 
-  this.eventsIndex = {};
+  this.eventsIndex = {ready: false};
   this.container = $(options.container).addClass('calendar');
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
@@ -276,7 +276,6 @@ function CsvEventCalendar(options) {
         me.view('month');
       });
     var h2 = $('<h2></h2>')
-      .attr('aria-label', title)
       .append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
@@ -391,19 +390,23 @@ function CsvEventCalendar(options) {
     var dayNodes = this.container.find('.view.month li.day');
     dayNodes.each(function(i, dayNode) {
       var key = $(dayNode).attr('data-date-key');
+      var title = me.title({key: key}).day;
       var events = me.eventsIndex[key];
       var eventsNode = $('<div class="events"></div>');
+      var h2 = $(dayNode).find('h2');
       $(dayNode).append(eventsNode);
-      if (events) {
-        calendarEvents[key] = events;
-        $(dayNode).addClass('has-events');
-        $.each(events, function(e, calEvent) {
-          eventsNode.append(me.eventHtml(calEvent));
-        });
-      } else {
-        var h2 = $(dayNode).find('h2');
-        var title = me.title({key: key}).day;
-        h2.attr('aria-label', title + ' (no events scheduled)');
+      if (me.eventsIndex.ready) {
+        if (events) {
+          calendarEvents[key] = events;
+          $(dayNode).addClass('has-events');
+          $.each(events, function(e, calEvent) {
+            eventsNode.append(me.eventHtml(calEvent));
+          });
+          h2.attr('aria-label', title + ' (click for a detailed view of events on this day)')
+        } else {
+          h2.attr('aria-label', title + ' (no events scheduled)');
+          eventsNode.html('<div class="no-events">no events scheduled</div>');
+        }
       }
     });
     var dayNode = this.dayNode(this.state.key());
@@ -422,6 +425,7 @@ function CsvEventCalendar(options) {
       me.eventsIndex[key].push(calEvent);
       me.sortByStartTime(me.eventsIndex[key]);
     });
+    me.eventsIndex.ready = true;
     this.populateCalendar()
   };
 
