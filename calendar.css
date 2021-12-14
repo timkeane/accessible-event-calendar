@@ -6,7 +6,7 @@
 .calendar .controls * {
   text-align: center;
 }
-.calendar .controls h2 {
+.calendar .controls h1 {
   margin: 0;
   display: inline-block;
 }
@@ -76,37 +76,37 @@
 .calendar .week-view .day.selected {
   border: 5px solid orange;
 }
-.calendar .month-view .day h3 ,
-.calendar .month-view .day h4 {
+.calendar .month-view .day h2 ,
+.calendar .month-view .day h3 {
   margin: 0;
   font-size: 14px;
   font-weight: bold;
   padding: 2px;
 }
-.calendar .month-view .day h3 {
+.calendar .month-view .day h2 {
   border-right: 1px solid white;
   border-left: 1px solid white;
   padding-left: 5px;
 }
-.calendar .day h3,
-.day-view h3 {
+.calendar .day h2,
+.day-view h2 {
   background-color: black;
   color: white;
 }
-.calendar .month-view .day h4 {
+.calendar .month-view .day h3 {
   color: black;
   background-color: transparent;
 }
-.calendar .month-view .day h3 .long,
-.day-view h3 .short {
+.calendar .month-view .day h2 .long,
+.day-view h2 .short {
   display: none;
 }
 .calendar .month-view .day.prev-mo,
 .calendar .month-view .day.next-mo {
   background-color: rgba(0,0,0,.1);
 }
-.calendar .month-view .day.prev-mo h3,
-.calendar .month-view .day.next-mo  h3 {
+.calendar .month-view .day.prev-mo h2,
+.calendar .month-view .day.next-mo  h2 {
   background-color: white;
     color: rgba(0,0,0,.5);
 }
@@ -121,11 +121,11 @@
 .calendar .day-view {
   min-height: 60px;
 }
-.calendar .week-view .day h3 {
+.calendar .week-view .day h2 {
   margin: 0;
   padding: 3px;
 }
-.calendar .week-view .day h3 .short {
+.calendar .week-view .day h2 .short {
   display: none;
 }
 .calendar .week-view .day .content {
@@ -145,7 +145,7 @@
   height: 20px;
   overflow: hidden;
 }
-.calendar .month-view .event h4 {
+.calendar .month-view .event h3 {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -156,7 +156,7 @@
 .day-view {
   border: 1px solid black;
 }
-.day-view h3 {
+.day-view h2 {
   margin: 0;
   padding: 3px;
 }
@@ -182,8 +182,8 @@
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
   border: none;
 }
-.day-view h4,
-.calendar .week-view h4 {
+.day-view h3,
+.calendar .week-view h3 {
   margin: 5px 0;  
 }
 @media only screen and (max-width : 600px) {
@@ -209,7 +209,7 @@
   .calendar .month-view th .long {
     display: none;
   }
-  .calendar .month-view .day h3 {
+  .calendar .month-view .day h2 {
     background-color: transparent;
     color: black;
     text-align: center;
