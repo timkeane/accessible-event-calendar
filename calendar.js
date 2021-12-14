@@ -84,15 +84,18 @@ function CsvEventCalendar(options) {
     var date = this.dateFromKey(key);
     date.setDate(date.getDate() + delta);
     this.updateState({key: this.dateKey(date)});
+    this.container.find('li.day').removeClass('selected');
+    this.dayNode(this.state.key()).addClass('selected');
   };
 
   this.weekNavigate = function(delta) {
     var key = this.state.key();
     var date = this.dateFromKey(key);
     date.setDate(date.getDate() + (delta * 7));
-    var newKey = this.dateKey(date);
-    var dayNode = this.dayNode(newKey);
-    this.updateState({key: newKey});
+    this.updateState({key: this.dateKey(date)});
+    this.container.find('li.day').removeClass('selected');
+    this.dayNode(this.state.key()).addClass('selected');
+    this.selectWeek();
   };
 
   this.navigate = function(domEvent) {
@@ -146,7 +149,7 @@ function CsvEventCalendar(options) {
       .append(
         $('<span class="month"></span>')
         .append('<span class="long"></span>')
-        .append('<span class="short"></span>')
+        .append('<span class="short" aria-hidden="true"></span>')
       )
       .append('<span class="day"></span>');
     var div1 = $('<div></div>')
@@ -200,8 +203,8 @@ function CsvEventCalendar(options) {
     $.each(CsvEventCalendar.DAY_NAMES, function(d, dayName) {
       var li = $('<li></li>')
         .append('<span class="long">' + dayName + '</span>')
-        .append('<span class="medium">' + dayName.substr(0, 3) + '</span>')
-        .append('<span class="short">' + dayName.substr(0, 1) + '</span>')
+        .append('<span class="medium" aria-hidden="true">' + dayName.substr(0, 3) + '</span>')
+        .append('<span class="short" aria-hidden="true">' + dayName.substr(0, 1) + '</span>')
         days.append(li);
     });
     return dates;
