@@ -1,5 +1,6 @@
 .calendar .controls {
-  margin-bottom: 5px
+  height: 50px;
+  margin-bottom: 5px;
 }
 .calendar .controls,
 .calendar .controls * {
@@ -7,16 +8,23 @@
 }
 .calendar .controls h2 {
   margin: 0;
+  display: inline-block;
 }
-.calendar .controls .short {
+.calendar .controls .short,
+.calendar .controls .day {
   display: none;
 }
 .calendar .controls button {
   width: 70px;
-  margin-top: -24px;
 }
 .calendar .controls select {
-  height: 24px;
+  width: 141px;
+  height: 25px;
+  margin-bottom: 5px;
+  float: right;
+}
+.calendar .controls input {
+  float: left;
 }
 .calendar .controls button,
 .calendar .month-view .day.has-events,
@@ -127,8 +135,8 @@
 }
 .day-view .event,
 .calendar .week-view .event {
-  margin: 10px 0 0;
-  padding: 10px;
+  margin: 20px 0 0;
+  padding: 5px 10px 10px;
 }
 .day-view .about,
 .calendar .week-view .about {
@@ -142,6 +150,7 @@
   width: 20px;
   height: 20px;
   float: right;
+  margin: -5px 0;
   background-color: black;
   background-position: center;
   background-repeat: no-repeat;
