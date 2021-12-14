@@ -1,5 +1,5 @@
 .calendar .controls {
-  height: 50px;
+  height: 58px;
   margin-bottom: 5px;
 }
 .calendar .controls,
@@ -88,8 +88,8 @@
   border-left: 1px solid white;
   padding-left: 5px;
 }
-.calendar .month-view .day h3,
-.calendar .week-view .day h3 {
+.calendar .day h3,
+.day-view h3 {
   background-color: black;
   color: white;
 }
@@ -114,8 +114,24 @@
   height: 100px;
   overflow: hidden;
 }
+.calendar .week-view {
+  border: 1px solid black;
+}
+.calendar .week-view .day {
+  min-height: 70px;
+}
+.calendar .week-view .day h3 {
+  margin: 0 0 5px;
+  padding: 3px;
+}
+.calendar .week-view .day h3 .short {
+  display: none;
+}
 .calendar .week-view .day .content {
   height: auto;
+}
+.calendar .week-view .no-events {
+  padding: 5px;
 }
 .calendar .event {
   background-color: lightblue;
@@ -134,14 +150,12 @@
 }
 .day-view {
   border: 1px solid black;
-  padding: 10px;
 }
 .day-view h3 {
-  margin: 0 0 5px;
+  margin: 0;
+  padding: 3px;
 }
-.day-view .event,
-.calendar .week-view .event {
-  margin: 20px 0 0;
+.day-view .event {
   padding: 5px 10px 10px;
 }
 .day-view .about,
@@ -156,11 +170,12 @@
   width: 20px;
   height: 20px;
   float: right;
-  margin: -5px 0;
+  margin: 3px;
   background-color: black;
   background-position: center;
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+  border: none;
 }
 .day-view h4,
 .calendar .week-view h4 {
@@ -213,14 +228,3 @@
   }
 }
 
-
-
-.calendar .week-view .no-events .content div {
-  padding: 15px 5px;
-}
-.calendar .week-view .day h3 .short {
-  display: none;
-}
-.calendar .week-view .day h3 .long {
-  display: block;
-}

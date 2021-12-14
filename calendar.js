@@ -248,8 +248,9 @@ function CsvEventCalendar(options) {
     tr.children().each(function(i, td) {
       var dayNode = $('<div></div>')
         .html($(td).html())
-        .append(!$(td).hasClass('has-events') && 'no events scheduled')
-        .addClass(td.className);
+        .append(!$(td).hasClass('has-events') && '<div class="no-events">no events scheduled</div>')
+        .addClass(td.className)
+        .removeClass('selected');
       weekView.append(dayNode);
     });
   };
