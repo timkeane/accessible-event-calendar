@@ -27,7 +27,7 @@
   float: left;
 }
 .calendar .controls button,
-.calendar .month-view .day.has-events,
+.calendar .view.month .day.has-events,
 .day-view .close {
     cursor: pointer;
 }
@@ -37,141 +37,109 @@
 .calendar .controls .fwd {
   float: right;
 }
-.calendar .month-view.active {
-  display: table;
-}
-.calendar .week-view.active,
-.day-view.active {
-  display: block;
-}
-.calendar .month-view.inactive,
-.calendar .week-view.inactive,
-.day-view.inactive {
-  display: none;
-}
-.calendar .month-view {
+
+
+.calendar .day-names,
+.calendar .dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 0 auto;
+  padding: 0;
   width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
 }
-.calendar .month-view th,
-.calendar .month-view .day {
-  border: 1px solid black;
+.calendar .day-names li {
+  text-align: center;
+}
+.calendar .view.month li {
+  border: 1px solid #000;
+  list-style: none;
+  margin-left: 0;
   overflow: hidden;
-  max-width: 50px;
 }
-.calendar .month-view th {
-  padding: 3px 0;
-  vertical-align: middle;
-}
-.calendar .month-view th .medium,
-  .calendar th .short {
+.calendar .view.month .day .close {
   display: none;
 }
-.calendar .month-view .day {
-    vertical-align: top;
-    padding: 0;
+.calendar .view.month * {
+  font-size: 16px;
 }
-.calendar .month-view .day.selected,
-.calendar .week-view .day.selected {
-  border: 5px solid orange;
-}
-.calendar .month-view .day h2 ,
-.calendar .month-view .day h3 {
+.calendar .view.month .day h2 {
   margin: 0;
-  font-size: 14px;
-  font-weight: bold;
+  padding: 2px 3px;
+  background-color: #000;
+  color: #fff;
+}
+
+.calendar .view.month .day {
+  height: 100px;
+}
+
+.calendar .day-names {
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.calendar .view.month .day h2 .long {
+  display: none;
+}
+
+.calendar .view.month ul .short,
+.calendar .view.month ul .medium {
+  display: none;
+}
+
+.calendar .day h3 {
+  margin: 0;
   padding: 2px;
 }
-.calendar .month-view .day h2 {
-  border-right: 1px solid white;
-  border-left: 1px solid white;
-  padding-left: 5px;
+.calendar .day .event {
+  margin: 2px;
+  background-color: lightblue;
+  border: 1px solid blue;
 }
-.calendar .day h2,
-.day-view h2 {
-  background-color: black;
-  color: white;
-}
-.calendar .month-view .day h3 {
-  color: black;
-  background-color: transparent;
-}
-.calendar .month-view .day h2 .long,
-.day-view h2 .short {
+.calendar .view.day h2 .short {
   display: none;
 }
-.calendar .month-view .day.prev-mo,
-.calendar .month-view .day.next-mo {
+.calendar .view.month .day .event {
+  height: 25px;
+  overflow: hidden;
+}
+
+.calendar .view.month .day.selected {
+  border-color: orange;
+  box-shadow: inset 0px 0px 0px 3px orange;
+  box-sizing: border-box; /* Include padding and border in element's width and height */
+}
+.calendar .view.month .day.selected h2 {
+  background-color: orange;
+  color: #000;
+}
+.calendar .view.month .day.prev-mo,
+.calendar .view.month .day.next-mo {
   background-color: rgba(0,0,0,.1);
 }
-.calendar .month-view .day.prev-mo h2,
-.calendar .month-view .day.next-mo  h2 {
+.calendar .view.month .day.prev-mo h2,
+.calendar .view.month .day.next-mo  h2 {
   background-color: white;
     color: rgba(0,0,0,.5);
 }
-.calendar .month-view .day .content {
-  height: 100px;
-  overflow: hidden;
-}
-.calendar .week-view {
-  border: 1px solid black;
-}
-.calendar .week-view .day,
-.calendar .day-view {
-  min-height: 60px;
-}
-.calendar .week-view .day h2 {
-  margin: 0;
-  padding: 3px;
-}
-.calendar .week-view .day h2 .short {
+
+.calendar .view.day .day-names,
+.calendar .view.day .dates .day {
   display: none;
 }
-.calendar .week-view .day .content {
-  height: auto;
+.calendar .view.day .dates,
+.calendar .view.day .dates .day.selected {
+  display: block;
 }
-.calendar .week-view .no-events,
-.day-view .no-events {
-  padding: 5px;
+
+.calendar .day h2,
+.view.day h2 {
+  background-color: black;
+  color: white;
 }
-.calendar .event {
-  background-color: lightblue;
-  border: 1px solid blue;
-  margin: 3px;
-  padding: 2px;
-}
-.calendar .month-view .event {
-  height: 20px;
-  overflow: hidden;
-}
-.calendar .month-view .event h3 {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.calendar .week-view .day {
-  margin-bottom: 10px;
-}
-.day-view {
-  border: 1px solid black;
-}
-.day-view h2 {
-  margin: 0;
-  padding: 3px;
-}
-.day-view .event {
-  padding: 5px 10px 10px;
-}
-.day-view .about,
-.calendar .week-view .about {
-  margin-top: 5px;
-}
-.day-view .time span,
-.calendar .week-view .time span {
-  margin: 0 20px 0 5px;
-}
-.day-view .close {
+
+.calendar .view.day .day .close {
+  display: block;
   width: 20px;
   height: 20px;
   float: right;
@@ -181,50 +149,4 @@
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
   border: none;
-}
-.day-view h3,
-.calendar .week-view h3 {
-  margin: 5px 0;  
-}
-@media only screen and (max-width : 600px) {
-  .calendar .month-view th .medium {
-    display: inline;
-  }
-  .calendar .month-view th .short,
-  .calendar .month-view th .long {
-    display: none;
-  }
-  .calendar .month-view .day .content {
-    height: 80px;
-  }  
-}
-@media only screen and (max-width : 500px) {
-  .calendar .month-view .day.has-events {
-    background-color: lightblue;
-  }
-  .calendar .month-view th .short {
-    display: inline;
-  }
-  .calendar .month-view th .medium,
-  .calendar .month-view th .long {
-    display: none;
-  }
-  .calendar .month-view .day h2 {
-    background-color: transparent;
-    color: black;
-    text-align: center;
-    padding: 20px 0;
-  }
-  .calendar .month-view .day .content {
-    overflow: hidden;
-    height: 50px;
-  }
-}
-@media only screen and (max-width : 330px) {
-  .calendar .controls .short {
-    display: inline;
-  }
-  .calendar .controls .long {
-    display: none;
-  }
 }
