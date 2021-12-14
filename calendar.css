@@ -108,7 +108,7 @@
 .calendar .month-view .day.prev-mo h3,
 .calendar .month-view .day.next-mo  h3 {
   background-color: white;
-  color: black;
+    color: rgba(0,0,0,.5);
 }
 .calendar .month-view .day .content {
   height: 100px;
@@ -219,10 +219,6 @@
     overflow: hidden;
     height: 50px;
   }
-  .calendar .month-view .day.prev-mo h3,
-  .calendar .month-view .day.next-mo h3 {
-    color: rgba(0,0,0,.5);
-  }
 }
 @media only screen and (max-width : 330px) {
   .calendar .controls .short {
@@ -232,4 +228,3 @@
     display: none;
   }
 }
-
