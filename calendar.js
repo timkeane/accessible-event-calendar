@@ -196,7 +196,7 @@ function CsvEventCalendar(options) {
 
   this.buildMonth = function() {
     var viewContainer = this.container.find('.view');
-    var days = $('<ul class="day-names"></ul>');
+    var days = $('<ul class="day-names" aria-hidden="true"></ul>');
     var dates = $('<ol class="dates"></ol>');
     if (!viewContainer.length) viewContainer = $('<div class="view month"></div>')
     this.container.append(viewContainer.empty().append(days).append(dates));
