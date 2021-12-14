@@ -10,7 +10,7 @@ function CsvEventCalendar(options) {
   this.container = $(options.container).addClass('calendar');
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
-
+  this.tabIdx = 4;
   this.state = {
     year: this.today.getFullYear(),
     month: this.today.getMonth(),
@@ -128,17 +128,21 @@ function CsvEventCalendar(options) {
   this.buildHeader = function() {
     var back = $('<button class="back" aria-label="previous month"><span>Previous</span></button>')
       .data('delta', -1)
+      .attr('tabindex', 0)
       .on('click', this.navigate.bind(this));
     var fwd = $('<button class="fwd" aria-label="next month"><span>Next</span></button>')
       .data('delta', 1)
+      .attr('tabindex', 1)
       .on('click', this.navigate.bind(this));
     var input = $('<input type="date">')
+      .attr('tabindex', 2)
       .val(this.state.key())
       .on('change', function() {
         me.updateState({key: input.val()})
         me.view('day');
       });
     var select = $('<select></select>')
+      .attr('tabindex', 3)
       .append('<option value="month">View by month</option>')
       .append('<option value="week">View by week</option>')
       .append('<option value="day">View by day</option>')
@@ -159,7 +163,7 @@ function CsvEventCalendar(options) {
     var div2 = $('<div></div>')
       .append(input)
       .append(select);
-    var controls = $('<header class="controls"></header>')
+    var controls = $('<div class="controls"></div>')
       .append(div1)
       .append(div2);
     this.container.append(controls);
@@ -197,7 +201,7 @@ function CsvEventCalendar(options) {
   this.buildMonth = function() {
     var viewContainer = this.container.find('.view');
     var days = $('<ul class="day-names" aria-hidden="true"></ul>');
-    var dates = $('<ol class="dates"></ol>');
+    var dates = $('<ol class="dates" tabindex="4"></ol>');
     if (!viewContainer.length) viewContainer = $('<div class="view month"></div>')
     this.container.append(viewContainer.empty().append(days).append(dates));
     $.each(CsvEventCalendar.DAY_NAMES, function(d, dayName) {
@@ -249,7 +253,8 @@ function CsvEventCalendar(options) {
       .removeClass('month')
       .removeClass('week')
       .removeClass('day')
-      .addClass(view);
+      .addClass(view)
+      .focus();
     this.title({node: this.container.find('.controls h1')});
     this.container.find('.controls .fwd').attr({
       'aria-label': 'next ' + view,
@@ -267,6 +272,11 @@ function CsvEventCalendar(options) {
     }
   };
 
+  this.tabindex = function() {
+    this.tabIdx = this.tabIdx + 1;
+    return this.tabIdx;
+  };
+
   this.addDay = function(date, month) {
     var key = date.key;
     var title = this.title({key: key}).day;
@@ -279,6 +289,7 @@ function CsvEventCalendar(options) {
       .append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
+      .attr('tabindex', this.tabindex())
       .addClass(date.monthClass + '-mo')
       .attr('data-date-key', date.key)
       .append(close)
@@ -402,9 +413,9 @@ function CsvEventCalendar(options) {
           $.each(events, function(e, calEvent) {
             eventsNode.append(me.eventHtml(calEvent));
           });
-          h2.attr('aria-label', title + ' (click for a detailed view of events on this day)')
+          $(dayNode).attr('aria-label', title + ' (click for a detailed view of events on this day)')
         } else {
-          h2.attr('aria-label', title + ' (no events scheduled)');
+          $(dayNode).attr('aria-label', title + ' (no events scheduled)');
           eventsNode.html('<div class="no-events">no events scheduled</div>');
         }
       }
