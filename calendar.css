@@ -150,7 +150,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.calendar .week-view .event {
+.calendar .week-view .day {
   margin-bottom: 10px;
 }
 .day-view {
