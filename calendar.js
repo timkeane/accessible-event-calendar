@@ -219,6 +219,21 @@ function CsvEventCalendar(options) {
       }
   };
 
+  this.selectWeek = function() {
+    var key = this.state.key();
+    var dayNode = this.dayNode(key);
+    var dayIdx = dayNode.index();
+    var weekIdx = this.dayNumber(key);
+    var days = dayNode.parent().children();
+    days.removeClass('selected-week');
+    for (var i = dayIdx - weekIdx; i <= dayIdx; i++) {
+      $(days.get(i)).addClass('selected-week');
+    }
+    for (var i = dayIdx; i <= dayIdx + (6 - weekIdx); i++) {
+      $(days.get(i)).addClass('selected-week');
+    }
+  };
+
   this.view = function(view) {
     this.updateState({view: view});
     var key = this.state.key();
@@ -269,6 +284,7 @@ function CsvEventCalendar(options) {
       .on('click', function() {
         me.container.find('li.day').removeClass('selected');
         day.addClass('selected');
+        me.selectWeek();
         me.updateState({key: key});
         me.view('day');
       });
@@ -390,6 +406,7 @@ function CsvEventCalendar(options) {
     var dayNode = this.dayNode(this.state.key());
     this.container.find('.view.month .day').removeClass('selected');
     dayNode.addClass('selected');
+    this.selectWeek();
     return calendarEvents;
   };
 

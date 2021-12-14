@@ -39,7 +39,7 @@
 }
 
 
-.calendar .day-names,
+.calendar .view.month .day-names,
 .calendar .dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -56,7 +56,7 @@
   margin-left: 0;
   overflow: hidden;
 }
-.calendar .view.month .day .close {
+.calendar .view .day .close {
   display: none;
 }
 .calendar .view.month * {
@@ -123,7 +123,10 @@
     color: rgba(0,0,0,.5);
 }
 
-.calendar .view.day .day-names,
+.calendar .view .day-names {
+  display: none;
+}
+
 .calendar .view.day .dates .day {
   display: none;
 }
@@ -149,4 +152,14 @@
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
   border: none;
+}
+
+.calendar .view.week .dates {
+  display: block;
+}
+.calendar .view.week .day {
+  display: none;
+}
+.calendar .view.week .day.selected-week {
+  display: block;
 }
