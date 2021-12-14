@@ -117,11 +117,12 @@
 .calendar .week-view {
   border: 1px solid black;
 }
-.calendar .week-view .day {
-  min-height: 70px;
+.calendar .week-view .day,
+.calendar .day-view {
+  min-height: 60px;
 }
 .calendar .week-view .day h3 {
-  margin: 0 0 5px;
+  margin: 0;
   padding: 3px;
 }
 .calendar .week-view .day h3 .short {
@@ -130,7 +131,8 @@
 .calendar .week-view .day .content {
   height: auto;
 }
-.calendar .week-view .no-events {
+.calendar .week-view .no-events,
+.day-view .no-events {
   padding: 5px;
 }
 .calendar .event {
@@ -147,6 +149,9 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.calendar .week-view .event {
+  margin-bottom: 10px;
 }
 .day-view {
   border: 1px solid black;

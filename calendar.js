@@ -232,7 +232,7 @@ function CsvEventCalendar(options) {
     this.dayViewContainer.empty()
       .append(close)
       .append(events.html())
-      .append(!events.find('.event').length && 'no events scheduled');
+      .append(!events.find('.event').length && '<div class="no-events">no events scheduled</div>');
   };
 
   this.weekView = function() {
