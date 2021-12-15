@@ -288,11 +288,28 @@
 }
 
 
-@media only screen and (max-width : 330px) {
+@media only screen and (max-width : 420px) {
+  .calendar .controls button .short {
+    display: inline;
+  }
+  .calendar .controls button .long {
+    display: none;
+  }
+  .calendar .controls button {
+    width: auto;
+  }
+}
+
+
+@media only screen and (max-width : 350px) {
   .calendar .controls .short {
     display: inline;
   }
   .calendar .controls .long {
     display: none;
+  }
+  .calendar .controls input[type="date"],
+  .calendar .controls select {
+    width: 130px;
   }
 }

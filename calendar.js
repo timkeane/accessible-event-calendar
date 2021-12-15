@@ -126,11 +126,11 @@ function CsvEventCalendar(options) {
   };
 
   this.buildHeader = function() {
-    var back = $('<button class="btn back" aria-label="previous month"><span>Previous</span></button>')
+    var back = $('<button class="btn back" aria-label="previous month"><span class="long">Previous</span><span class="short">&lt;</span></button>')
       .data('delta', -1)
       .attr('tabindex', 0)
       .on('click', this.navigate.bind(this));
-    var fwd = $('<button class="btn fwd" aria-label="next month"><span>Next</span></button>')
+    var fwd = $('<button class="btn fwd" aria-label="next month"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .attr('tabindex', 1)
       .on('click', this.navigate.bind(this));
