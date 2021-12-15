@@ -110,8 +110,7 @@
 
 .calendar .view.month .day.selected {
   border-color: orange;
-  box-shadow: inset 0px 0px 0px 3px orange;
-  box-sizing: border-box; /* Include padding and border in element's width and height */
+  /* box-shadow: inset 0px 0px 15px 5px orange; */
 }
 .calendar .view.month .day.selected h2 {
   background-color: orange;
@@ -188,6 +187,9 @@
   .calendar .view.month .day.has-events {
     background-color: lightblue;
   }
+  .calendar .view.month .day.selected {
+    background-color: orange;
+  }
   .calendar .view.month ul .short {
     display: inline;
   }
@@ -199,7 +201,8 @@
     background-color: transparent;
     color: black;
     text-align: center;
-    padding: 20px 0;
+    padding: 16px 0;
+    /* border: 1px solid red; */
   }
   .calendar .view.month .day  {
     overflow: hidden;
