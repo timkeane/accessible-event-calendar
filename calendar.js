@@ -290,7 +290,7 @@ function CsvEventCalendar(options) {
       });
     var h2 = $('<h2></h2>');
     var a = $('<a></a>');
-    h2.append(a);
+    a.append(h2);
     a.append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
