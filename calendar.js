@@ -239,6 +239,7 @@ function CsvEventCalendar(options) {
   };
 
   this.view = function(view) {
+    if (!view) return;
     this.updateState({view: view});
     var key = this.state.key();
     var dayNode = this.dayNode(key);
