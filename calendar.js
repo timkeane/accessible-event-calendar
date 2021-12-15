@@ -450,6 +450,7 @@ function CsvEventCalendar(options) {
     });
   } else {
     this.container.find('.view').get(0).className = 'view-wo-events';
+    this.container.find('.controls').addClass('controls-wo-views');
   }
 
   return this;

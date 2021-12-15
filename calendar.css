@@ -23,9 +23,16 @@
   margin-bottom: 5px;
   float: right;
 }
+.calendar .controls.controls-wo-views select {
+  display: none;
+}
 .calendar .controls input {
   float: left;
 }
+.calendar .controls.controls-wo-views input {
+  float: none;
+}
+
 .calendar .controls button,
 .calendar .view.month .day.has-events,
 .calendar .view-wo-events .day.has-events
