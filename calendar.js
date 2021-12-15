@@ -413,7 +413,7 @@ function CsvEventCalendar(options) {
       var title = me.title({key: key}).day;
       var events = me.eventsIndex[key];
       var eventsNode = $('<div class="events"></div>');
-      var h2 = $(dayNode).find('h2');
+      var a = $(dayNode).find('h2 a');
       $(dayNode).append(eventsNode);
       if (me.eventsIndex.ready) {
         if (events) {
