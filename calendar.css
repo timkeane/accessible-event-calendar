@@ -50,8 +50,7 @@
 .calendar .day-names li {
   text-align: center;
 }
-.calendar .view.month li,
-.calendar .view.month .day h2 {
+.calendar .view.month li {
   list-style: none;
   margin-left: 0;
   overflow: hidden;
@@ -62,7 +61,14 @@
     1px 0 0 0 #888 inset, 
     0 1px 0 0 #888 inset;
 }
-
+.calendar .view.month .day h2 {
+  box-shadow: 
+    1px 0 0 0 #888, 
+    0 1px 0 0 #888, 
+    1px 1px 0 0 #888,   /* Just to fix the corner */
+    1px 0 0 0 #888 inset, 
+    0 1px 0 0 #888 inset;
+}
 .calendar .view .day .close {
   display: none;
 }
@@ -96,19 +102,30 @@
 
 .calendar .day h3 {
   margin: 0;
-  padding: 2px;
+  padding: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .calendar .day .event {
-  margin: 2px;
   background-color: #add8e6;
-  border: 1px solid #0000ff;
+  box-shadow: 
+    1px 0 0 0 #0000ff, 
+    0 1px 0 0 #0000ff, 
+    1px 1px 0 0 #0000ff,   /* Just to fix the corner */
+    1px 0 0 0 #0000ff inset, 
+    0 1px 0 0 #0000ff inset;
 }
-.calendar .view.day h2 .short {
+.calendar .view h2 .short {
   display: none;
 }
+
 .calendar .view.month .day .event {
   height: 25px;
   overflow: hidden;
+}
+.calendar .view.month h2 .short {
+  display: block;
 }
 
 .calendar .view.month .day .no-events {

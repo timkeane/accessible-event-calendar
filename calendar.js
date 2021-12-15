@@ -229,16 +229,8 @@ function CsvEventCalendar(options) {
   this.selectWeek = function() {
     var key = this.state.key();
     var dayNode = this.dayNode(key);
-    var dayIdx = dayNode.index();
-    var weekIdx = this.dayNumber(key);
-    var days = dayNode.parent().children();
-    days.removeClass('selected-week');
-    for (var i = dayIdx - weekIdx; i <= dayIdx; i++) {
-      $(days.get(i)).addClass('selected-week');
-    }
-    for (var i = dayIdx; i <= dayIdx + (6 - weekIdx); i++) {
-      $(days.get(i)).addClass('selected-week');
-    }
+    this.container.find('li.day').removeClass('selected-week');
+    $('.week-' + dayNode.data('week')).addClass('selected-week');
   };
 
   this.view = function(view) {
@@ -277,7 +269,7 @@ function CsvEventCalendar(options) {
     return this.tabIdx;
   };
 
-  this.addDay = function(date, month) {
+  this.addDay = function(date, week, month) {
     var key = date.key;
     var title = this.title({key: key}).day;
     var close = $('<button class="close" aria-label="return to calendar"></button>')
@@ -290,7 +282,9 @@ function CsvEventCalendar(options) {
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
       .attr('tabindex', this.tabindex())
+      .data('week', week)
       .addClass(date.monthClass + '-mo')
+      .addClass( 'week-' + week)
       .attr('data-date-key', date.key)
       .append(close)
       .append(h2)
@@ -302,6 +296,7 @@ function CsvEventCalendar(options) {
         me.view('day');
       });
       month.append(day);
+      return day;
   };
 
   this.dateNumber = function(key) {
@@ -347,8 +342,9 @@ function CsvEventCalendar(options) {
     var month = this.buildMonth();
     var endOfWeek1 = dates[6].key;
     var startOfWeek6 = dates[35].key;
+    var weekOfMonth = 0;
     $.each(dates, function(i, date) {
-      me.addDay(date, month);
+      me.addDay(date, weekOfMonth, month);
       if ((i + 1) % 7 === 0) {
         if (i === 34 && !me.sameMonth(endOfWeek1, startOfWeek6)) {
           return false;
