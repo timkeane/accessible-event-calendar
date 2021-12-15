@@ -251,7 +251,7 @@ function CsvEventCalendar(options) {
       .removeClass('day')
       .addClass(view)
       .focus();
-    dayNode.attr('aria-live', 'assertive')
+    dayNode.find('a').attr('aria-live', 'assertive')
       .data('old-label', dayNode.attr('aria-lable'))
       .attr('aria-label', 'showing ' + view + ' view blah blah')
       .focus();
