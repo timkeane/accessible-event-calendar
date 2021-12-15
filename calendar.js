@@ -299,7 +299,7 @@ function CsvEventCalendar(options) {
       .addClass( 'week-' + week)
       .attr('data-date-key', date.key)
       .append(close)
-      .append(h2)
+      .append(a)
       .on('click', function() {
         me.container.find('li.day').removeClass('selected');
         day.addClass('selected');
