@@ -50,12 +50,19 @@
 .calendar .day-names li {
   text-align: center;
 }
-.calendar .view.month li {
-  border: 1px solid #000;
+.calendar .view.month li,
+.calendar .view.month .day h2 {
   list-style: none;
   margin-left: 0;
   overflow: hidden;
+  box-shadow: 
+    1px 0 0 0 #888, 
+    0 1px 0 0 #888, 
+    1px 1px 0 0 #888,   /* Just to fix the corner */
+    1px 0 0 0 #888 inset, 
+    0 1px 0 0 #888 inset;
 }
+
 .calendar .view .day .close {
   display: none;
 }
@@ -93,8 +100,8 @@
 }
 .calendar .day .event {
   margin: 2px;
-  background-color: lightblue;
-  border: 1px solid blue;
+  background-color: #add8e6;
+  border: 1px solid #0000ff;
 }
 .calendar .view.day h2 .short {
   display: none;
@@ -109,8 +116,7 @@
 }
 
 .calendar .view.month .day.selected {
-  border-color: orange;
-  /* box-shadow: inset 0px 0px 15px 5px orange; */
+  background-color: orange;
 }
 .calendar .view.month .day.selected h2 {
   background-color: orange;
@@ -118,12 +124,12 @@
 }
 .calendar .view.month .day.prev-mo,
 .calendar .view.month .day.next-mo {
-  background-color: rgba(0,0,0,.1);
+  background-color: #eee;
 }
 .calendar .view.month .day.prev-mo h2,
 .calendar .view.month .day.next-mo  h2 {
-  background-color: white;
-    color: rgba(0,0,0,.5);
+  background-color: #fff;
+  color: #888;
 }
 
 .calendar .view .day-names {
@@ -140,8 +146,8 @@
 
 .calendar .day h2,
 .view.day h2 {
-  background-color: black;
-  color: white;
+  background-color: #000;
+  color: #fff;
 }
 
 .calendar .view.day .day .close {
@@ -150,7 +156,7 @@
   height: 20px;
   float: right;
   margin: 3px;
-  background-color: black;
+  background-color: #000;
   background-position: center;
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
@@ -185,7 +191,7 @@
 
 @media only screen and (max-width : 500px) {
   .calendar .view.month .day.has-events {
-    background-color: lightblue;
+    background-color: #add8e6;
   }
   .calendar .view.month .day.selected {
     background-color: orange;
@@ -199,10 +205,9 @@
   }
   .calendar .view.month .day h2 {
     background-color: transparent;
-    color: black;
+    color: #000;
     text-align: center;
     padding: 16px 0;
-    /* border: 1px solid red; */
   }
   .calendar .view.month .day  {
     overflow: hidden;
