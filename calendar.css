@@ -15,10 +15,10 @@
   display: none;
 }
 .calendar .controls button {
-  width: 70px;
+  width: 95px;
 }
 .calendar .controls select {
-  width: 141px;
+  width: 150px;
   height: 25px;
   margin-bottom: 5px;
   float: right;
@@ -26,10 +26,12 @@
 .calendar .controls.controls-wo-views select {
   display: none;
 }
-.calendar .controls input {
+.calendar .controls input[type="date"] {
+  display: block;
+  width: 150px;
   float: left;
 }
-.calendar .controls.controls-wo-views input {
+.calendar .controls.controls-wo-views input[type="date"] {
   float: none;
 }
 .calendar .controls button,
@@ -224,12 +226,13 @@
   width: 20px;
   height: 20px;
   float: right;
-  margin: 7px;
+  margin: 10px;
   background-color: #000;
   background-position: center;
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
   border: none;
+  opacity: 1;
 }
 
 
