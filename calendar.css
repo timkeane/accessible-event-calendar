@@ -310,6 +310,6 @@
   }
   .calendar .controls input[type="date"],
   .calendar .controls select {
-    width: 130px;
+    width: 125px;
   }
 }
