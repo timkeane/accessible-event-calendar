@@ -84,8 +84,12 @@ function CsvEventCalendar(options) {
     var date = this.dateFromKey(key);
     date.setDate(date.getDate() + delta);
     this.updateState({key: this.dateKey(date)});
+    var dayNode = this.dayNode(this.state.key())
+    if (!dayNode.length) {
+      this.monthView();
+    }
     this.container.find('li.day').removeClass('selected');
-    this.dayNode(this.state.key()).addClass('selected');
+    this.dayNode.addClass('selected');
   };
 
   this.weekNavigate = function(delta) {
@@ -93,8 +97,12 @@ function CsvEventCalendar(options) {
     var date = this.dateFromKey(key);
     date.setDate(date.getDate() + (delta * 7));
     this.updateState({key: this.dateKey(date)});
+    var dayNode = this.dayNode(this.state.key())
+    if (!dayNode.length) {
+      this.monthView();
+    }
     this.container.find('li.day').removeClass('selected');
-    this.dayNode(this.state.key()).addClass('selected');
+    dayNode.addClass('selected');
     this.week();
   };
 
@@ -280,8 +288,10 @@ function CsvEventCalendar(options) {
         domEvent.stopImmediatePropagation();
         me.view('month');
       });
-    var h2 = $('<h2></h2>')
-      .append('<span class="long">' + title + '</span>')
+    var h2 = $('<h2></h2>');
+    var a = $('<a></a>');
+    h2.append(a);
+    a.append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
       .data('week', week)
