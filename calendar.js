@@ -422,9 +422,9 @@ function CsvEventCalendar(options) {
           $.each(events, function(e, calEvent) {
             eventsNode.append(me.eventHtml(calEvent));
           });
-          h2.attr('aria-label', title + ' (click for a detailed view of events on this day)')
+          a.attr('aria-label', title + ' (click for a detailed view of events on this day)')
         } else {
-          h2.attr('aria-label', title + ' (no events scheduled)');
+          a.attr('aria-label', title + ' (no events scheduled)');
           eventsNode.html('<div class="no-events">no events scheduled</div>');
         }
       }
