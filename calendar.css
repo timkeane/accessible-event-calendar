@@ -27,7 +27,7 @@
   display: none;
 }
 .calendar .controls input[type="date"] {
-  display: block;
+  display: inline;
   width: 150px;
   float: left;
 }
@@ -35,8 +35,8 @@
   float: none;
 }
 .calendar .controls button,
-.calendar .view.month .day.has-events,
-.calendar .view-wo-events .day.has-events,
+.calendar .view.month .day,
+.calendar .view-wo-events .day,
 .day-view .close {
     cursor: pointer;
 }
@@ -100,11 +100,6 @@
 }
 
 
-.calendar .view.month .day .event {
-  padding: 0;
-}
-
-
 .calendar .view.month *,
 .calendar .view-wo-events * {
   font-size: 16px;
@@ -124,6 +119,9 @@
 .calendar .view.month .day,
 .calendar .view-wo-events .day {
   height: 100px;
+}
+.calendar .view.month .day .event {
+  padding: 0;
 }
 .calendar .view.month .day h2,
 .calendar .view-wo-events .day h2 {
@@ -175,12 +173,12 @@
 .calendar .view-wo-events .day .no-events {
   display: none;
 }
-.calendar .view.month .day.selected,
-.calendar .view-wo-events .day.selected {
-  background-color: orange;
-}
 .calendar .view.month .day.selected h2,
-.calendar .view-wo-events .day.selected h2 {
+.calendar .view-wo-events .day.selected h2,
+.calendar .view.month .day.prev-mo.selected h2,
+.calendar .view.month .day.next-mo.selected h2,
+.calendar .view-wo-events .day.prev-mo.selected h2,
+.calendar .view-wo-events .day.next-mo.selected h2 {
   background-color: orange;
   color: #333;
 }
@@ -189,6 +187,15 @@
 .calendar .view-wo-events .day.prev-mo,
 .calendar .view-wo-events .day.next-mo {
   background-color: #eee;
+}
+
+.calendar .view.month .day.selected,
+.calendar .view-wo-events .day.selected
+.calendar .view.month .day.prev-mo.selected,
+.calendar .view.month .day.next-mo.selected,
+.calendar .view-wo-events .day.prev-mo.selected,
+.calendar .view-wo-events .day.next-mo.selected {
+  background-color: orange;
 }
 .calendar .view.month .day.prev-mo h2,
 .calendar .view.month .day.next-mo  h2,
