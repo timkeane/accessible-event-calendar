@@ -289,7 +289,7 @@ function CsvEventCalendar(options) {
         me.view('month');
       });
     var h2 = $('<h2></h2>');
-    var a = $('<a></a>');
+    var a = $('<a href="#"></a>');
     a.append(h2);
     a.append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
