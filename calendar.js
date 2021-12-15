@@ -275,8 +275,8 @@ function CsvEventCalendar(options) {
     container.find('button.next').attr('tabindex', 2);
     container.find('.controls input').attr('tabindex', 3);
     container.find('.controls select').attr('tabindex', 4);
-    container.find('li.day h2').each(function(i, h2) {
-      $(h2).attr('tabindex', i + 5);
+    container.find('li.day a').each(function(i, a) {
+      $(a).attr('tabindex', i + 5);
     });
   };
 
