@@ -290,7 +290,7 @@ function CsvEventCalendar(options) {
       });
     var h2 = $('<h2></h2>');
     var a = $('<a href="#"></a>');
-    a.append(h2);
+    h2.append(a);
     a.append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
@@ -299,7 +299,7 @@ function CsvEventCalendar(options) {
       .addClass( 'week-' + week)
       .attr('data-date-key', date.key)
       .append(close)
-      .append(a)
+      .append(h2)
       .on('click', function() {
         me.container.find('li.day').removeClass('selected');
         day.addClass('selected');
