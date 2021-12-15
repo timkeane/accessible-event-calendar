@@ -171,3 +171,47 @@
 .calendar .event .time span {
   margin-right: 5px;
 }
+
+@media only screen and (max-width : 600px) {
+  .calendar .view.month ul .medium {
+    display: inline;
+  }
+  .calendar .view.month ul .short, .calendar .view.month ul .long {
+    display: none;
+  }
+  .calendar .view.month .day {
+    height: 80px;
+  }
+}
+
+@media only screen and (max-width : 500px) {
+  .calendar .view.month .day.has-events {
+    background-color: lightblue;
+  }
+  .calendar .view.month ul .short {
+    display: inline;
+  }
+  .calendar .view.month ul .medium,
+  .calendar .view.month ul .long {
+    display: none;
+  }
+  .calendar .view.month .day h2 {
+    background-color: transparent;
+    color: black;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .calendar .view.month .day  {
+    overflow: hidden;
+    height: 50px;
+  }
+}
+
+@media only screen and (max-width : 330px) {
+  .calendar .controls .short {
+    display: inline;
+  }
+  .calendar .controls .long {
+    display: none;
+  }
+}
