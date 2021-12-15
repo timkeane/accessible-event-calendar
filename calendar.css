@@ -49,7 +49,6 @@
 
 
 .calendar .day-names {
-  font-weight: 800;
   text-decoration: none;
 }
 .calendar .day-names li {
@@ -75,7 +74,7 @@
 }
 .calendar .day h2,
 .calendar .view.day h2 {
-  background-color: #000;
+  background-color: #333;
   color: #fff;
 }
 .calendar .view .day h3 {
@@ -143,7 +142,7 @@
 .calendar .view-wo-events .day h2 {
   margin: 0;
   padding: 2px 3px;
-  background-color: #000;
+  background-color: #333;
   color: #fff;
 }
 .calendar .view.month .day h2 .long,
@@ -183,7 +182,7 @@
 .calendar .view.month .day.selected h2,
 .calendar .view-wo-events .day.selected h2 {
   background-color: orange;
-  color: #000;
+  color: #333;
 }
 .calendar .view.month .day.prev-mo,
 .calendar .view.month .day.next-mo,
@@ -227,7 +226,7 @@
   height: 20px;
   float: right;
   margin: 10px;
-  background-color: #000;
+  background-color: #333;
   background-position: center;
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
@@ -276,7 +275,7 @@
   .calendar .view.month .day h2,
   .calendar .view-wo-events .day h2 {
     background-color: transparent;
-    color: #000;
+    color: #333;
     text-align: center;
     padding: 16px 0;
   }
@@ -310,6 +309,6 @@
   }
   .calendar .controls input[type="date"],
   .calendar .controls select {
-    width: 125px;
+    width: 130px;
   }
 }
