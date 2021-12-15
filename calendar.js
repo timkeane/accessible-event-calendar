@@ -250,6 +250,8 @@ function CsvEventCalendar(options) {
       .removeClass('week')
       .removeClass('day')
       .addClass(view)
+      .attr('aria-live', 'assertive')
+      .attr('aria-label', 'showing ' + view + ' month blah blah')
       .focus();
     this.title({node: this.container.find('.controls h1')});
     this.container.find('.controls .next').attr({
@@ -422,7 +424,7 @@ function CsvEventCalendar(options) {
           $.each(events, function(e, calEvent) {
             eventsNode.append(me.eventHtml(calEvent));
           });
-          a.attr('aria-label', title + ' (click for a detailed view of events on this day)')
+          a.attr('aria-label', title + ' (tap or press enter for a detailed view of events on this day)')
         } else {
           a.attr('aria-label', title + ' (no events scheduled)');
           eventsNode.html('<div class="no-events">no events scheduled</div>');
