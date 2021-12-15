@@ -251,10 +251,10 @@ function CsvEventCalendar(options) {
       .removeClass('day')
       .addClass(view)
       .focus();
-    dayNode.find('a').attr('aria-live', 'assertive')
-      .data('old-label', dayNode.attr('aria-lable'))
-      .attr('aria-label', 'showing ' + view + ' view blah blah')
-      .focus();
+    dayNode.find('h2 a').attr('aria-live', 'assertive')
+      .data('old-label', dayNode.attr('aria-label'))
+      .attr('aria-label', 'showing ' + view + ' view blah blah');
+    dayNode.find('button.close').focus();
     this.title({node: this.container.find('.controls h1')});
     this.container.find('.controls .next').attr({
       'aria-label': 'next ' + view,
