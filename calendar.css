@@ -77,6 +77,10 @@
   background-color: #333;
   color: #fff;
 }
+.calendar .day h2 button {
+  border: inherit;
+  background-color: inherit;
+}
 .calendar .view .day h3 {
   margin: 5px;
 }

@@ -56,6 +56,7 @@ function CsvEventCalendar(options) {
     this.container.find('.controls input').val(key);
     this.container.find('.controls select').val(this.state.view);
     if (after !== before) {
+      this.week();
       this.selectionChanged({
         date: key,
         events: this.eventsIndex[key] || []
@@ -249,12 +250,7 @@ function CsvEventCalendar(options) {
       .removeClass('month')
       .removeClass('week')
       .removeClass('day')
-      .addClass(view)
-      .focus();
-    dayNode.find('h2 a').attr('aria-live', 'assertive')
-      .data('old-label', dayNode.attr('aria-label'))
-      .attr('aria-label', 'showing ' + view + ' view blah blah');
-    dayNode.find('button.close').focus();
+      .addClass(view);
     this.title({node: this.container.find('.controls h1')});
     this.container.find('.controls .next').attr({
       'aria-label': 'next ' + view,
@@ -270,6 +266,18 @@ function CsvEventCalendar(options) {
     } else {
       h1.css('visible', 'hidden');
     }
+    this.container.find('.day button[tabindex-bak]').each(function(i, btn) {
+      $(btn).attr('tabindex', $(btn).attr('tabindex-bak'))
+        .removeAttr('tabindex-bak');
+    });
+    var btn = this.container.find('.day h2 button[old-label]');
+    btn.attr('aria-label', btn.attr('old-label'))
+      .removeAttr('old-label');
+    this.container.find('.day h2 button.close').removeAttr('tabindex');
+    this.container.find('.day h2')
+      .removeAttr('aria-live')
+      .removeAttr('aria-label')
+      .removeAttr('tabindex');
   };
 
   this.tabindex = function() {
@@ -279,8 +287,8 @@ function CsvEventCalendar(options) {
     container.find('button.next').attr('tabindex', 2);
     container.find('.controls input').attr('tabindex', 3);
     container.find('.controls select').attr('tabindex', 4);
-    container.find('li.day a').each(function(i, a) {
-      $(a).attr('tabindex', i + 5);
+    container.find('li.day button').each(function(i, button) {
+      $(button).attr('tabindex', i + 5);
     });
   };
 
@@ -293,9 +301,9 @@ function CsvEventCalendar(options) {
         me.view('month');
       });
     var h2 = $('<h2></h2>');
-    var a = $('<a href="#"></a>');
-    h2.append(a);
-    a.append('<span class="long">' + title + '</span>')
+    var button = $('<button></button>');
+    h2.append(button);
+    button.append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
     var day = $('<li class="day"></li>')
       .data('week', week)
@@ -305,11 +313,21 @@ function CsvEventCalendar(options) {
       .append(close)
       .append(h2)
       .on('click', function() {
+        var eventCount = me.eventsIndex[key].length;
         me.container.find('li.day').removeClass('selected');
         day.addClass('selected');
-        me.week();
         me.updateState({key: key});
         me.view('day');
+        me.container.find('.day h2 button').each(function(i, btn) {
+          $(btn).attr('tabindex-bak', $(btn).attr('tabindex'))
+          .attr('tabindex', '-1');
+        });
+        h2.find('button.close').attr('tabindex', 7);
+        button.attr('aria-live', 'assertive')
+          .attr('old-label', button.attr('aria-label'))
+          .attr('aria-label', 'showing ' + eventCount + 
+            (eventCount > 1 ? ' events' : ' event') + ' for ' + title)
+          .attr('tabindex', 6);
       });
       month.append(day);
       return day;
@@ -417,7 +435,7 @@ function CsvEventCalendar(options) {
       var title = me.title({key: key}).day;
       var events = me.eventsIndex[key];
       var eventsNode = $('<div class="events"></div>');
-      var a = $(dayNode).find('h2 a');
+      var button = $(dayNode).find('h2 button');
       $(dayNode).append(eventsNode);
       if (me.eventsIndex.ready) {
         if (events) {
@@ -426,9 +444,9 @@ function CsvEventCalendar(options) {
           $.each(events, function(e, calEvent) {
             eventsNode.append(me.eventHtml(calEvent));
           });
-          a.attr('aria-label', title + ' (tap or press enter for a detailed view of events on this day)')
+          button.attr('aria-label', title + ' (tap or press enter for a detailed view of events on this day)')
         } else {
-          a.attr('aria-label', title + ' (no events scheduled)');
+          button.attr('aria-label', title + ' (no events scheduled)');
           eventsNode.html('<div class="no-events">no events scheduled</div>');
         }
       }
