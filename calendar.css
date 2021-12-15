@@ -28,6 +28,7 @@
 }
 .calendar .controls button,
 .calendar .view.month .day.has-events,
+.calendar .view-wo-events .day.has-events
 .day-view .close {
     cursor: pointer;
 }
@@ -40,6 +41,7 @@
 
 
 .calendar .view.month .day-names,
+.calendar .view-wo-events .day-names,
 .calendar .dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -50,7 +52,8 @@
 .calendar .day-names li {
   text-align: center;
 }
-.calendar .view.month li {
+.calendar .view.month li,
+.calendar .view-wo-events li {
   list-style: none;
   margin-left: 0;
   overflow: hidden;
@@ -61,7 +64,8 @@
     1px 0 0 0 #888 inset, 
     0 1px 0 0 #888 inset;
 }
-.calendar .view.month .day h2 {
+.calendar .view.month .day h2,
+.calendar .view-wo-events .day h2 {
   box-shadow: 
     1px 0 0 0 #888, 
     0 1px 0 0 #888, 
@@ -69,20 +73,28 @@
     1px 0 0 0 #888 inset, 
     0 1px 0 0 #888 inset;
 }
-.calendar .view .day .close {
+.calendar .view.month .day.selected h2,
+.calendar .view-wo-events .day.selected h2 {
+  box-shadow: none;
+}
+.calendar .view .day .close,
+.calendar .view-wo-events .day .close {
   display: none;
 }
-.calendar .view.month * {
+.calendar .view.month *,
+.calendar .view-wo-events * {
   font-size: 16px;
 }
-.calendar .view.month .day h2 {
+.calendar .view.month .day h2,
+.calendar .view-wo-events .day h2 {
   margin: 0;
   padding: 2px 3px;
   background-color: #000;
   color: #fff;
 }
 
-.calendar .view.month .day {
+.calendar .view.month .day,
+.calendar .view-wo-events .day {
   height: 100px;
 }
 
@@ -91,13 +103,16 @@
   text-decoration: none;
 }
 
-.calendar .view.month .day h2 .long {
+.calendar .view.month .day h2 .long,
+.calendar .view-wo-events .day h2 .long {
   display: none;
 }
 
 .calendar .view.month ul .short,
-.calendar .view.month ul .medium {
-  display: none;
+.calendar .view.month ul .medium,
+.calendar .view-wo-events ul .short,
+.calendar .view-wo-events ul .medium {
+    display: none;
 }
 
 .calendar .day h3 {
@@ -120,31 +135,40 @@
   display: none;
 }
 
-.calendar .view.month .day .event {
+.calendar .view.month .day .event,
+.calendar .view-wo-events .day .event {
   height: 25px;
   overflow: hidden;
 }
-.calendar .view.month h2 .short {
+.calendar .view.month h2 .short,
+.calendar .view-wo-events h2 .short {
   display: block;
 }
 
-.calendar .view.month .day .no-events {
+.calendar .view.month .day .no-events,
+.calendar .view-wo-events .day .no-events {
   display: none;
 }
 
-.calendar .view.month .day.selected {
+.calendar .view.month .day.selected,
+.calendar .view-wo-events .day.selected {
   background-color: orange;
 }
-.calendar .view.month .day.selected h2 {
+.calendar .view.month .day.selected h2,
+.calendar .view-wo-events .day.selected h2 {
   background-color: orange;
   color: #000;
 }
 .calendar .view.month .day.prev-mo,
-.calendar .view.month .day.next-mo {
+.calendar .view.month .day.next-mo,
+.calendar .view-wo-events .day.prev-mo,
+.calendar .view-wo-events .day.next-mo {
   background-color: #eee;
 }
 .calendar .view.month .day.prev-mo h2,
-.calendar .view.month .day.next-mo  h2 {
+.calendar .view.month .day.next-mo  h2,
+.calendar .view-wo-events .day.prev-mo h2,
+.calendar .view-wo-events .day.next-mo  h2 {
   background-color: #fff;
   color: #888;
 }
@@ -195,38 +219,50 @@
 }
 
 @media only screen and (max-width : 600px) {
-  .calendar .view.month ul .medium {
+  .calendar .view.month ul .medium,
+  .calendar .view-wo-events ul .medium {
     display: inline;
   }
-  .calendar .view.month ul .short, .calendar .view.month ul .long {
+  .calendar .view.month ul .short,
+  .calendar .view.month ul .long,
+  .calendar .view-wo-events ul .short,
+  .calendar .view-wo-events ul .long {
     display: none;
   }
-  .calendar .view.month .day {
+  .calendar .view.month .day,
+  .calendar .view-wo-events .day {
     height: 80px;
   }
 }
 
 @media only screen and (max-width : 500px) {
-  .calendar .view.month .day.has-events {
+  .calendar .view.month .day.has-events,
+  .calendar .view-wo-events .day.has-events {
     background-color: #add8e6;
   }
-  .calendar .view.month .day.selected {
+  .calendar .view.month .day.selected,
+  .calendar .view-wo-events .day.selected {
     background-color: orange;
   }
-  .calendar .view.month ul .short {
+  .calendar .view.month ul .short,
+  .calendar .view-wo-events ul .short {
     display: inline;
   }
   .calendar .view.month ul .medium,
-  .calendar .view.month ul .long {
+  .calendar .view.month ul .long,
+  .calendar .view-wo-events ul .medium,
+  .calendar .view-wo-events ul .long {
     display: none;
   }
-  .calendar .view.month .day h2 {
+  .calendar .view.month .day h2,
+  .calendar .view-wo-events .day h2 {
     background-color: transparent;
     color: #000;
     text-align: center;
     padding: 16px 0;
   }
-  .calendar .view.month .day  {
+  .calendar .view.month .day,
+  .calendar .view-wo-events .day {
     overflow: hidden;
     height: 50px;
   }

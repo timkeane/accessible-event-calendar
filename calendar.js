@@ -95,7 +95,7 @@ function CsvEventCalendar(options) {
     this.updateState({key: this.dateKey(date)});
     this.container.find('li.day').removeClass('selected');
     this.dayNode(this.state.key()).addClass('selected');
-    this.selectWeek();
+    this.week();
   };
 
   this.navigate = function(domEvent) {
@@ -226,7 +226,7 @@ function CsvEventCalendar(options) {
       }
   };
 
-  this.selectWeek = function() {
+  this.week = function() {
     var key = this.state.key();
     var dayNode = this.dayNode(key);
     this.container.find('li.day').removeClass('selected-week');
@@ -291,7 +291,7 @@ function CsvEventCalendar(options) {
       .on('click', function() {
         me.container.find('li.day').removeClass('selected');
         day.addClass('selected');
-        me.selectWeek();
+        me.week();
         me.updateState({key: key});
         me.view('day');
       });
@@ -346,6 +346,7 @@ function CsvEventCalendar(options) {
     $.each(dates, function(i, date) {
       me.addDay(date, weekOfMonth, month);
       if ((i + 1) % 7 === 0) {
+        weekOfMonth = weekOfMonth + 1;
         if (i === 34 && !me.sameMonth(endOfWeek1, startOfWeek6)) {
           return false;
         }
@@ -419,7 +420,7 @@ function CsvEventCalendar(options) {
     var dayNode = this.dayNode(this.state.key());
     this.container.find('.view.month .day').removeClass('selected');
     dayNode.addClass('selected');
-    this.selectWeek();
+    this.week();
     return calendarEvents;
   };
 
@@ -439,13 +440,17 @@ function CsvEventCalendar(options) {
   this.buildHeader();
   this.view('month');
 
-  Papa.parse(options.url, {
-    download: true,
-    header: true,
-    complete: function(response) {
-      me.indexCalendarData(response);
-    }
-  });
+  if (options.url) {
+    Papa.parse(options.url, {
+      download: true,
+      header: true,
+      complete: function(response) {
+        me.indexCalendarData(response);
+      }
+    });
+  } else {
+    this.container.find('.view').get(0).className = 'view-wo-events';
+  }
 
   return this;
 };
