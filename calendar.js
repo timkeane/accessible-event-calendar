@@ -247,12 +247,12 @@ function CsvEventCalendar(options) {
     var title = this.title({key: key}).day;
     dayNode.addClass('selected');
     this.container.find('.day h2 button').each(function(i, btn) {
-      $(btn).attr('tabindex-bak', $(btn).attr('tabindex'))
+      $(btn).attr('data-tabindex-bak', $(btn).attr('tabindex'))
       .attr('tabindex', '-1');
     });
     dayNode.find('h2 button.close').attr('tabindex', 7);
     button.attr('aria-live', 'assertive')
-      .attr('old-label', button.attr('aria-label'));
+      .attr('data-old-label', button.attr('aria-label'));
     button.attr('aria-label', 'showing ' + eventCount + 
         (eventCount > 1 ? ' events' : ' event') + ' for ' + title);
     button.attr('tabindex', 6);
@@ -281,13 +281,13 @@ function CsvEventCalendar(options) {
       'aria-label': 'previous ' + view,
       title: 'previous ' + view
     });
-    this.container.find('.day button[tabindex-bak]').each(function(i, btn) {
-      $(btn).attr('tabindex', $(btn).attr('tabindex-bak'))
-        .removeAttr('tabindex-bak');
+    this.container.find('.day button[data-tabindex-bak]').each(function(i, btn) {
+      $(btn).attr('tabindex', $(btn).attr('data-tabindex-bak'))
+        .removeAttr('data-tabindex-bak');
     });
-    var btn = this.container.find('.day h2 button[old-label]');
-    btn.attr('aria-label', btn.attr('old-label'))
-      .removeAttr('old-label');
+    var btn = this.container.find('.day h2 button[data-old-label]');
+    btn.attr('aria-label', btn.attr('data-old-label'))
+      .removeAttr('data-old-label');
     this.container.find('.day h2 button.close').removeAttr('tabindex');
     this.container.find('.day h2')
       .removeAttr('aria-live')

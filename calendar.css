@@ -1,38 +1,48 @@
 .calendar .controls {
-  height: 58px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 65px;
+}
+.calendar .controls button,
+.calendar .controls h1,
+.calendar .controls input[type="date"],
+.calendar .controls select {
+  margin: 0;
+  display: inline;
+}
+.calendar .controls button {
+  width: 80px;
+}
+.calendar .controls input[type="date"],
+.calendar .controls select {
+  width: 130px;
+}
+.calendar .controls h1 {
+  width: auto;
+}
+.calendar .controls button.back,
+.calendar .controls input[type="date"] {
+  float: left;
+}
+.calendar .controls button.next,
+.calendar .controls select {
+  float: right;
 }
 .calendar .controls,
 .calendar .controls * {
   text-align: center;
 }
-.calendar .controls h1 {
-  margin: 0;
-  display: inline-block;
-}
 .calendar .controls .short,
 .calendar .controls .day {
   display: none;
 }
-.calendar .controls button {
-  width: 95px;
-}
 .calendar .controls select {
-  width: 150px;
   height: 25px;
-  margin-bottom: 5px;
-  float: right;
 }
 .calendar .controls.controls-wo-views select {
   display: none;
 }
-.calendar .controls input[type="date"] {
-  display: inline;
-  width: 150px;
-  float: left;
-}
 .calendar .controls.controls-wo-views input[type="date"] {
-  float: none;
 }
 .calendar .controls button,
 .calendar .view.month .day,
@@ -41,10 +51,8 @@
     cursor: pointer;
 }
 .calendar .controls .back {
-  float: left;
 }
 .calendar .controls .next {
-  float: right;
 }
 
 
@@ -266,6 +274,9 @@
 
 
 @media only screen and (max-width : 500px) {
+  .calendar .controls button {
+    width: auto;
+  }
   .calendar .view.month .day.has-events,
   .calendar .view-wo-events .day.has-events {
     background-color: #add8e6;
@@ -299,20 +310,17 @@
 }
 
 
-@media only screen and (max-width : 420px) {
+@media only screen and (max-width : 470px) {
   .calendar .controls button .short {
     display: inline;
   }
   .calendar .controls button .long {
     display: none;
   }
-  .calendar .controls button {
-    width: auto;
-  }
 }
 
 
-@media only screen and (max-width : 350px) {
+@media only screen and (max-width : 370px) {
   .calendar .controls .short {
     display: inline;
   }
