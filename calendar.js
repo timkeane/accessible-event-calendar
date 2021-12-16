@@ -289,7 +289,7 @@ function CsvEventCalendar(options) {
       var dayKey = dayNode.attr('data-date-key');
       var eventCount = me.eventsIndex[dayKey] && me.eventsIndex[dayKey].length || 0;
       var button = dayNode.find('h2 button.name');
-      var title = me.title({key: dayKey}).day;
+      var title = me.title({key: dayKey}).day.long;
       button.attr('aria-live', 'assertive')
         .attr('data-old-label', button.attr('aria-label'));
       button.attr('aria-label', 'showing ' + eventCount + 
