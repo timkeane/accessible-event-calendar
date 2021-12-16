@@ -231,7 +231,8 @@
 .calendar .view.day .dates .day.selected {
   display: block;
 }
-.calendar .view.day .day .close {
+.calendar .view.day .day .close,
+.calendar .view.week .day:first-of-type .close {
   display: block;
   width: 20px;
   height: 20px;

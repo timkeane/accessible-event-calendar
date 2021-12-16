@@ -238,6 +238,26 @@ function CsvEventCalendar(options) {
     $('.week-' + dayNode.data('week')).addClass('selected-week');
   };
 
+  this.dayView = function() {
+    var key = this.state.key();
+    var dayNode = this.dayNode(key);
+    var eventCount = this.eventsIndex[key].length;
+    var button = dayNode.find('h2 button.name');
+    this.container.find('li.day').removeClass('selected');
+    var title = this.title({key: key}).day;
+    dayNode.addClass('selected');
+    this.container.find('.day h2 button').each(function(i, btn) {
+      $(btn).attr('tabindex-bak', $(btn).attr('tabindex'))
+      .attr('tabindex', '-1');
+    });
+    dayNode.find('h2 button.close').attr('tabindex', 7);
+    button.attr('aria-live', 'assertive')
+      .attr('old-label', button.attr('aria-label'));
+    button.attr('aria-label', 'showing ' + eventCount + 
+        (eventCount > 1 ? ' events' : ' event') + ' for ' + title);
+    button.attr('tabindex', 6);
+  }
+
   this.view = function(view) {
     if (!view) return;
     this.updateState({view: view});
@@ -261,12 +281,6 @@ function CsvEventCalendar(options) {
       'aria-label': 'previous ' + view,
       title: 'previous ' + view
     });
-    var h1 = this.container.find('.controls h1');
-    if (view === 'month') {
-      h1.css('visible', 'visible');
-    } else {
-      h1.css('visible', 'hidden');
-    }
     this.container.find('.day button[tabindex-bak]').each(function(i, btn) {
       $(btn).attr('tabindex', $(btn).attr('tabindex-bak'))
         .removeAttr('tabindex-bak');
@@ -279,6 +293,7 @@ function CsvEventCalendar(options) {
       .removeAttr('aria-live')
       .removeAttr('aria-label')
       .removeAttr('tabindex');
+    this[view + 'View']();
   };
 
   this.tabindex = function() {
@@ -302,7 +317,7 @@ function CsvEventCalendar(options) {
         me.view('month');
       });
     var h2 = $('<h2></h2>');
-    var button = $('<button></button>');
+    var button = $('<button class="name"></button>');
     h2.append(button);
     button.append('<span class="long">' + title + '</span>')
       .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
@@ -314,21 +329,8 @@ function CsvEventCalendar(options) {
       .append(close)
       .append(h2)
       .on('click', function() {
-        var eventCount = me.eventsIndex[key].length;
-        me.container.find('li.day').removeClass('selected');
-        day.addClass('selected');
         me.updateState({key: key});
         me.view('day');
-        me.container.find('.day h2 button').each(function(i, btn) {
-          $(btn).attr('tabindex-bak', $(btn).attr('tabindex'))
-          .attr('tabindex', '-1');
-        });
-        h2.find('button.close').attr('tabindex', 7);
-        button.attr('aria-live', 'assertive')
-          .attr('old-label', button.attr('aria-label'))
-          .attr('aria-label', 'showing ' + eventCount + 
-            (eventCount > 1 ? ' events' : ' event') + ' for ' + title)
-          .attr('tabindex', 6);
       });
       month.append(day);
       return day;
