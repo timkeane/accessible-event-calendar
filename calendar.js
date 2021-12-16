@@ -17,6 +17,7 @@ function CsvEventCalendar(options) {
     date: this.today.getDate(),
     day: this.today.getDay(),
     view: 'month',
+    returnToView: 'month',
     key: function() {
       var m = this.month + 1;
       var d = this.date;
@@ -41,10 +42,17 @@ function CsvEventCalendar(options) {
 
   this.updateState = function(options) {
     var before = JSON.stringify(this.state);
+    var returnToView = this.state.view;
+    this.state.view = options.view || this.state.view;
     this.state.year = options.year || this.state.year;
     this.state.month = options.month !== undefined ? options.month : this.state.month;
     this.state.date = options.date || this.state.date;
-    this.state.view = options.view || this.state.view;
+    if (this.state.view === 'day') {
+      this.state.returnToView = returnToView;
+    }
+    if (this.state.view === 'week') {
+      this.state.returnToView = 'month';
+    }
     if (options.key) {
       this.state.year = this.yearNumber(options.key);
       this.state.month = this.monthNumber(options.key) - 1;
@@ -234,29 +242,56 @@ function CsvEventCalendar(options) {
   this.week = function() {
     var key = this.state.key();
     var dayNode = this.dayNode(key);
-    this.container.find('li.day').removeClass('selected-week');
-    $('.week-' + dayNode.data('week')).addClass('selected-week');
+    this.container.find('li.day')
+      .removeClass('start-of-week')
+      .removeClass('selected-week');
+    $('.week-' + dayNode.data('week'))
+      .addClass('selected-week')
+      .first()
+      .addClass('start-of-week');
   };
 
   this.dayView = function() {
     var key = this.state.key();
     var dayNode = this.dayNode(key);
-    var eventCount = this.eventsIndex[key].length;
+    var eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0;
     var button = dayNode.find('h2 button.name');
     this.container.find('li.day').removeClass('selected');
     var title = this.title({key: key}).day;
     dayNode.addClass('selected');
-    this.container.find('.day h2 button').each(function(i, btn) {
+    this.container.find('.day button').each(function(i, btn) {
       $(btn).attr('data-tabindex-bak', $(btn).attr('tabindex'))
       .attr('tabindex', '-1');
     });
-    dayNode.find('h2 button.close').attr('tabindex', 7);
+    button.attr('tabindex', 6);
+    dayNode.find('button.close').attr('tabindex', 7);
     button.attr('aria-live', 'assertive')
       .attr('data-old-label', button.attr('aria-label'));
     button.attr('aria-label', 'showing ' + eventCount + 
-        (eventCount > 1 ? ' events' : ' event') + ' for ' + title);
-    button.attr('tabindex', 6);
-  }
+      (eventCount === 1 ? ' event' : ' events') + ' for ' + title);
+  };
+
+  this.weekView = function() {
+    var key = this.state.key();
+    var days = this.container.find('li.day.selected-week');
+    days.each(function(i, day) {
+      var dayNode = $(day);
+      var dayKey = dayNode.attr('data-date-key');
+      var eventCount = me.eventsIndex[dayKey] && me.eventsIndex[dayKey].length || 0;
+      var button = dayNode.find('h2 button.name');
+      var title = me.title({key: dayKey}).day;
+      button.attr('tabindex', 6 + i);
+      dayNode.find('button.close').attr('tabindex', 7 + i);
+      me.container.find('.day h2 button').each(function(j, btn) {
+        $(btn).attr('data-tabindex-bak', $(btn).attr('tabindex'))
+          .attr('tabindex', 8 + i + j);
+      });
+      button.attr('aria-live', 'assertive')
+        .attr('data-old-label', button.attr('aria-label'));
+      button.attr('aria-label', 'showing ' + eventCount + 
+        (eventCount === 1 ? ' event' : ' events') + ' for ' + title);
+    });
+  };
 
   this.view = function(view) {
     if (!view) return;
@@ -288,11 +323,13 @@ function CsvEventCalendar(options) {
     var btn = this.container.find('.day h2 button[data-old-label]');
     btn.attr('aria-label', btn.attr('data-old-label'))
       .removeAttr('data-old-label');
-    this.container.find('.day h2 button.close').removeAttr('tabindex');
+    this.container.find('.day button.close').removeAttr('tabindex');
     this.container.find('.day h2')
       .removeAttr('aria-live')
       .removeAttr('aria-label')
       .removeAttr('tabindex');
+    this.container.find('.day button.close')
+      .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
     this[view + 'View']();
   };
 
@@ -311,10 +348,10 @@ function CsvEventCalendar(options) {
   this.addDay = function(date, week, month) {
     var key = date.key;
     var title = this.title({key: key}).day;
-    var close = $('<button class="close" aria-label="return to calendar"></button>')
+    var close = $('<button class="close"></button>')
       .on('click', function(domEvent) {
         domEvent.stopImmediatePropagation();
-        me.view('month');
+        me.view(me.state.returnToView);
       });
     var h2 = $('<h2></h2>');
     var button = $('<button class="name"></button>');

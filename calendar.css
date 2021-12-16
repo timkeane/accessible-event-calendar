@@ -42,20 +42,12 @@
 .calendar .controls.controls-wo-views select {
   display: none;
 }
-.calendar .controls.controls-wo-views input[type="date"] {
-}
 .calendar .controls button,
 .calendar .view.month .day,
 .calendar .view-wo-events .day,
-.day-view .close {
+.day-view button.close {
     cursor: pointer;
 }
-.calendar .controls .back {
-}
-.calendar .controls .next {
-}
-
-
 .calendar .day-names {
   text-decoration: none;
 }
@@ -106,12 +98,6 @@
 .calendar .event .time span {
   margin-right: 5px;
 }
-.calendar .view .day .close,
-.calendar .view-wo-events .day .close {
-  display: none;
-}
-
-
 .calendar .view.month *,
 .calendar .view-wo-events * {
   font-size: 16px;
@@ -239,9 +225,10 @@
 .calendar .view.day .dates .day.selected {
   display: block;
 }
-.calendar .view.day .day .close,
-.calendar .view.week .day:first-of-type .close {
-  display: block;
+
+
+.calendar button.close {
+  display: none;
   width: 20px;
   height: 20px;
   float: right;
@@ -252,6 +239,10 @@
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2214%2C3%2011%2C0%207%2C4%203%2C0%200%2C3%204%2C7%200%2C11%203%2C14%207%2C10%2011%2C14%2014%2C11%2010%2C7%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
   border: none;
   opacity: 1;
+}
+.calendar .view.day .selected button.close,
+.calendar .view.week .start-of-week button.close {
+  display: block;
 }
 
 
@@ -320,7 +311,7 @@
 }
 
 
-@media only screen and (max-width : 370px) {
+@media only screen and (max-width : 380px) {
   .calendar .controls .short {
     display: inline;
   }
