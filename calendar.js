@@ -53,7 +53,7 @@ function CsvEventCalendar(options) {
       this.state.month = this.state.month;
       this.state.date = lastDayOfMonth;
     }
-    if (this.state.view === 'day') {
+    if (this.state.view === 'day' && returnToView !== 'day') {
       this.state.returnToView = returnToView;
     }
     if (this.state.view === 'week') {
