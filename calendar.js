@@ -133,12 +133,14 @@ function CsvEventCalendar(options) {
     var title = {
       month: {
         long: month + ' ' + year,
-        short: m + ' ' + year
+        short: m + ' ' + year,
+        number: this.monthNumber(key) + '/' + year
       },
       day: day + ' ' + month + ' ' + date + ', ' + year
     }
     $(options.node).find('.month .long').html(title.month.long);
     $(options.node).find('.month .short').html(title.month.short);
+    $(options.node).find('.month .number').html(title.month.number);
     return title;
   };
 
@@ -167,6 +169,7 @@ function CsvEventCalendar(options) {
         $('<span class="month"></span>')
         .append('<span class="long"></span>')
         .append('<span class="short" aria-hidden="true"></span>')
+        .append('<span class="number" aria-hidden="true"></span>')
       )
       .append('<span class="day"></span>');
     var div1 = $('<div></div>')

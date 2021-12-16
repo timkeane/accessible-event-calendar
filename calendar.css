@@ -7,7 +7,6 @@
 .calendar .controls h1,
 .calendar .controls input[type="date"],
 .calendar .controls select {
-  margin: 0;
   display: inline;
 }
 .calendar .controls button {
@@ -15,8 +14,15 @@
 }
 .calendar .controls input[type="date"],
 .calendar .controls select {
-  width: 130px;
+  height: 24px;
+  width: 120px;
 }
+.calendar .controls input[type="date"] {
+  margin-left: 1px;
+}  
+.calendar .controls select {
+  margin-right: 1px;
+}  
 .calendar .controls h1 {
   width: auto;
 }
@@ -33,11 +39,9 @@
   text-align: center;
 }
 .calendar .controls .short,
+.calendar .controls .number,
 .calendar .controls .day {
   display: none;
-}
-.calendar .controls select {
-  height: 25px;
 }
 .calendar .controls.controls-wo-views select {
   display: none;
@@ -246,7 +250,7 @@
 }
 
 
-@media only screen and (max-width : 600px) {
+@media only screen and (max-width: 645px) {
   .calendar .view.month ul .medium,
   .calendar .view-wo-events ul .medium {
     display: inline;
@@ -312,7 +316,8 @@
 
 
 @media only screen and (max-width : 380px) {
-  .calendar .controls .short {
+  .calendar .controls h1 .short,
+  .calendar .controls button .short {
     display: inline;
   }
   .calendar .controls .long {
@@ -321,5 +326,20 @@
   .calendar .controls input[type="date"],
   .calendar .controls select {
     width: 130px;
+  }
+}
+
+
+@media only screen and (max-width : 310px) {
+  .calendar .controls input[type="date"],
+  .calendar .controls select {
+    width: 45%;
+  }
+  .calendar .controls h1 .long,
+  .calendar .controls h1 .short {
+    display: none;
+  }
+  .calendar .controls h1 .number {
+    display: inline;
   }
 }
