@@ -132,21 +132,27 @@ function CsvEventCalendar(options) {
     var key = options.key || this.state.key();
     var year = this.yearNumber(key);
     var month = this.monthName(key);
-    var m = month.substr(0, 3);
+    var mo = month.substr(0, 3);
+    var m = this.monthNumber(key);
     var date = this.dateNumber(key);
     var day = this.dayName(key);
     var d = day.substr(0, 3);
     var title = {
       month: {
         long: month + ' ' + year,
-        short: m + ' ' + year,
-        number: this.monthNumber(key) + '/' + year
+        short: mo + ' ' + year,
+        abbr: m + '/' + year
       },
-      day: day + ' ' + month + ' ' + date + ', ' + year
+      day: {
+        long: day + ' ' + month + ' ' + date + ', ' + year,
+        medium: day.substr(0, 3) + ' ' + mo + ' ' + date + ', ' + year,
+        short: date,
+        abbr: m + '/' + date + '/' + year
+      }
     }
     $(options.node).find('.month .long').html(title.month.long);
     $(options.node).find('.month .short').html(title.month.short);
-    $(options.node).find('.month .number').html(title.month.number);
+    $(options.node).find('.month .abbr').html(title.month.abbr);
     return title;
   };
 
@@ -173,9 +179,9 @@ function CsvEventCalendar(options) {
     var h1 = $('<h1></h1>')
       .append(
         $('<span class="month"></span>')
-        .append('<span class="long"></span>')
-        .append('<span class="short" aria-hidden="true"></span>')
-        .append('<span class="number" aria-hidden="true"></span>')
+          .append('<span class="long"></span>')
+          .append('<span class="short"></span>')
+          .append('<span class="abbr"></span>')
       )
       .append('<span class="day"></span>');
     var div1 = $('<div></div>')
@@ -229,8 +235,8 @@ function CsvEventCalendar(options) {
     $.each(CsvEventCalendar.DAY_NAMES, function(d, dayName) {
       var li = $('<li></li>')
         .append('<span class="long">' + dayName + '</span>')
-        .append('<span class="medium" aria-hidden="true">' + dayName.substr(0, 3) + '</span>')
-        .append('<span class="short" aria-hidden="true">' + dayName.substr(0, 1) + '</span>')
+        .append('<span class="medium">' + dayName.substr(0, 3) + '</span>')
+        .append('<span class="short">' + dayName.substr(0, 1) + '</span>')
         days.append(li);
     });
     return dates;
@@ -366,8 +372,10 @@ function CsvEventCalendar(options) {
     var h2 = $('<h2></h2>');
     var button = $('<button class="name"></button>');
     h2.append(button);
-    button.append('<span class="long">' + title + '</span>')
-      .append('<span class="short" aria-hidden="true">' + this.dateNumber(key) + '</span>');
+    button.append('<span class="long">' + title.long + '</span>')
+      .append('<span class="medium">' + title.medium + '</span>')
+      .append('<span class="abbr">' + title.abbr + '</span>')
+      .append('<span class="short">' + title.short + '</span>');
     var day = $('<li class="day"></li>')
       .data('week', week)
       .addClass(date.monthClass + '-mo')

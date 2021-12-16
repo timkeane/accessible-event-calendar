@@ -39,7 +39,7 @@
   text-align: center;
 }
 .calendar .controls .short,
-.calendar .controls .number,
+.calendar .controls .abbr,
 .calendar .controls .day {
   display: none;
 }
@@ -73,7 +73,9 @@
 .calendar .view h2 {
   padding: 3px;
 }
-.calendar .view h2 .short {
+.calendar .view h2 .short,
+.calendar .view h2 .medium,
+.calendar .view h2 .abbr {
   display: none;
 }
 .calendar .day h2,
@@ -303,19 +305,23 @@
     overflow: hidden;
     height: 50px;
   }
+  .calendar .view.day .day h2 .long,
+  .calendar .view.week .day h2 .long {
+    display: none;
+  }
+  .calendar .view.day .day h2 .medium,
+  .calendar .view.week .day h2 .medium {
+    display: block;
+  }
 }
 
 
-@media only screen and (max-width : 485px) {
+@media only screen and (max-width : 480px) {
   .calendar .controls button .short {
     display: inline;
   }
   .calendar .controls button .long {
     display: none;
-  }
-  .calendar .view.week h2,
-  .calendar .view.day h2 {
-    font-size: 24px;
   }
 }
 
@@ -335,6 +341,18 @@
 }
 
 
+@media only screen and (max-width : 340px) {
+  .calendar .view.day .day h2 .medium,
+  .calendar .view.week .day h2 .medium {
+    display: none;
+  }
+  .calendar .view.day .day h2 .abbr,
+  .calendar .view.week .day h2 .abbr {
+    display: block;
+  }
+}
+
+
 @media only screen and (max-width : 310px) {
   .calendar .controls input[type="date"],
   .calendar .controls select {
@@ -344,7 +362,7 @@
   .calendar .controls h1 .short {
     display: none;
   }
-  .calendar .controls h1 .number {
+  .calendar .controls h1 .abbr {
     display: inline;
   }
 }
