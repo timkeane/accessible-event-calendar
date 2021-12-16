@@ -321,7 +321,7 @@ function CsvEventCalendar(options) {
       title: 'previous ' + view
     });
     this.container.find('.day h2 button[data-old-label]').each(function(i, btn) {
-      btn.attr('aria-label', btn.attr('data-old-label'))
+      $(btn).attr('aria-label', $(btn).attr('data-old-label'))
         .removeAttr('data-old-label');
     });
     this.container.find('.day h2')
