@@ -274,11 +274,13 @@ function CsvEventCalendar(options) {
     this.container.find('li.day').removeClass('selected');
     var title = this.title({key: key}).day.long;
     dayNode.addClass('selected');
-    button.attr('aria-live', 'assertive')
+    button.attr('role', 'alert')
       .attr('data-old-label', button.attr('aria-label'))
       .attr('aria-label', 'showing ' + eventCount + 
         (eventCount === 1 ? ' event' : ' events') + 
         ' for ' + title);
+      dayNode.find('button.close').focus();
+      dayNode.find('button.name').focus();
   };
 
   this.weekView = function() {
@@ -291,9 +293,9 @@ function CsvEventCalendar(options) {
       var button = dayNode.find('h2 button.name');
       var title = me.title({key: dayKey}).day.long;
       button.attr('aria-live', 'assertive')
-        .attr('data-old-label', button.attr('aria-label'));
-      button.attr('aria-label', 'showing ' + eventCount + 
-        (eventCount === 1 ? ' event' : ' events') + ' for ' + title);
+        .attr('data-old-label', button.attr('aria-label'))
+        .attr('aria-label', 'showing ' + eventCount + 
+          (eventCount === 1 ? ' event' : ' events') + ' for ' + title);
     });
   };
 
@@ -325,6 +327,7 @@ function CsvEventCalendar(options) {
         .removeAttr('data-old-label');
     });
     this.container.find('.day h2')
+      .removeAttr('role')
       .removeAttr('aria-live')
       .removeAttr('aria-label');
     this.container.find('.day button.close')
