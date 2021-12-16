@@ -46,7 +46,13 @@ function CsvEventCalendar(options) {
     this.state.view = options.view || this.state.view;
     this.state.year = options.year || this.state.year;
     this.state.month = options.month !== undefined ? options.month : this.state.month;
+    var currentMonth = new Date(this.state.year, this.state.month + 1, 0);
+    var totalDaysInMonth = currentMonth.getDate();
     this.state.date = options.date || this.state.date;
+    if (this.state.date > totalDaysInMonth) {
+      this.state.month = this.state.month;
+      this.state.date = totalDaysInMonth;
+    }
     if (this.state.view === 'day') {
       this.state.returnToView = returnToView;
     }
