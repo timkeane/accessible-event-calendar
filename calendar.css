@@ -3,6 +3,10 @@
   width: 100%;
   height: 65px;
 }
+
+::-webkit-calendar-picker-indicator{
+  margin-left: 0px;
+}
 .calendar .controls button,
 .calendar .controls h1,
 .calendar .controls input[type="date"],
