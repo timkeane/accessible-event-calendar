@@ -272,7 +272,7 @@ function CsvEventCalendar(options) {
     var eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0;
     var button = dayNode.find('h2 button.name');
     this.container.find('li.day').removeClass('selected');
-    var title = this.title({key: key}).day;
+    var title = this.title({key: key}).day.long;
     dayNode.addClass('selected');
     button.attr('aria-live', 'assertive')
       .attr('data-old-label', button.attr('aria-label'))
