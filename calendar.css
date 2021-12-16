@@ -219,8 +219,9 @@
 }
 
 
+.calendar .view.week .day .event,
 .calendar .view.day .day .event {
-  padding: 10px;
+  margin-bottom: 10px;
 }
 .calendar .view.day .dates .day {
   display: none;
@@ -305,12 +306,16 @@
 }
 
 
-@media only screen and (max-width : 470px) {
+@media only screen and (max-width : 485px) {
   .calendar .controls button .short {
     display: inline;
   }
   .calendar .controls button .long {
     display: none;
+  }
+  .calendar .view.week h2,
+  .calendar .view.day h2 {
+    font-size: 24px;
   }
 }
 

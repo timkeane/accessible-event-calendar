@@ -104,7 +104,7 @@ function CsvEventCalendar(options) {
       this.monthView();
     }
     this.container.find('li.day').removeClass('selected');
-    this.dayNode.addClass('selected');
+    dayNode.addClass('selected');
   };
 
   this.weekNavigate = function(delta) {
@@ -478,7 +478,7 @@ function CsvEventCalendar(options) {
 
   this.populateCalendar = function() { //return;
     var calendarEvents = {};
-    var dayNodes = this.container.find('.view.month li.day');
+    var dayNodes = this.container.find('.view li.day');
     dayNodes.each(function(i, dayNode) {
       var key = $(dayNode).attr('data-date-key');
       var title = me.title({key: key}).day;
