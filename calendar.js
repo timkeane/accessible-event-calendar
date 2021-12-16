@@ -320,9 +320,10 @@ function CsvEventCalendar(options) {
       'aria-label': 'previous ' + view,
       title: 'previous ' + view
     });
-    var btn = this.container.find('.day h2 button[data-old-label]');
-    btn.attr('aria-label', btn.attr('data-old-label'))
-      .removeAttr('data-old-label');
+    this.container.find('.day h2 button[data-old-label]').each(function(i, btn) {
+      btn.attr('aria-label', btn.attr('data-old-label'))
+        .removeAttr('data-old-label');
+    });
     this.container.find('.day h2')
       .removeAttr('aria-live')
       .removeAttr('aria-label');
