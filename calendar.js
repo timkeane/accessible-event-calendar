@@ -151,10 +151,10 @@ function CsvEventCalendar(options) {
   };
 
   this.buildHeader = function() {
-    var back = $('<button class="btn back" aria-label="previous month"><span class="long">Previous</span><span class="short">&lt;</span></button>')
+    var back = $('<button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button>')
       .data('delta', -1)
       .on('click', this.navigate.bind(this));
-    var next = $('<button class="btn next" aria-label="next month"><span class="long">Next</span><span class="short">&gt;</span></button>')
+    var next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .on('click', this.navigate.bind(this));
     var input = $('<input type="date">')
@@ -275,9 +275,10 @@ function CsvEventCalendar(options) {
     button.attr('tabindex', 6);
     dayNode.find('button.close').attr('tabindex', 7);
     button.attr('aria-live', 'assertive')
-      .attr('data-old-label', button.attr('aria-label'));
-    button.attr('aria-label', 'showing ' + eventCount + 
-      (eventCount === 1 ? ' event' : ' events') + ' for ' + title);
+      .attr('data-old-label', button.attr('aria-label'))
+      .attr('aria-label', 'showing ' + eventCount + 
+        (eventCount === 1 ? ' event' : ' events') + 
+        ' for ' + title);
   };
 
   this.weekView = function() {
