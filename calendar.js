@@ -251,17 +251,16 @@ function CsvEventCalendar(options) {
       .on('change', function() {
         me.view(select.val());
       });
-    var h1 = $('<h1 aria-polite="assertive"></h1>')
+    var h2 = $('<h2 aria-polite="assertive"></h2>')
       .append(
         $('<span class="month"></span>')
           .append('<span class="long"></span>')
           .append('<span class="short"></span>')
           .append('<span class="abbr"></span>')
-      )
-      .append('<span class="day"></span>');
+      );
     var div1 = $('<div></div>')
       .append(back)
-      .append(h1)
+      .append(h2)
       .append(next);
     var div2 = $('<div></div>')
       .append(input)
@@ -325,9 +324,9 @@ function CsvEventCalendar(options) {
         domEvent.stopImmediatePropagation();
         me.view(me.state.returnToView);
       });
-    var h2 = $('<h2></h2>');
+    var h3 = $('<h3></h3>');
     var button = $('<button class="name"></button>');
-    h2.append(button);
+    h3.append(button);
     button.append('<span class="long">' + title.long + '</span>')
       .append('<span class="medium">' + title.medium + '</span>')
       .append('<span class="abbr">' + title.abbr + '</span>')
@@ -337,7 +336,7 @@ function CsvEventCalendar(options) {
       .addClass(date.monthClass + '-mo')
       .addClass( 'week-' + week)
       .attr('data-date-key', date.key)
-      .append(h2)
+      .append(h3)
       .append(close)
       .on('click', function() {
         if (me.eventsIndex.noData || day.hasClass('has-events')) {
@@ -355,7 +354,7 @@ function CsvEventCalendar(options) {
       var container = me.container;
       console.info(view, document.activeElement);      
       if (view === 'month') {
-        container.find('.controls h1').attr('tabindex', 0).focus();
+        container.find('.controls h2').attr('tabindex', 0).focus();
       } else if (view === 'week') {
         container.find('.view').attr('tabindex', 0).focus();
       } else {
@@ -378,7 +377,7 @@ function CsvEventCalendar(options) {
       .removeClass('week')
       .removeClass('day')
       .addClass(view);
-    this.title({node: this.container.find('.controls h1')});
+    this.title({node: this.container.find('.controls h2')});
     this.container.find('.controls .next').attr({
       'aria-label': 'next ' + view,
       title: 'next ' + view
@@ -406,7 +405,7 @@ function CsvEventCalendar(options) {
     this.nextMonth(dates);
     this.calendar(dates);
     this.populate();
-    this.container.find('.controls h1').attr('aria-label', 
+    this.container.find('.controls h2').attr('aria-label', 
       this.title({key: this.state.key()}).month.long + 
       ' - showing ' + $('.view .event').length + ' events');
   };
@@ -428,7 +427,7 @@ function CsvEventCalendar(options) {
     var key = this.state.key();
     var dayNode = this.dayNode(key);
     var eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0;
-    var button = dayNode.find('h2 button.name');
+    var button = dayNode.find('h3 button.name');
     this.container.find('li.day').removeClass('selected');
     var title = this.title({key: key}).day.long;
     var label = title + ' - there no scheduled events to show';
@@ -480,7 +479,7 @@ function CsvEventCalendar(options) {
       var events = me.eventsIndex[key];
       var eventCount = events && events.length || 0;
       var eventsNode = $('<div class="events"></div>');
-      var button = $(dayNode).find('h2 button');
+      var button = $(dayNode).find('h3 button');
       $(dayNode).append(eventsNode);
       if (me.eventsIndex.ready) {
         if (events) {
@@ -526,7 +525,7 @@ function CsvEventCalendar(options) {
       header: true,
       complete: function(response) {
         me.indexData(response);
-        me.container.find('.controls h1').attr('aria-label', 
+        me.container.find('.controls h2').attr('aria-label', 
           me.title({key: me.state.key()}).month.long + 
           ' - showing ' + $('.view .event').length + ' events');
         }
@@ -553,7 +552,7 @@ CsvEventCalendar.prototype.eventHtml = function(calEvent) {
       .append('<span>' + fmt(calEvent.end, true) + '</span>');
   }
   return $('<div class="event"></div>')
-    .append('<h3>' + calEvent.name + '</h3>')
+    .append('<h4>' + calEvent.name + '</h4>')
     .append(time)
     .append(about);
 };
