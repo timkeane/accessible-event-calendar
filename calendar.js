@@ -6,6 +6,7 @@
 function CsvEventCalendar(options) {
   var me = this;
 
+  this.firstLoad = true;
   this.eventsIndex = {ready: false, noData: false};
   this.container = $(options.container).addClass('calendar');
   this.selectionChanged = options.selectionChanged || function() {};
@@ -354,18 +355,21 @@ function CsvEventCalendar(options) {
   };
 
   this.focus = function() {
-    setTimeout(function() {
-      var view = me.state.view;
-      var container = me.container;
-      console.info(view, document.activeElement);      
-      if (view === 'month') {
-        container.find('.controls h2').attr('tabindex', 0).focus();
-      } else if (view === 'week') {
-        container.find('.view').attr('tabindex', 0).focus();
-      } else {
-        container.find('.view .day.selected button.name').focus();
-      }
-    }, 300);
+    if (!this.firstLoad) {
+      setTimeout(function() {
+        var view = me.state.view;
+        var container = me.container;
+        console.info(view, document.activeElement);      
+        if (view === 'month') {
+          container.find('.controls h2').attr('tabindex', 0).focus();
+        } else if (view === 'week') {
+          container.find('.view').attr('tabindex', 0).focus();
+        } else {
+          container.find('.view .day.selected button.name').focus();
+        }
+      }, 300);
+    }
+    this.firstLoad = false;
   };
 
   this.view = function(view) {
