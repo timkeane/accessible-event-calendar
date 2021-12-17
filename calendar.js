@@ -67,7 +67,7 @@ function CsvEventCalendar(options) {
     var after = JSON.stringify(this.state);
     var key = this.state.key();
     this.container.find('.controls input').val(key);
-    this.container.find('.controls select').val(this.state.view).blur();
+    this.container.find('.controls select').val(this.state.view);
     if (after !== before) {
       this.week();
       this.selectionChanged({
@@ -309,16 +309,15 @@ function CsvEventCalendar(options) {
       'aria-label': 'previous ' + view,
       title: 'previous ' + view
     });
+    this.container.find('.day button.name').removeAttr('aria-live');
     this.container.find('.day button[data-old-label]').each(function(i, btn) {
       $(btn).attr('aria-label', $(btn).attr('data-old-label'))
         .removeAttr('data-old-label');
     });
-    this.container.find('.day button.name')
-      .removeAttr('aria-live')
-      .removeAttr('aria-label');
     this.container.find('.day button.close')
       .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
     this[view + 'View']();
+    this.container.find('.controls select').blur();
   };
 
   this.tabindex = function() {return;
