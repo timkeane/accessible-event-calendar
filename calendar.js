@@ -251,8 +251,8 @@ function CsvEventCalendar(options) {
       )
       .append('<span class="day"></span>');
     var div1 = $('<div></div>')
-      .append(back)
       .append(h1)
+      .append(back)
       .append(next);
     var div2 = $('<div></div>')
       .append(input)
