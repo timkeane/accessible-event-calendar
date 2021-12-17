@@ -1,3 +1,7 @@
+.calendar,
+.calendar * {
+  font-family: Arial, Helvetica, sans-serif;
+}
 .calendar .controls {
   margin-bottom: 10px;
   width: 100%;
@@ -62,6 +66,7 @@
 }
 .calendar .day-names li {
   text-align: center;
+  padding: 3px 0 0 0;
 }
 .calendar .dates,
 .calendar .view.month .day-names,
@@ -77,6 +82,19 @@
 }
 .calendar .view h2 {
   padding: 3px;
+  margin: 20px 0 10px 0;
+  font-size: 30px;
+}
+.calendar .day h2 span,
+.calendar .day h2 button {
+  background-color: inherit;
+  color: inherit;
+  font-size: inherit;
+}
+.calendar .day h2 button {
+  border: inherit;
+  background-color: inherit;
+  font-size: inherit;
 }
 .calendar .view h2 .short,
 .calendar .view h2 .medium,
@@ -88,12 +106,8 @@
   background-color: #333;
   color: #fff;
 }
-.calendar .day h2 button {
-  border: inherit;
-  background-color: inherit;
-}
 .calendar .view .day h3 {
-  margin: 5px;
+  margin: 5px 0;
 }
 .calendar .day .event {
   padding: 10px;
