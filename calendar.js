@@ -6,11 +6,22 @@
 function CsvEventCalendar(options) {
   var me = this;
 
-  this.eventsIndex = {ready: false};
+  this.eventsIndex = {ready: false, noData: false};
   this.container = $(options.container).addClass('calendar');
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
+
+  this.dateKey = function(date) {
+    var parts =  date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).split('/');
+    return parts[2] + '-' + parts[0] + '-' + parts[1];
+  };
+
   this.state = {
+    today: this.dateKey(this.today),
     year: this.today.getFullYear(),
     month: this.today.getMonth(),
     date: this.today.getDate(),
@@ -61,15 +72,6 @@ function CsvEventCalendar(options) {
         events: this.eventsIndex[key] || []
       });
     }
-  };
-
-  this.dateKey = function(date) {
-    var parts =  date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).split('/');
-    return parts[2] + '-' + parts[0] + '-' + parts[1];
   };
 
   this.dateFromKey = function(key) {
@@ -213,10 +215,17 @@ function CsvEventCalendar(options) {
     var key = this.state.key();
     var date = this.dateFromKey(key);
     date.setDate(date.getDate() + delta);
-    this.updateState({key: this.dateKey(date)});
+
+    var nextKey = this.dateKey(date);
+    this.updateState({key: nextKey});
+
     var dayNode = this.dayNode(this.state.key())
     if (!dayNode.length) {
       this.monthView();
+    }
+    if (!dayNode.hasClass('has-events')) {
+      this.dayNavigate(delta);
+      return;
     }
     this.container.find('li.day').removeClass('selected');
     dayNode.addClass('selected');
@@ -251,8 +260,8 @@ function CsvEventCalendar(options) {
       )
       .append('<span class="day"></span>');
     var div1 = $('<div></div>')
-      .append(h1)
       .append(back)
+      .append(h1)
       .append(next);
     var div2 = $('<div></div>')
       .append(input)
@@ -331,11 +340,28 @@ function CsvEventCalendar(options) {
       .append(h2)
       .append(close)
       .on('click', function() {
-        me.updateState({key: key});
-        me.view('day');
+        if (me.eventsIndex.noData || day.hasClass('has-events')) {
+          me.updateState({key: key});
+          me.view('day');
+        }
       });
       month.append(day);
       return day;
+  };
+
+  this.focus = function() {
+    setTimeout(function() {
+      var view = me.state.view;
+      var container = me.container;
+      console.info(view, document.activeElement);      
+      if (view === 'month') {
+        container.find('.controls h1').attr('tabindex', 0).focus();
+      } else if (view === 'week') {
+        container.find('.view').attr('tabindex', 0).focus();
+      } else {
+        container.find('.view .day.selected button.name').focus();
+      }
+    }, 300);
   };
 
   this.view = function(view) {
@@ -369,7 +395,8 @@ function CsvEventCalendar(options) {
     this.container.find('.day button.close')
       .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
     this[view + 'View']();
-    dayNode.focus();
+    this.container.find('.view .day[data-date-key="' + this.state.today + '"]').addClass('today');
+    this.focus();
   };
 
   this.monthView = function() {
@@ -380,19 +407,22 @@ function CsvEventCalendar(options) {
     this.calendar(dates);
     this.populate();
     this.container.find('.controls h1').attr('aria-label', 
-        'showing ' + $('.view .event').length + ' events for the month of' +
-        this.monthName(this.state.key()) + ' ' + this.state.year
-      );
+      this.title({key: this.state.key()}).month.long + 
+      ' - showing ' + $('.view .event').length + ' events');
   };
 
   this.weekView = function() {
-    this.container.find('.day.selected-week button.name')
-      .get(0).focus();
-    this.container.find('.controls h1').attr('aria-label', 
-      'showing ' + $('.view .event:visible').length + ' events for the week of' +
-      this.container.find('.view .start-of-week li .name .long')
+    var key;
+    this.container.find('.day.selected-week').each(function(i, day) {
+      if ($(day).hasClass('has-events')) {
+        key = $(day).attr('data-date-key');
+        return false;
+      }
+    });
+    this.container.find('.view').attr('aria-label', 
+      'week of ' + this.title(key).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
     );
-};
+  };
 
   this.dayView = function() {
     var key = this.state.key();
@@ -406,14 +436,9 @@ function CsvEventCalendar(options) {
       label = title + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? 'event' : 'events');
     }
     dayNode.addClass('selected');
-    // this.container.find('.controls select').blur();
     button.attr('aria-live', 'assertive')
       .attr('data-old-label', button.attr('aria-label'))
-      .attr('aria-label', label)
-      .focus();
-    this.container.find('.controls h1').attr('aria-label', 
-      'showing ' + $('.view .event:visible').length + ' events for ' + title
-    );
+      .attr('aria-label', label);
   };
 
   this.sortByStartTime = function(events) {
@@ -494,7 +519,6 @@ function CsvEventCalendar(options) {
 
   this.controls();
   this.view('month');
-  this.container.find('.view .day.selected').addClass('today');
 
   if (options.url) {
     Papa.parse(options.url, {
@@ -502,11 +526,16 @@ function CsvEventCalendar(options) {
       header: true,
       complete: function(response) {
         me.indexData(response);
-      }
+        me.container.find('.controls h1').attr('aria-label', 
+          me.title({key: me.state.key()}).month.long + 
+          ' - showing ' + $('.view .event').length + ' events');
+        }
     });
   } else {
+    this.eventsIndex.noData = true;
     this.container.find('.view').get(0).className = 'view-wo-events';
     this.container.find('.controls').addClass('controls-wo-views');
+    this.noCsvUrl = true;
   }
 
   return this;
@@ -564,4 +593,5 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   return parts.join(':') + suffix;
 };
 
-document.write('<div style="position fixed;top:10px;left:10px;">version 4</div>');
+document.write('<div style="position fixed;top:10px;left:10px;">version 17</div>');
+// setInterval(()=>console.warn(document.activeElement),3000);

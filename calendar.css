@@ -53,8 +53,12 @@
 .calendar .controls.controls-wo-views select {
   display: none;
 }
+.calendar .view.month .day button {
+  cursor: unset;
+}
 .calendar .controls button,
-.calendar .view.month .day,
+.calendar .view.month .day.has-events,
+.calendar .view.month .day.has-events button,
 .calendar .view-wo-events .day,
 .day-view button.close {
     cursor: pointer;
@@ -95,11 +99,6 @@
   border: inherit;
   background-color: inherit;
   font-size: inherit;
-}
-.calendar .view h2 .short,
-.calendar .view h2 .medium,
-.calendar .view h2 .abbr {
-  display: none;
 }
 .calendar .day h2,
 .calendar .view.day h2 {
@@ -168,8 +167,12 @@
   background-color: #333;
   color: #fff;
 }
-.calendar .view.month .day h2 .long,
-.calendar .view-wo-events .day h2 .long {
+.calendar .view .day h2 .long,
+.calendar .view-wo-events .day h2 .long,
+.calendar .view .day h2 .medium,
+.calendar .view-wo-events .day h2 .medium,
+.calendar .view .day h2 .abbr,
+.calendar .view-wo-events .day h2 .abbr {
   display: none;
 }
 .calendar .view.month .day h3 {
@@ -213,13 +216,15 @@
 .calendar .view-wo-events .day.next-mo {
   background-color: #eee;
 }
-.calendar .view.month .day.today,
 .calendar .view.month .day.prev-mo.today,
 .calendar .view.month .day.next-mo.today,
-.calendar .view-wo-events .day.today,
 .calendar .view-wo-events .day.prev-mo.today,
 .calendar .view-wo-events .day.next-mo.today {
   background-color: orange;
+}
+.calendar .view.month .day.today,
+.calendar .view-wo-events .day.today {
+  background-color: rgba(255,165,0,.2);
 }
 .calendar .view.month .day.prev-mo h2,
 .calendar .view.month .day.next-mo  h2,
@@ -236,7 +241,7 @@
 .calendar .view.week .day {
   display: none;
 }
-.calendar .view.week .day.today-week {
+.calendar .view.week .day.selected-week {
   display: block;
 }
 .calendar .view.week .day .event,
@@ -247,12 +252,12 @@
   display: none;
 }
 .calendar .view.day .dates,
-.calendar .view.day .dates .day.today {
+.calendar .view.day .dates .day.selected {
   display: block;
 }
 
 
-.calendar .view.day .today button.close,
+.calendar .view.day .day.selected button.close,
 .calendar .view.week .start-of-week button.close {
   display: block;
 }
