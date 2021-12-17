@@ -28,6 +28,7 @@ function CsvEventCalendar(options) {
     day: this.today.getDay(),
     view: 'month',
     returnToView: 'month',
+    returnToFocus: '',
     key: function() {
       var m = this.month + 1;
       var d = this.date;
@@ -323,6 +324,10 @@ function CsvEventCalendar(options) {
       .on('click', function(domEvent) {
         domEvent.stopImmediatePropagation();
         me.view(me.state.returnToView);
+        // setTimeout(function() {
+        //   var dayNode = me.dayNode(me.state.key());
+        //   dayNode.find('button.name').focus();
+        // }, 600);
       });
     var h3 = $('<h3></h3>');
     var button = $('<button class="name"></button>');
@@ -516,8 +521,25 @@ function CsvEventCalendar(options) {
     this.populate();
   };
 
+  this.resize = function() {
+    var container = this.container;
+    var changes = [645, 500, 480, 380, 340, 310];
+    var width = container.width();
+    for (var i = 0; i < changes.length; i++) {
+      var w = changes[i];
+      if (width <= w) {
+        container.addClass('w-' + w);
+      } else {
+        container.removeClass('w-' + w);
+      }
+    }
+  };
+
   this.controls();
   this.view('month');
+  this.resize();
+
+  $(window).on('resize', this.resize.bind(this));
 
   if (options.url) {
     Papa.parse(options.url, {

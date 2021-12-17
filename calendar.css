@@ -8,8 +8,9 @@
 }
 .calendar .controls div {
   overflow: hidden;
-  margin: 5px 0;
+  padding: 1px;
 }
+
 .calendar .controls button,
 .calendar .controls h2,
 .calendar .controls input[type="date"],
@@ -24,15 +25,9 @@
   height: 24px;
   width: 120px;
 }
-.calendar .controls input[type="date"] {
-  margin-left: 1px;
-}  
 .calendar .controls input::-webkit-calendar-picker-indicator {
   margin-left: 0px;
 }
-.calendar .controls select {
-  margin-right: 1px;
-}  
 .calendar .controls h2 {
   width: auto;
 }
@@ -266,7 +261,7 @@
   width: 20px;
   height: 20px;
   float: right;
-  margin: -38px 4px;
+  margin: -37px 5px;
   background-color: #333;
   background-position: center;
   background-repeat: no-repeat;
