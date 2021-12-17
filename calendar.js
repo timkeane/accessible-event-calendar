@@ -283,7 +283,9 @@ function CsvEventCalendar(options) {
     var viewContainer = this.container.find('.view, .view-wo-events');
     var days = $('<ul class="day-names" aria-hidden="true"></ul>');
     var dates = $('<ol class="dates"></ol>');
-    if (!viewContainer.length) viewContainer = $('<div class="view month"></div>');
+    if (!viewContainer.length) {
+      viewContainer = $('<div class="view month"></div>');
+    }
     this.container.append(viewContainer.empty().append(days).append(dates));
     $.each(CsvEventCalendar.DAY_NAMES, function(d, name) {
       var li = $('<li></li>')
@@ -395,8 +397,7 @@ function CsvEventCalendar(options) {
     button.attr('aria-live', 'assertive')
       .attr('data-old-label', button.attr('aria-label'))
       .attr('aria-label', 'showing ' + eventCount + 
-        (eventCount === 1 ? ' event' : ' events') + 
-        ' for ' + title)
+        (eventCount === 1 ? ' event' : ' events') + ' for ' + title)
       .focus();
   };
 
@@ -458,7 +459,6 @@ function CsvEventCalendar(options) {
     this.container.find('.view.month .day').removeClass('selected');
     dayNode.addClass('selected');
     this.week();
-    return calendarEvents;
   };
 
   this.indexData = function(response) {
@@ -471,7 +471,7 @@ function CsvEventCalendar(options) {
       me.sortByStartTime(me.eventsIndex[key]);
     });
     me.eventsIndex.ready = true;
-    this.populate()
+    this.populate();
   };
 
   this.controls();
