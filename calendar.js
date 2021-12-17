@@ -369,7 +369,6 @@ function CsvEventCalendar(options) {
     this.container.find('.day button.close')
       .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
     this[view + 'View']();
-    this.container.find('.controls select').blur();
   };
 
   this.monthView = function() {
@@ -394,6 +393,7 @@ function CsvEventCalendar(options) {
     this.container.find('li.day').removeClass('selected');
     var title = this.title({key: key}).day.long;
     dayNode.addClass('selected');
+    this.container.find('.controls select').blur();
     button.attr('aria-live', 'assertive')
       .attr('data-old-label', button.attr('aria-label'))
       .attr('aria-label', 'showing ' + eventCount + 
