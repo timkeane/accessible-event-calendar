@@ -242,7 +242,7 @@ function CsvEventCalendar(options) {
       .on('change', function() {
         me.view(select.val());
       });
-    var h1 = $('<h1></h1>')
+    var h1 = $('<h1 aria-polite="assertive"></h1>')
       .append(
         $('<span class="month"></span>')
           .append('<span class="long"></span>')
@@ -369,6 +369,7 @@ function CsvEventCalendar(options) {
     this.container.find('.day button.close')
       .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
     this[view + 'View']();
+    dayNode.focus();
   };
 
   this.monthView = function() {
@@ -378,12 +379,20 @@ function CsvEventCalendar(options) {
     this.nextMonth(dates);
     this.calendar(dates);
     this.populate();
+    this.container.find('.controls h1').attr('aria-label', 
+        'showing ' + $('.view .event').length + ' events for the month of' +
+        this.monthName(this.state.key()) + ' ' + this.state.year
+      );
   };
 
   this.weekView = function() {
     this.container.find('.day.selected-week button.name')
       .get(0).focus();
-  };
+    this.container.find('.controls h1').attr('aria-label', 
+      'showing ' + $('.view .event:visible').length + ' events for the week of' +
+      this.container.find('.view .start-of-week li .name .long')
+    );
+};
 
   this.dayView = function() {
     var key = this.state.key();
@@ -392,13 +401,19 @@ function CsvEventCalendar(options) {
     var button = dayNode.find('h2 button.name');
     this.container.find('li.day').removeClass('selected');
     var title = this.title({key: key}).day.long;
+    var label = title + ' - there no scheduled events to show';
+    if (eventCount) {
+      label = title + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? 'event' : 'events');
+    }
     dayNode.addClass('selected');
-    this.container.find('.controls select').blur();
+    // this.container.find('.controls select').blur();
     button.attr('aria-live', 'assertive')
       .attr('data-old-label', button.attr('aria-label'))
-      .attr('aria-label', 'showing ' + eventCount + 
-        (eventCount === 1 ? ' event' : ' events') + ' for ' + title)
+      .attr('aria-label', label)
       .focus();
+    this.container.find('.controls h1').attr('aria-label', 
+      'showing ' + $('.view .event:visible').length + ' events for ' + title
+    );
   };
 
   this.sortByStartTime = function(events) {
@@ -438,6 +453,7 @@ function CsvEventCalendar(options) {
       var key = $(dayNode).attr('data-date-key');
       var title = me.title({key: key}).day.long;
       var events = me.eventsIndex[key];
+      var eventCount = events && events.length || 0;
       var eventsNode = $('<div class="events"></div>');
       var button = $(dayNode).find('h2 button');
       $(dayNode).append(eventsNode);
@@ -448,9 +464,11 @@ function CsvEventCalendar(options) {
           $.each(events, function(e, calEvent) {
             eventsNode.append(me.eventHtml(calEvent));
           });
-          button.attr('aria-label', title + ' (tap or press enter for a detailed view of events on this day)')
+          button.attr('aria-label', title + ' (' + eventCount + (eventCount === 1 ? ' event' : ' events') + ' scheduled');
         } else {
-          button.attr('aria-label', title + ' (no events scheduled)');
+          $(dayNode).attr('aria-hidden', 'true');
+          button.attr('aria-label', title + ' (no events scheduled)')
+            .attr('tabindex', -1);
           eventsNode.html('<div class="no-events">no events scheduled</div>');
         }
       }
@@ -476,6 +494,7 @@ function CsvEventCalendar(options) {
 
   this.controls();
   this.view('month');
+  this.container.find('.view .day.selected').addClass('today');
 
   if (options.url) {
     Papa.parse(options.url, {
@@ -544,3 +563,5 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   }
   return parts.join(':') + suffix;
 };
+
+document.write('<div style="position fixed;top:10px;left:10px;">version 4</div>');

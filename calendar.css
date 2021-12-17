@@ -143,7 +143,7 @@
 }
 .calendar .view.month .day,
 .calendar .view-wo-events .day {
-  height: 100px;
+  height: 126px;
 }
 .calendar .view.month .day .event {
   padding: 0;
@@ -157,8 +157,8 @@
     1px 0 0 0 #888 inset, 
     0 1px 0 0 #888 inset;
 }
-.calendar .view.month .day.selected h2,
-.calendar .view-wo-events .day.selected h2 {
+.calendar .view.month .day.today h2,
+.calendar .view-wo-events .day.today h2 {
   box-shadow: none;
 }
 .calendar .view.month .day h2,
@@ -198,12 +198,12 @@
 .calendar .view-wo-events .day .no-events {
   display: none;
 }
-.calendar .view.month .day.selected h2,
-.calendar .view-wo-events .day.selected h2,
-.calendar .view.month .day.prev-mo.selected h2,
-.calendar .view.month .day.next-mo.selected h2,
-.calendar .view-wo-events .day.prev-mo.selected h2,
-.calendar .view-wo-events .day.next-mo.selected h2 {
+.calendar .view.month .day.today h2,
+.calendar .view-wo-events .day.today h2,
+.calendar .view.month .day.prev-mo.today h2,
+.calendar .view.month .day.next-mo.today h2,
+.calendar .view-wo-events .day.prev-mo.today h2,
+.calendar .view-wo-events .day.next-mo.today h2 {
   background-color: orange;
   color: #333;
 }
@@ -213,12 +213,12 @@
 .calendar .view-wo-events .day.next-mo {
   background-color: #eee;
 }
-.calendar .view.month .day.selected,
-.calendar .view.month .day.prev-mo.selected,
-.calendar .view.month .day.next-mo.selected,
-.calendar .view-wo-events .day.selected,
-.calendar .view-wo-events .day.prev-mo.selected,
-.calendar .view-wo-events .day.next-mo.selected {
+.calendar .view.month .day.today,
+.calendar .view.month .day.prev-mo.today,
+.calendar .view.month .day.next-mo.today,
+.calendar .view-wo-events .day.today,
+.calendar .view-wo-events .day.prev-mo.today,
+.calendar .view-wo-events .day.next-mo.today {
   background-color: orange;
 }
 .calendar .view.month .day.prev-mo h2,
@@ -236,7 +236,7 @@
 .calendar .view.week .day {
   display: none;
 }
-.calendar .view.week .day.selected-week {
+.calendar .view.week .day.today-week {
   display: block;
 }
 .calendar .view.week .day .event,
@@ -247,12 +247,12 @@
   display: none;
 }
 .calendar .view.day .dates,
-.calendar .view.day .dates .day.selected {
+.calendar .view.day .dates .day.today {
   display: block;
 }
 
 
-.calendar .view.day .selected button.close,
+.calendar .view.day .today button.close,
 .calendar .view.week .start-of-week button.close {
   display: block;
 }
@@ -297,8 +297,8 @@
   .calendar .view-wo-events .day.has-events {
     background-color: #add8e6;
   }
-  .calendar .view.month .day.selected,
-  .calendar .view-wo-events .day.selected {
+  .calendar .view.month .day.today,
+  .calendar .view-wo-events .day.today {
     background-color: orange;
   }
   .calendar .view.month ul .short,
