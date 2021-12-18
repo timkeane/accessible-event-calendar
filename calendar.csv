@@ -1,4 +1,4 @@
-﻿date,start,end,name,detail,sponsor
+﻿date,start,end,name,about,sponsor
 2021-12-01,2am,3pm,event 1 with a long name,,sponsor 1
 2021-12-02,12am,3am,event 2,event details go here 2,sponsor 2
 2021-12-07,12pm,1:30 PM,event 3,event details go here 3,sponsor 3

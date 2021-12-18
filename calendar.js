@@ -571,7 +571,7 @@ CsvEventCalendar.prototype.eventHtml = function(calEvent) {
     .append('<strong>Start:</strong>')
     .append('<span>' + fmt(calEvent.start, true) + '</span>');
   var about = $('<div class="about"></div>')
-    .append(calEvent.detail);
+    .append(calEvent.about);
   if (calEvent.end) {
     time.append('<strong>End:</strong>')
       .append('<span>' + fmt(calEvent.end, true) + '</span>');
