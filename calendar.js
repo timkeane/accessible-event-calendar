@@ -529,7 +529,6 @@ function CsvEventCalendar(options) {
     var container = this.container;
     var changes = [645, 500, 480, 380, 340, 310];
     var width = container.width();
-    console.warn(width);
     for (var i = 0; i < changes.length; i++) {
       var w = changes[i];
       container.removeClass('w-' + w);
@@ -537,7 +536,6 @@ function CsvEventCalendar(options) {
         container.addClass('w-' + w);
       }
     }
-    console.warn(container[0].className);
   };
 
   this.controls();

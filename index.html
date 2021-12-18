@@ -13,23 +13,26 @@
       padding: 20px;
     }
     body>div {
-      margin-bottom: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 50px;
     }
     .calendar .event .sponsor {
       color: blue;
       margin: 5px 0;
     }
     #calendar-2 {
-      max-width: 400px;
-      margin: auto;
+      width: 645px;
+    }
+    #calendar-3 {
+      width: 450px;
     }
   </style>
 </head>
 <body>
-  <div>CustomCalendar with custum eventHtml</div>
   <div id="calendar-1"></div>
-  <div>CsvEventCalendar</div>
   <div id="calendar-2"></div>
+  <div id="calendar-3"></div>
   <script>
 
     var CustomCalendar = function(options) {
@@ -48,15 +51,23 @@
       container: $('#calendar-1'), 
       url: './calendar.csv',
       selectionChanged: function(day) {
-        console.log('selectionChanged-1', day);
+        console.log('customCalendar1 selectionChanged', day);
       }
     });
 
-    var notCustomCalendar2 = new CsvEventCalendar({
+    var customCalendar2 = new CustomCalendar({
       container: $('#calendar-2'), 
       url: './calendar.csv',
       selectionChanged: function(day) {
-        console.log('selectionChanged-2', day);
+        console.log('customCalendar2 selectionChanged', day);
+      }
+    });
+
+    var customCalendar3 = new CustomCalendar({
+      container: $('#calendar-3'), 
+      url: './calendar.csv',
+      selectionChanged: function(day) {
+        console.log('customCalendar3 selectionChanged', day);
       }
     });
 
