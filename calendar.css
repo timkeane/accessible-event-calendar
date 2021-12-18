@@ -270,116 +270,121 @@
   opacity: 1;
 }
 
-@media only screen and (max-width: 645px) {
-  .calendar .view.month ul span.medium,
-  .calendar .view-wo-events ul span.medium {
-    display: inline;
-  }
-  .calendar .view.month ul span.short,
-  .calendar .view.month ul span.long,
-  .calendar .view-wo-events ul span.short,
-  .calendar .view-wo-events ul span.long {
-    display: none;
-  }
-  .calendar .view.month .day,
-  .calendar .view-wo-events .day {
-    height: 80px;
-  }
-  .calendar .view.month .day.has-events,
-  .calendar .view-wo-events .day.has-events {
-    background-color: #add8e6;
-  }
-  .calendar .view.month .day .events,
-  .calendar .view-wo-events .day .events {
-    display: none;
-  }  
+
+/* max-width : 645px */
+.calendar.w-645 .view.month ul span.medium,
+.calendar.w-645 .view-wo-events ul span.medium {
+  display: inline;
 }
-
-
-@media only screen and (max-width : 500px) {
-  .calendar .controls button {
-    width: auto;
-  }
-  .calendar .view.month ul span.short,
-  .calendar .view-wo-events ul span.short {
-    display: inline;
-  }
-  .calendar .view.month ul span.medium,
-  .calendar .view.month ul span.long,
-  .calendar .view-wo-events ul span.medium,
-  .calendar .view-wo-events ul span.long {
-    display: none;
-  }
-  .calendar .view.month .day h3,
-  .calendar .view-wo-events .day h3 {
-    background-color: transparent;
-    color: #333;
-    text-align: center;
-    padding: 16px 0;
-  }
-  .calendar .view.month .day,
-  .calendar .view-wo-events .day {
-    overflow: hidden;
-    height: 50px;
-  }
-  .calendar .view.day .day h3 span.long,
-  .calendar .view.week .day h3 span.long {
-    display: none;
-  }
-  .calendar .view.day .day h3 span.medium,
-  .calendar .view.week .day h3 span.medium {
-    display: block;
-  }
+.calendar.w-645 .view.month ul span.short,
+.calendar.w-645 .view.month ul span.long,
+.calendar.w-645 .view-wo-events ul span.short,
+.calendar.w-645 .view-wo-events ul span.long {
+  display: none;
 }
-
-
-@media only screen and (max-width : 480px) {
-  .calendar .controls button span.short {
-    display: inline;
-  }
-  .calendar .controls button span.long {
-    display: none;
-  }
+.calendar.w-645 .view.month .day,
+.calendar.w-645 .view-wo-events .day {
+  height: 80px;
 }
-
-
-@media only screen and (max-width : 380px) {
-  .calendar .controls h2 span.short,
-  .calendar .controls button span.short {
-    display: inline;
-  }
-  .calendar .controls span.long {
-    display: none;
-  }
-  .calendar .controls input[type="date"],
-  .calendar .controls select {
-    width: 130px;
-  }
+.calendar.w-645 .view.month .day.has-events,
+.calendar.w-645 .view-wo-events .day.has-events {
+  background-color: #add8e6;
 }
+.calendar.w-645 .view.month .day .events,
+.calendar.w-645 .view-wo-events .day .events {
+  display: none;
+}  
+/* max-width : 645px */
 
 
-@media only screen and (max-width : 340px) {
-  .calendar .view.day .day h3 span.medium,
-  .calendar .view.week .day h3 span.medium {
-    display: none;
-  }
-  .calendar .view.day .day h3 span.abbr,
-  .calendar .view.week .day h3 span.abbr {
-    display: block;
-  }
+/* max-width : 500px */
+.calendar.w-500 .controls button {
+  width: auto;
 }
-
-
-@media only screen and (max-width : 310px) {
-  .calendar .controls input[type="date"],
-  .calendar .controls select {
-    width: 45%;
-  }
-  .calendar .controls h2 span.long,
-  .calendar .controls h2 span.short {
-    display: none;
-  }
-  .calendar .controls h2 span.abbr {
-    display: inline;
-  }
+.calendar.w-500 .view.month ul span.short,
+.calendar.w-500 .view-wo-events ul span.short {
+  display: inline;
 }
+.calendar.w-500 .view.month ul span.medium,
+.calendar.w-500 .view.month ul span.long,
+.calendar.w-500 .view-wo-events ul span.medium,
+.calendar.w-500 .view-wo-events ul span.long {
+  display: none;
+}
+.calendar.w-500 .view.month .day h3,
+.calendar.w-500 .view-wo-events .day h3 {
+  background-color: transparent;
+  color: #333;
+  text-align: center;
+  padding: 16px 0;
+}
+.calendar.w-500 .view.month .day,
+.calendar.w-500 .view-wo-events .day {
+  overflow: hidden;
+  height: 50px;
+}
+.calendar.w-500 .view.day .day h3 span.long,
+.calendar.w-500 .view.week .day h3 span.long {
+  display: none;
+}
+.calendar.w-500 .view.day .day h3 span.medium,
+.calendar.w-500 .view.week .day h3 span.medium {
+  display: block;
+}
+/* max-width : 500px */
+
+
+/* max-width : 480px */
+.calendar.w-480 .controls button span.short {
+  display: inline;
+}
+.calendar.w-480 .controls button span.long {
+  display: none;
+}
+.calendar.w-480 .view.month .day.today h3 {
+  box-shadow: inset 0 0 0 10px orange;
+  margin: 1px 0 0 1px;
+}
+/* max-width : 480px */
+
+
+/* max-width : 380px */
+.calendar.w-380 .controls h2 span.short,
+.calendar.w-380 .controls button span.short {
+  display: inline;
+}
+.calendar.w-380 .controls span.long {
+  display: none;
+}
+.calendar.w-380 .controls input[type="date"],
+.calendar.w-380 .controls select {
+  width: 130px;
+}
+/* max-width : 380px */
+
+
+/* max-width : 340px */
+.calendar.w-340 .view.day .day h3 span.medium,
+.calendar.w-340 .view.week .day h3 span.medium {
+  display: none;
+}
+.calendar.w-340 .view.day .day h3 span.abbr,
+.calendar.w-340 .view.week .day h3 span.abbr {
+  display: block;
+}
+/* max-width : 340px */
+
+
+/* max-width : 310px */
+.calendar.w-310 .controls input[type="date"],
+.calendar.w-310 .controls select {
+  width: 45%;
+}
+.calendar.w-310 .controls h2 span.long,
+.calendar.w-310 .controls h2 span.short {
+  display: none;
+}
+.calendar.w-310 .controls h2 span.abbr {
+  display: inline;
+}
+/* max-width : 310px */
