@@ -243,6 +243,8 @@ function CsvEventCalendar(options) {
       .on('click', this.navigate.bind(this));
     var input = $('<input type="date">')
       .val(this.state.key())
+      .attr('min', (this.state.year - 1) + '-01-01')
+      .attr('max', (this.state.year + 1) + '-12-31')
       .on('change', function() {
         me.updateState({key: input.val()})
         me.view('day');
