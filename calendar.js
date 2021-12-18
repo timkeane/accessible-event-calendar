@@ -527,6 +527,14 @@ function CsvEventCalendar(options) {
   this.indexData = function(response) {
     var calEvents = response.data;
     this.sortByDate(calEvents);
+    if (!this.min) {
+      this.min = calEvents[0].date;
+      this.container.find('.controls input').attr('min', this.min);
+    }
+    if (!this.max) {
+      this.max = calEvents[calEvents.length - 1].date;
+      this.container.find('.controls input').attr('max', this.max);
+    }
     $.each(calEvents, function(i, calEvent) {
       var key = calEvent.date;
       me.eventsIndex[key] = me.eventsIndex[key] || [];
