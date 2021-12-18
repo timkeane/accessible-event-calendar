@@ -9,6 +9,7 @@ function CsvEventCalendar(options) {
   this.firstLoad = true;
   this.eventsIndex = {ready: false, noData: false};
   this.container = $(options.container).addClass('calendar');
+  this.eventHtml = options.eventHtml || this.eventHtml;
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
 
@@ -359,7 +360,6 @@ function CsvEventCalendar(options) {
       setTimeout(function() {
         var view = me.state.view;
         var container = me.container;
-        console.info(view, document.activeElement);      
         if (view === 'month') {
           container.find('.controls h2').attr('tabindex', 0).focus();
         } else if (view === 'week') {

@@ -35,11 +35,7 @@
   <div id="calendar-3"></div>
   <script>
 
-    var CustomCalendar = function(options) {
-      return CsvEventCalendar.call(this, options);
-    };
-
-    CustomCalendar.prototype.eventHtml = function(calEvent) {
+    function eventHtml(calEvent) {
       var html = CsvEventCalendar.prototype.eventHtml.call(this, calEvent);
       var sponsor = $('<div class="sponsor"></div>')
         .html('<strong>Sponsor:</strong> ' + calEvent.sponsor);
@@ -47,27 +43,29 @@
       return html;
     };
 
-    var customCalendar1 = new CustomCalendar({
+    var calendar1 = new CsvEventCalendar({
       container: $('#calendar-1'), 
       url: './calendar.csv',
+      eventHtml: eventHtml,
       selectionChanged: function(day) {
-        console.log('customCalendar1 selectionChanged', day);
+        console.log('calendar1 selectionChanged', day);
       }
     });
 
-    var customCalendar2 = new CustomCalendar({
+    var calendar2 = new CsvEventCalendar({
       container: $('#calendar-2'), 
       url: './calendar.csv',
+      eventHtml: eventHtml,
       selectionChanged: function(day) {
-        console.log('customCalendar2 selectionChanged', day);
+        console.log('calendar2 selectionChanged', day);
       }
     });
 
-    var customCalendar3 = new CustomCalendar({
+    var calendar3 = new CsvEventCalendar({
       container: $('#calendar-3'), 
       url: './calendar.csv',
       selectionChanged: function(day) {
-        console.log('customCalendar3 selectionChanged', day);
+        console.log('calendar3 selectionChanged', day);
       }
     });
 
