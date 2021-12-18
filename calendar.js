@@ -9,6 +9,8 @@ function CsvEventCalendar(options) {
   this.firstLoad = true;
   this.eventsIndex = {ready: false, noData: false};
   this.container = $(options.container).addClass('calendar');
+  this.min = options.min;
+  this.max = options.max;
   this.eventHtml = options.eventHtml || this.eventHtml;
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
@@ -63,6 +65,14 @@ function CsvEventCalendar(options) {
       this.state.year = this.yearNumber(options.key);
       this.state.month = this.monthNumber(options.key) - 1;
       this.state.date = this.dateNumber(options.key);
+    }
+    if (this.max && this.state.key() > this.max) {
+      this.updateState({key: this.max});
+      return;
+    }
+    if (this.min && this.state.key() < this.min) {
+      this.updateState({key: this.min});
+      return;
     }
     var after = JSON.stringify(this.state);
     var key = this.state.key();
@@ -243,8 +253,8 @@ function CsvEventCalendar(options) {
       .on('click', this.navigate.bind(this));
     var input = $('<input type="date">')
       .val(this.state.key())
-      .attr('min', (this.state.year - 1) + '-01-01')
-      .attr('max', (this.state.year + 1) + '-12-31')
+      .attr('min', this.min || (this.state.year - 1) + '-01-01')
+      .attr('max', this.max || (this.state.year + 1) + '-12-31')
       .on('change', function() {
         me.updateState({key: input.val()})
         me.view('day');
