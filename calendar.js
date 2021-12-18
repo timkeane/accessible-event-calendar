@@ -529,14 +529,15 @@ function CsvEventCalendar(options) {
     var container = this.container;
     var changes = [645, 500, 480, 380, 340, 310];
     var width = container.width();
+    console.warn(width);
     for (var i = 0; i < changes.length; i++) {
       var w = changes[i];
+      container.removeClass('w-' + w);
       if (width <= w) {
         container.addClass('w-' + w);
-      } else {
-        container.removeClass('w-' + w);
       }
     }
+    console.warn(container[0].className);
   };
 
   this.controls();
