@@ -10,7 +10,15 @@
   overflow: hidden;
   padding: 1px;
 }
-
+.calendar .controls div.alert {
+  display: none;
+  font-size: 16px;
+  font-weight: bold;
+  height: 26px;
+  padding-top: 6px;
+  margin: 0;
+  border: none;
+}
 .calendar .controls button,
 .calendar .controls h2,
 .calendar .controls input[type="date"],
@@ -122,7 +130,8 @@
 
 
 .calendar .view.month *,
-.calendar .view-wo-events * {
+.calendar .view-wo-events *,
+.calendar .controls div.alert {
   font-size: 16px;
 }
 .calendar .view.month li,

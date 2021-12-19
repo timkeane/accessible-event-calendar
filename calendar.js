@@ -66,12 +66,14 @@ function CsvEventCalendar(options) {
       this.state.month = this.monthNumber(options.key) - 1;
       this.state.date = this.dateNumber(options.key);
     }
-    if (this.max && this.state.key() > this.max) {
+    if (this.state.key() > this.max) {
       this.updateState({key: this.max});
+      this.alert('max');
       return;
     }
-    if (this.min && this.state.key() < this.min) {
+    if (this.state.key() < this.min) {
       this.updateState({key: this.min});
+      this.alert('min');
       return;
     }
     var after = JSON.stringify(this.state);
@@ -85,6 +87,19 @@ function CsvEventCalendar(options) {
         events: this.eventsIndex[key] || []
       });
     }
+  };
+
+  this.alert = function(minMax) {
+    var inputs = this.container.find('.controls .inputs').hide();
+    var alert = this.container.find('.controls .alert')
+      .html('No events scheduled ' + 
+        (minMax === 'min' ? 'before ' : 'after ') +
+        this.title({key: this[minMax]}).day.long)
+      .show();
+    setTimeout(function() {
+      alert.hide();
+      inputs.show();
+    }, 4000);
   };
 
   this.dateFromKey = function(key) {
@@ -190,6 +205,8 @@ function CsvEventCalendar(options) {
   this.navigate = function(domEvent) {
     var delta =  $(domEvent.currentTarget).data('delta');
     var view = this.state.view;
+    this.container.find('.controls .alert').hide();
+    this.container.find('.controls .inputs').show();
     this[view + 'Navigate'](delta);
     this.view(view);
   };
@@ -253,8 +270,6 @@ function CsvEventCalendar(options) {
       .on('click', this.navigate.bind(this));
     var input = $('<input type="date">')
       .val(this.state.key())
-      .attr('min', this.min || (this.state.year - 1) + '-01-01')
-      .attr('max', this.max || (this.state.year + 1) + '-12-31')
       .on('change', function() {
         me.updateState({key: input.val()})
         me.view('day');
@@ -277,12 +292,13 @@ function CsvEventCalendar(options) {
       .append(back)
       .append(h2)
       .append(next);
-    var div2 = $('<div></div>')
+    var div2 = $('<div class="inputs"></div>')
       .append(input)
       .append(select);
     var controls = $('<div class="controls"></div>')
       .append(div1)
-      .append(div2);
+      .append(div2)
+      .append('<div class="alert" role="alert"></div>');
     this.container.append(controls);
   };
 
