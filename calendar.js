@@ -373,7 +373,7 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
   var me = this;
   var key = date.key;
   var title = this.title({key: key}).day;
-  var close = $('<button class="close"></button>')
+  var prevView = $('<button class="prev-view"></button>')
     .on('click', function(domEvent) {
       domEvent.stopImmediatePropagation();
       me.view(me.state.returnToView);
@@ -391,7 +391,7 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
     .addClass( 'week-' + week)
     .attr('data-date-key', date.key)
     .append(h3)
-    .append(close)
+    .append(prevView)
     .append('<div class="events"></div>')
     .on('click', function() {
       if (me.eventsIndex.noData || day.hasClass('has-events')) {
@@ -431,7 +431,7 @@ CsvEventCalendar.prototype.view = function(view) {
     $(btn).attr('aria-label', $(btn).attr('data-old-label'))
       .removeAttr('data-old-label');
   });
-  this.container.find('.day button.close')
+  this.container.find('.day button.prev-view')
     .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
   this[view + 'View']();
   this.container.find('.view .day[data-date-key="' + this.state.today + '"]').addClass('today');
@@ -498,7 +498,8 @@ CsvEventCalendar.prototype.populate = function() {
         $(dayNode).attr('aria-hidden', 'true');
         button.attr('aria-label', title + ' (no events scheduled)')
           .attr('tabindex', -1);
-        eventsNode.html('<div class="no-events">no events scheduled</div>');
+        $(dayNode).find('button.prev-view').attr('tabindex', -1);
+          eventsNode.html('<div class="no-events">no events scheduled</div>');
       }
     }
   });
