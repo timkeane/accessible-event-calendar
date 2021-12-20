@@ -282,8 +282,8 @@
 .calendar .controls button.next span.short,
 .calendar .view button.prev-view {
   display: none;
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   color: transparent;
   background-color: transparent;
   background-position: center;
@@ -291,14 +291,14 @@
   border: none;
   opacity: 1;
 }
-.calendar .view button.prev-view {
+.calendar .view .day button.prev-view {
   float: right;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
-  margin: -39px 5px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+  margin: -37px 11px;
 }
 .calendar .controls button.back span.short,
-.calendar .view .day.selected button.prev-view {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23000%22%2F%3E%3C%2Fsvg%3E");
+.calendar .view .day.today button.prev-view {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
 }
 .calendar .controls button.next span.short {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%223.404%2C2.051%208.354%2C7%203.404%2C11.95%205.525%2C14.07%2012.596%2C7%205.525%2C-0.071%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
@@ -368,7 +368,7 @@
 .calendar.w-500 .controls button span.short,
 .calendar.w-500 .controls div.alert span.long.medium,
 .calendar.w-500 .controls div.alert span.medium {
-  display: inline;
+  display: table-cell;
 }
 .calendar.w-500 .controls button span.long,
 .calendar.w-500 .controls div.alert span.long {
