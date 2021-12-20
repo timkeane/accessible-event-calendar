@@ -96,7 +96,10 @@ function CsvEventCalendar(options) {
         (minMax === 'min' ? 'before ' : 'after ') +
         this.title({key: this[minMax]}).day.long)
       .show();
-    setTimeout(function() {
+    this.container.find('.controls button.' +
+      (minMax === 'min' ? 'back' : 'next'))
+      .attr('disabled', true);
+    this.alertTimeout = setTimeout(function() {
       alert.hide();
       inputs.show();
     }, 4000);
@@ -205,8 +208,10 @@ function CsvEventCalendar(options) {
   this.navigate = function(domEvent) {
     var delta =  $(domEvent.currentTarget).data('delta');
     var view = this.state.view;
+    clearTimeout(this.alertTimeout);
     this.container.find('.controls .alert').hide();
     this.container.find('.controls .inputs').show();
+    this.container.find('.controls button').removeAttr('disabled');
     this[view + 'Navigate'](delta);
     this.view(view);
   };
