@@ -11,6 +11,7 @@ function CsvEventCalendar(options) {
   this.container = $(options.container).addClass('calendar');
   this.min = options.min;
   this.max = options.max;
+  this.alertTimeout = null;
   this.eventHtml = options.eventHtml || this.eventHtml;
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
@@ -397,6 +398,7 @@ function CsvEventCalendar(options) {
           container.find('.controls h2').attr('tabindex', 0).focus();
         } else if (view === 'week') {
           container.find('.view').attr('tabindex', 0).focus();
+          container.scrollTop(0);
         } else {
           container.find('.view .day.selected button.name').focus();
         }
