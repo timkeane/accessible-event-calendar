@@ -287,8 +287,13 @@ CsvEventCalendar.prototype.controls = function() {
   var input = $('<input type="date">')
     .val(this.state.key())
     .on('change', function() {
-      me.updateState({key: input.val()})
-      me.view('day');
+      var key = input.val();
+      if (me.eventsIndex[key]) {
+        me.updateState({key: key});
+        me.view('day');
+      } else {
+        me.alert(key);
+      }
     });
   var select = $('<select></select>')
     .append('<option value="month">View by month</option>')
@@ -526,8 +531,13 @@ CsvEventCalendar.prototype.indexData = function(response) {
 };
 
 CsvEventCalendar.prototype.alert = function(minMax) {
-  var message = 'No events scheduled ' + (minMax === 'min' ? 'before ' : 'after ') +
-    this.title({key: this[minMax]}).day.long;
+  var message =  this.title({key: this[minMax]}).day.long;
+  if (['min', 'max'].indexOf(minMax) > -1) {
+    message = 'No events scheduled ' + 
+      (minMax === 'min' ? 'before ' : 'after ') + message;
+  } else {
+    message = 'No events scheduled on ' + message;
+  }
   var inputs = this.container.find('.controls .inputs').hide();
   var alert = this.container.find('.controls .alert')
     .html(message)
@@ -545,7 +555,6 @@ CsvEventCalendar.prototype.alert = function(minMax) {
 
 CsvEventCalendar.prototype.focus = function() {
   var me = this;
-  console.warn(this.container.find('.controls .alert').is(':visible'));
   if (!this.firstLoad && !this.container.find('.controls .alert').is(':visible')) {
     var scroll = $(document).scrollTop();
     setTimeout(function() {
@@ -659,3 +668,5 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   }
   return parts.join(':') + suffix;
 };
+
+document.write('<div style="position:fixed">v5</div>');
