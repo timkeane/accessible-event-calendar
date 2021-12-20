@@ -458,7 +458,7 @@ CsvEventCalendar.prototype.weekView = function() {
     }
   });
   this.container.find('.view').attr('aria-label', 
-    'week of ' + this.title(key).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
+    'week of ' + this.title({key: key}).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
   );
 };
 
@@ -554,6 +554,7 @@ CsvEventCalendar.prototype.alert = function(minMax) {
 CsvEventCalendar.prototype.focus = function() {
   var me = this;
   if (!this.firstLoad) {
+    var scroll = $(document).scrollTop();
     setTimeout(function() {
       var view = me.state.view;
       var container = me.container;
@@ -562,6 +563,7 @@ CsvEventCalendar.prototype.focus = function() {
       } else if (view === 'week') {
         container.find('.view').attr('tabindex', 0).focus();
         container.scrollTop(0);
+        $(document).scrollTop(scroll);
       } else {
         container.find('.view .day.selected button.name').focus();
       }
