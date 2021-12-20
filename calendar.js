@@ -305,7 +305,7 @@ CsvEventCalendar.prototype.controls = function() {
         .append('<span class="short"></span>')
         .append('<span class="abbr"></span>')
     );
-  var div1 = $('<div></div>')
+  var div1 = $('<div class="buttons"></div>')
     .append(back)
     .append(h2)
     .append(next);

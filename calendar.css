@@ -36,6 +36,9 @@
 .calendar .controls input::-webkit-calendar-picker-indicator {
   margin-left: 0px;
 }
+.calendar .controls .buttons {
+  margin-bottom: 5px;
+}
 .calendar .controls h2 {
   width: auto;
 }
