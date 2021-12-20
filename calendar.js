@@ -315,7 +315,7 @@ CsvEventCalendar.prototype.controls = function() {
   var controls = $('<div class="controls"></div>')
     .append(div1)
     .append(div2)
-    .append('<div class="alert" role="alert"></div>');
+    .append('<div class="alert" aria-live="assertive" tabindex="0"></div>');
   this.container.append(controls);
 };
 
@@ -450,13 +450,7 @@ CsvEventCalendar.prototype.monthView = function() {
 };
 
 CsvEventCalendar.prototype.weekView = function() {
-  var key;
-  this.container.find('.day.selected-week').each(function(i, day) {
-    if ($(day).hasClass('has-events')) {
-      key = $(day).attr('data-date-key');
-      return false;
-    }
-  });
+  var key = this.container.find('.day.start-of-week').attr('data-date-key');
   this.container.find('.view').attr('aria-label', 
     'week of ' + this.title({key: key}).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
   );
@@ -536,24 +530,27 @@ CsvEventCalendar.prototype.indexData = function(response) {
 };
 
 CsvEventCalendar.prototype.alert = function(minMax) {
+  var message = 'No events scheduled ' + (minMax === 'min' ? 'before ' : 'after ') +
+    this.title({key: this[minMax]}).day.long;
   var inputs = this.container.find('.controls .inputs').hide();
   var alert = this.container.find('.controls .alert')
-    .html('No events scheduled ' + 
-      (minMax === 'min' ? 'before ' : 'after ') +
-      this.title({key: this[minMax]}).day.long)
-    .show();
+    .html(message)
+    .attr('aria-label', message)
+    .show()
+    .focus();
   this.container.find('.controls button.' +
     (minMax === 'min' ? 'back' : 'next'))
     .attr('disabled', true);
   this.alertTimeout = setTimeout(function() {
     alert.hide();
     inputs.show();
-  }, 4000);
+  }, 5000);
 };
 
 CsvEventCalendar.prototype.focus = function() {
   var me = this;
-  if (!this.firstLoad) {
+  console.warn(this.container.find('.controls .alert').is(':visible'));
+  if (!this.firstLoad && !this.container.find('.controls .alert').is(':visible')) {
     var scroll = $(document).scrollTop();
     setTimeout(function() {
       var view = me.state.view;
