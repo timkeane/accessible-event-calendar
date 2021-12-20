@@ -19,6 +19,13 @@
   margin: 0;
   border: none;
 }
+.calendar .controls div.alert span.medium,
+.calendar .controls div.alert span.abbr {
+  display: none;
+}
+.calendar .controls div.alert span.long.medium {
+  display: inline;
+}
 .calendar .controls button,
 .calendar .controls h2,
 .calendar .controls input[type="date"],
@@ -277,6 +284,7 @@
   display: none;
   width: 20px;
   height: 20px;
+  color: transparent;
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
@@ -357,11 +365,13 @@
 .calendar.w-500 .view.week .day h3 span.medium {
   display: block;
 }
-.calendar.w-500 .controls button span.short {
-  display: inline-block;
-  color: transparent;
+.calendar.w-500 .controls button span.short,
+.calendar.w-500 .controls div.alert span.long.medium,
+.calendar.w-500 .controls div.alert span.medium {
+  display: inline;
 }
-.calendar.w-500 .controls button span.long {
+.calendar.w-500 .controls button span.long,
+.calendar.w-500 .controls div.alert span.long {
   display: none;
 }
 .calendar.w-500 .view.month .day.today h3 {
@@ -369,6 +379,18 @@
   margin: 1px 0 0 1px;
 }
 /* max-width : 500px */
+
+
+/* max-width : 400px */
+
+.calendar.w-400 .controls div.alert span.abbr {
+  display: inline;
+}
+.calendar.w-400 .controls div.alert span.long.medium,
+.calendar.w-400 .controls div.alert span.medium {
+  display: none;
+}
+/* max-width : 400px */
 
 
 /* max-width : 380px */

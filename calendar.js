@@ -532,9 +532,14 @@ CsvEventCalendar.prototype.indexData = function(response) {
 };
 
 CsvEventCalendar.prototype.alert = function(minMax) {
-  var message =  this.title({key: this[minMax]}).day.long;
+  var title =  this.title({key: this[minMax]}).day;
+  var label =  'No events scheduled ' + 
+    (minMax === 'min' ? 'before ' : 'after ') + title.long;
+  var message = '<span class="long">' + title.long + '</span>' +
+    '<span class="medium">' + title.medium + '</span>' +
+    '<span class="abbr">' + title.abbr + '</span>';
   if (['min', 'max'].indexOf(minMax) > -1) {
-    message = 'No events scheduled ' + 
+    message = 'No events <span class="long medium">scheduled </span>' + 
       (minMax === 'min' ? 'before ' : 'after ') + message;
   } else {
     message = 'No events scheduled on ' + message;
@@ -542,7 +547,7 @@ CsvEventCalendar.prototype.alert = function(minMax) {
   var inputs = this.container.find('.controls .inputs').hide();
   var alert = this.container.find('.controls .alert')
     .html(message)
-    .attr('aria-label', message)
+    .attr('aria-label', label)
     .show()
     .focus();
   this.container.find('.controls button.' +
@@ -607,7 +612,7 @@ CsvEventCalendar.prototype.sortByDate = function(events) {
 
 CsvEventCalendar.prototype.resize = function() {
   var container = this.container;
-  var changes = [645, 500, 480, 380, 340, 310];
+  var changes = [645, 500, 400, 380, 340, 310];
   var width = container.width();
   for (var i = 0; i < changes.length; i++) {
     var w = changes[i];
