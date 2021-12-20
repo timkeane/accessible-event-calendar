@@ -264,6 +264,9 @@
 .calendar .view.week .start-of-week button.close {
   display: block;
 }
+calendar .view.day .day h3 {
+  line-height: 30px;
+}
 
 .calendar button.close {
   display: none;
