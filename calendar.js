@@ -669,5 +669,3 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   }
   return parts.join(':') + suffix;
 };
-
-document.write('<div style="position:fixed">v5</div>');
