@@ -294,7 +294,7 @@ CsvEventCalendar.prototype.controls = function() {
     .append('<option value="month">View by month</option>')
     .append('<option value="week">View by week</option>')
     .append('<option value="day">View by day</option>')
-    .on('change', function() {
+    .on('input', function() {
       me.view(select.val());
     });
   var h2 = $('<h2 aria-polite="assertive"></h2>')
