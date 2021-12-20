@@ -23,7 +23,6 @@ function CsvEventCalendar(options) {
     day: this.today.getDay(),
     view: 'month',
     returnToView: 'month',
-    returnToFocus: '',
     key: function() {
       var m = this.month + 1;
       var d = this.date;
@@ -373,10 +372,6 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
     .on('click', function(domEvent) {
       domEvent.stopImmediatePropagation();
       me.view(me.state.returnToView);
-      // setTimeout(function() {
-      //   var dayNode = me.dayNode(me.state.key());
-      //   dayNode.find('button.name').focus();
-      // }, 600);
     });
   var h3 = $('<h3></h3>');
   var button = $('<button class="name"></button>');
@@ -392,6 +387,7 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
     .attr('data-date-key', date.key)
     .append(h3)
     .append(close)
+    .append('<div class="events"></div>')
     .on('click', function() {
       if (me.eventsIndex.noData || day.hasClass('has-events')) {
         me.updateState({key: key});
@@ -482,7 +478,7 @@ CsvEventCalendar.prototype.populate = function() {
     var title = me.title({key: key}).day.long;
     var events = me.eventsIndex[key];
     var eventCount = events && events.length || 0;
-    var eventsNode = $('<div class="events"></div>');
+    var eventsNode = $(dayNode).find('.events');
     var button = $(dayNode).find('h3 button');
     $(dayNode).append(eventsNode);
     if (me.eventsIndex.ready) {

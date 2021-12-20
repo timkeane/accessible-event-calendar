@@ -203,10 +203,10 @@
 .calendar .view-wo-events .day .no-events {
   display: none;
 }
-.calendar .view.month .day.today h3,
+.calendar .view .day.today h3,
 .calendar .view-wo-events .day.today h3,
-.calendar .view.month .day.prev-mo.today h3,
-.calendar .view.month .day.next-mo.today h3,
+.calendar .view .day.prev-mo.today h3,
+.calendar .view .day.next-mo.today h3,
 .calendar .view-wo-events .day.prev-mo.today h3,
 .calendar .view-wo-events .day.next-mo.today h3 {
   background-color: orange;
@@ -346,21 +346,17 @@ calendar .view.day .day h3 {
 .calendar.w-500 .view.week .day h3 span.medium {
   display: block;
 }
-/* max-width : 500px */
-
-
-/* max-width : 480px */
-.calendar.w-480 .controls button span.short {
+.calendar.w-500 .controls button span.short {
   display: inline;
 }
-.calendar.w-480 .controls button span.long {
+.calendar.w-500 .controls button span.long {
   display: none;
 }
-.calendar.w-480 .view.month .day.today h3 {
+.calendar.w-500 .view.month .day.today h3 {
   box-shadow: inset 0 0 0 10px orange;
   margin: 1px 0 0 1px;
 }
-/* max-width : 480px */
+/* max-width : 500px */
 
 
 /* max-width : 380px */
