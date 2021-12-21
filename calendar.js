@@ -7,12 +7,13 @@ function CsvEventCalendar(options) {
   var me = this;
   this.firstLoad = true;
   this.eventsIndex = {ready: false, noData: false};
-  this.container = $(options.container).addClass('calendar');
+  this.container = $('<div class="calendar"></div>')
   this.min = options.min;
   this.max = options.max;
   this.eventHtml = options.eventHtml || this.eventHtml;
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
+  $(options.target).append(this.container);
 
   this.state = {
     today: this.dateKey(this.today),

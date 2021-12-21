@@ -47,7 +47,7 @@
     };
 
     var calendar1 = new CsvEventCalendar({
-      container: $('#calendar-1'), 
+      target: $('#calendar-1'), 
       url: './calendar.csv',
       eventHtml: eventHtml,
       selectionChanged: function(day) {
@@ -56,7 +56,7 @@
     });
 
     var calendar2 = new CsvEventCalendar({
-      container: $('#calendar-2'), 
+      target: $('#calendar-2'), 
       url: './calendar.csv',
       eventHtml: eventHtml,
       selectionChanged: function(day) {
@@ -65,7 +65,7 @@
     });
 
     var calendar3 = new CsvEventCalendar({
-      container: $('#calendar-3'), 
+      target: $('#calendar-3'), 
       url: './calendar.csv',
       min: '2021-01-01',
       max: '2021-12-31',

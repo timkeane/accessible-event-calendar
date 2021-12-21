@@ -1,5 +1,7 @@
 .calendar {
   position: relative;
+  border-right: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 .calendar,
 .calendar * {
@@ -31,7 +33,6 @@
 }
 .calendar .controls div {
   overflow: hidden;
-  padding: 1px;
 }
 .calendar .controls button,
 .calendar .controls h2,
