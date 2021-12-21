@@ -13,7 +13,7 @@
 .calendar .controls div.alert {
   display: none;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   height: 26px;
   padding-top: 6px;
   margin: 0;
@@ -332,9 +332,6 @@
 
 
 /* max-width : 500px */
-.calendar.w-500 .controls button {
-  width: auto;
-}
 .calendar.w-500 .view.month ul span.short,
 .calendar.w-500 .view-wo-events ul span.short {
   display: inline;
@@ -357,22 +354,11 @@
   overflow: hidden;
   height: 50px;
 }
-.calendar.w-500 .view.day .day h3 span.long,
-.calendar.w-500 .view.week .day h3 span.long {
-  display: none;
-}
-.calendar.w-500 .view.day .day h3 span.medium,
-.calendar.w-500 .view.week .day h3 span.medium {
-  display: block;
-}
-.calendar.w-500 .controls button span.short,
-.calendar.w-500 .controls div.alert span.long.medium,
-.calendar.w-500 .controls div.alert span.medium {
-  display: table-cell;
-}
-.calendar.w-500 .controls button span.long,
 .calendar.w-500 .controls div.alert span.long {
   display: none;
+}
+.calendar.w-500 .controls div.alert span.medium {
+  display: inline;
 }
 .calendar.w-500 .view.month .day.today h3 {
   box-shadow: inset 0 0 0 10px orange;
@@ -382,7 +368,15 @@
 
 
 /* max-width : 400px */
-
+.calendar.w-400 .controls button {
+  width: auto;
+}
+.calendar.w-400 .controls button span.long {
+  display: none;
+}
+.calendar.w-400 .controls button span.short {
+  display: table-cell;
+}
 .calendar.w-400 .controls div.alert span.abbr {
   display: inline;
 }
@@ -393,42 +387,49 @@
 /* max-width : 400px */
 
 
-/* max-width : 380px */
-.calendar.w-380 .controls h2 span.short {
-  display: inline;
-}
-.calendar.w-380 .controls span.long {
+/* max-width : 360px */
+.calendar.w-360 .view.day .day h3 span.long,
+.calendar.w-360 .view.week .day h3 span.long {
   display: none;
 }
-.calendar.w-380 .controls input[type="date"],
-.calendar.w-380 .controls select {
-  width: 130px;
-}
-/* max-width : 380px */
-
-
-/* max-width : 340px */
-.calendar.w-340 .view.day .day h3 span.medium,
-.calendar.w-340 .view.week .day h3 span.medium {
-  display: none;
-}
-.calendar.w-340 .view.day .day h3 span.abbr,
-.calendar.w-340 .view.week .day h3 span.abbr {
+.calendar.w-360 .view.day .day h3 span.medium,
+.calendar.w-360 .view.week .day h3 span.medium {
   display: block;
 }
-/* max-width : 340px */
-
-
-/* max-width : 310px */
-.calendar.w-310 .controls input[type="date"],
-.calendar.w-310 .controls select {
-  width: 45%;
-}
-.calendar.w-310 .controls h2 span.long,
-.calendar.w-310 .controls h2 span.short {
-  display: none;
-}
-.calendar.w-310 .controls h2 span.abbr {
+.calendar.w-360 .controls button span.short {
   display: inline;
 }
-/* max-width : 310px */
+.calendar.w-360 .controls h2 span.short {
+  display: inline;
+}
+.calendar.w-360 .controls h2 span.long {
+  display: none;
+}
+.calendar.w-360 .controls input[type="date"],
+.calendar.w-360 .controls select {
+  width: 130px;
+}
+/* max-width : 360px */
+
+
+/* max-width : 300px */
+.calendar.w-300 .view.day .day h3 span.medium,
+.calendar.w-300 .view.week .day h3 span.medium {
+  display: none;
+}
+.calendar.w-300 .view.day .day h3 span.abbr,
+.calendar.w-300 .view.week .day h3 span.abbr {
+  display: block;
+}
+.calendar.w-300 .controls input[type="date"],
+.calendar.w-300 .controls select {
+  width: 45%;
+}
+.calendar.w-300 .controls h2 span.long,
+.calendar.w-300 .controls h2 span.short {
+  display: none;
+}
+.calendar.w-300 .controls h2 span.abbr {
+  display: inline;
+}
+/* max-width : 300px */
