@@ -297,9 +297,10 @@ CsvEventCalendar.prototype.controls = function() {
     .append('<option value="week">View by week</option>')
     .append('<option value="day">View by day</option>')
     .data('last-val', 'month')
-    .on('keydown click', function(e) {
-      var changedWithMouse = e.type === 'click' && select.val() !== select.data('last-val');
-      var changedWithKeyboard = e.type === 'keydown' && (e.keyCode === 32 || e.keyCode === 13);
+    .on('keypress click', function(e) {
+      var chg = select.val() !== select.data('last-val');
+      var changedWithMouse = chg && e.type === 'click';
+      var changedWithKeyboard = chg && e.type === 'keypress' && (e.keyCode === 32 || e.keyCode === 13);
       if (changedWithMouse || changedWithKeyboard) {
         var val = select.val();
         select.data('last-val', val);
