@@ -1,6 +1,29 @@
+.calendar {
+  position: relative;
+}
 .calendar,
 .calendar * {
   font-family: Arial, Helvetica, sans-serif;
+}
+.calendar div.alert {
+  display: none;
+  position: absolute;
+  max-width: 280px;
+  top: 40%;
+  left: 50%;
+  background-color: #fff;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  box-shadow: 4px 4px 8px #333;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 0;
+  text-align: center;
+}
+.calendar div.alert p {
+  margin-bottom: 10px;
+  padding: 0;
 }
 .calendar .controls {
   margin-bottom: 10px;
@@ -9,22 +32,6 @@
 .calendar .controls div {
   overflow: hidden;
   padding: 1px;
-}
-.calendar .controls div.alert {
-  display: none;
-  font-size: 16px;
-  font-weight: 600;
-  height: 26px;
-  padding-top: 6px;
-  margin: 0;
-  border: none;
-}
-.calendar .controls div.alert span.medium,
-.calendar .controls div.alert span.abbr {
-  display: none;
-}
-.calendar .controls div.alert span.long.medium {
-  display: inline;
 }
 .calendar .controls button,
 .calendar .controls h2,
@@ -354,12 +361,6 @@
   overflow: hidden;
   height: 50px;
 }
-.calendar.w-500 .controls div.alert span.long {
-  display: none;
-}
-.calendar.w-500 .controls div.alert span.medium {
-  display: inline;
-}
 .calendar.w-500 .view.month .day.today h3 {
   box-shadow: inset 0 0 0 10px orange;
   margin: 1px 0 0 1px;
@@ -376,13 +377,6 @@
 }
 .calendar.w-400 .controls button span.short {
   display: table-cell;
-}
-.calendar.w-400 .controls div.alert span.abbr {
-  display: inline;
-}
-.calendar.w-400 .controls div.alert span.long.medium,
-.calendar.w-400 .controls div.alert span.medium {
-  display: none;
 }
 /* max-width : 400px */
 

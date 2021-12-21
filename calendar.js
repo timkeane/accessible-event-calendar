@@ -10,7 +10,6 @@ function CsvEventCalendar(options) {
   this.container = $(options.container).addClass('calendar');
   this.min = options.min;
   this.max = options.max;
-  this.alertTimeout = null;
   this.eventHtml = options.eventHtml || this.eventHtml;
   this.selectionChanged = options.selectionChanged || function() {};
   this.today = new Date();
@@ -218,9 +217,6 @@ CsvEventCalendar.prototype.nextMonth = function(dates) {
 CsvEventCalendar.prototype.navigate = function(domEvent) {
   var delta =  $(domEvent.currentTarget).data('delta');
   var view = this.state.view;
-  clearTimeout(this.alertTimeout);
-  this.container.find('.controls .alert').hide();
-  this.container.find('.controls .inputs').show();
   this.container.find('.controls button').removeAttr('disabled');
   this[view + 'Navigate'](delta);
   this.view(view);
@@ -319,8 +315,14 @@ CsvEventCalendar.prototype.controls = function() {
   var controls = $('<div class="controls"></div>')
     .append(div1)
     .append(div2)
-    .append('<div class="alert" aria-live="assertive" tabindex="0"></div>');
   this.container.append(controls);
+  var alert = $('<div class="alert" aria-live="assertive"><p></p></div>');
+  var ok = $('<button class="btn ok">OK</button></div>')
+    .on('click', function() {
+      alert.hide();
+    });
+  this.container.append(alert.append(ok));
+
 };
 
 CsvEventCalendar.prototype.calendar = function(dates) {
@@ -493,7 +495,8 @@ CsvEventCalendar.prototype.populate = function() {
         $.each(events, function(e, calEvent) {
           eventsNode.append(me.eventHtml(calEvent));
         });
-        button.attr('aria-label', title + ' (' + eventCount + (eventCount === 1 ? ' event' : ' events') + ' scheduled');
+        button.attr('aria-label', title + ' (' + eventCount +
+          (eventCount === 1 ? ' event' : ' events') + ' scheduled');
       } else {
         $(dayNode).attr('aria-hidden', 'true');
         button.attr('aria-label', title + ' (no events scheduled)')
@@ -531,37 +534,27 @@ CsvEventCalendar.prototype.indexData = function(response) {
   this.populate();
 };
 
-CsvEventCalendar.prototype.alert = function(minMax) {
-  var title =  this.title({key: this[minMax]}).day;
-  var label =  'No events scheduled ' + 
-    (minMax === 'min' ? 'before ' : 'after ') + title.long;
-  var message = '<span class="long">' + title.long + '</span>' +
-    '<span class="medium">' + title.medium + '</span>' +
-    '<span class="abbr">' + title.abbr + '</span>';
-  if (['min', 'max'].indexOf(minMax) > -1) {
-    message = 'No events <span class="long medium">scheduled </span>' + 
-      (minMax === 'min' ? 'before ' : 'after ') + message;
+CsvEventCalendar.prototype.alert = function(minMaxKey) {
+  var message;
+  if (['min', 'max'].indexOf(minMaxKey) > -1) {
+    this.container.find('.controls button.' + (minMaxKey === 'min' ? 'back' : 'next'))
+      .attr('disabled', true);
+    message = 'No events scheduled ' + (minMaxKey === 'min' ? 'before ' : 'after ') +
+      this.title({key: this[minMaxKey]}).day.long;
   } else {
-    message = 'No events scheduled on ' + message;
+    message = 'No events scheduled on ' + this.title({key: minMaxKey}).day.long;
   }
-  var inputs = this.container.find('.controls .inputs').hide();
-  var alert = this.container.find('.controls .alert')
-    .html(message)
-    .attr('aria-label', label)
+  this.container.find('.alert p').html(message);
+  var alert = this.container.find('.alert')
+    .attr('aria-label', message)
+    .attr('tabindex', 0)
     .show()
     .focus();
-  this.container.find('.controls button.' +
-    (minMax === 'min' ? 'back' : 'next'))
-    .attr('disabled', true);
-  this.alertTimeout = setTimeout(function() {
-    alert.hide();
-    inputs.show();
-  }, 5000);
 };
 
 CsvEventCalendar.prototype.focus = function() {
   var me = this;
-  if (!this.firstLoad && !this.container.find('.controls .alert').is(':visible')) {
+  if (!this.firstLoad && !this.container.find('.alert').is(':visible')) {
     var scroll = $(document).scrollTop();
     setTimeout(function() {
       var view = me.state.view;
