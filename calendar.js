@@ -318,7 +318,7 @@ CsvEventCalendar.prototype.controls = function() {
     .append(div2)
   this.container.append(controls);
   var alert = $('<div class="alert" aria-live="assertive"><p></p></div>');
-  var ok = $('<button class="btn ok">OK</button></div>')
+  var ok = $('<button class="btn ok" aria-label="click OK to continue">OK</button></div>')
     .on('click', function() {
       alert.hide();
     });
@@ -550,7 +550,14 @@ CsvEventCalendar.prototype.alert = function(minMaxKey) {
     .attr('aria-label', message)
     .attr('tabindex', 0)
     .show()
-    .find('button.ok').focus();
+    .focus();
+  var ok = alert.find('button.ok')
+  var timeout = setTimeout(function() {
+    ok.focus();
+  }, 6500);
+  ok.on('click', function() {
+    clearTimeout(timeout);
+  });
 };
 
 CsvEventCalendar.prototype.focus = function() {
