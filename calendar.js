@@ -550,7 +550,7 @@ CsvEventCalendar.prototype.alert = function(minMaxKey) {
     .attr('aria-label', message)
     .attr('tabindex', 0)
     .show()
-    .focus();
+    .find('button.ok').focus();
 };
 
 CsvEventCalendar.prototype.focus = function() {
