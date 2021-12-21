@@ -57,10 +57,8 @@ function CsvEventCalendar(options) {
   }
 
   $(document).on('keyup', function(domEvent) {
-    console.warn(domEvent);
     if (domEvent.keyCode === 27) {
-      calendar1
-        .view(calendar1.state.previousView);
+      me.view(me.state.previousView);
     }
   });
 
