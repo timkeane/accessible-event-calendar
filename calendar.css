@@ -332,10 +332,6 @@
 .calendar.w-645 .view-wo-events .day.has-events {
   background-color: #add8e6;
 }
-.calendar.w-645 .view.month .day .events,
-.calendar.w-645 .view-wo-events .day .events {
-  display: none;
-}  
 /* max-width : 645px */
 
 
