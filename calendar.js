@@ -22,7 +22,7 @@ function CsvEventCalendar(options) {
     date: this.today.getDate(),
     day: this.today.getDay(),
     view: 'month',
-    returnToView: 'month',
+    previousView: 'month',
     key: function() {
       var m = this.month + 1;
       var d = this.date;
@@ -56,12 +56,20 @@ function CsvEventCalendar(options) {
     this.noCsvUrl = true;
   }
 
+  $(document).on('keyup', function(domEvent) {
+    console.warn(domEvent);
+    if (domEvent.keyCode === 27) {
+      calendar1
+        .view(calendar1.state.previousView);
+    }
+  });
+
   return this;
 };
 
 CsvEventCalendar.prototype.updateState = function(options) {
   var before = JSON.stringify(this.state);
-  var returnToView = this.state.view;
+  var previousView = this.state.view;
   this.state.view = options.view || this.state.view;
   this.state.year = options.year || this.state.year;
   this.state.month = options.month !== undefined ? options.month : this.state.month;
@@ -72,11 +80,11 @@ CsvEventCalendar.prototype.updateState = function(options) {
     this.state.month = this.state.month;
     this.state.date = lastDayOfMonth;
   }
-  if (this.state.view === 'day' && returnToView !== 'day') {
-    this.state.returnToView = returnToView;
+  if (this.state.view === 'day' && previousView !== 'day') {
+    this.state.previousView = previousView;
   }
   if (this.state.view === 'week') {
-    this.state.returnToView = 'month';
+    this.state.previousView = 'month';
   }
   if (options.key) {
     this.state.year = this.yearNumber(options.key);
@@ -297,10 +305,10 @@ CsvEventCalendar.prototype.controls = function() {
     .append('<option value="week">View by week</option>')
     .append('<option value="day">View by day</option>')
     .data('last-val', 'month')
-    .on('keypress click', function(e) {
+    .on('keypress click', function(domEvent) {
       var chg = select.val() !== select.data('last-val');
-      var changedWithMouse = chg && e.type === 'click';
-      var changedWithKeyboard = chg && e.type === 'keypress' && (e.keyCode === 32 || e.keyCode === 13);
+      var changedWithMouse = chg && domEvent.type === 'click';
+      var changedWithKeyboard = chg && domEvent.type === 'keypress' && (domEvent.keyCode === 32 || domEvent.keyCode === 13);
       if (changedWithMouse || changedWithKeyboard) {
         var val = select.val();
         select.data('last-val', val);
@@ -387,7 +395,7 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
   var prevView = $('<button class="prev-view"></button>')
     .on('click', function(domEvent) {
       domEvent.stopImmediatePropagation();
-      me.view(me.state.returnToView);
+      me.view(me.state.previousView);
     });
   var h3 = $('<h3></h3>');
   var button = $('<button class="name"></button>');
@@ -443,7 +451,7 @@ CsvEventCalendar.prototype.view = function(view) {
       .removeAttr('data-old-label');
   });
   this.container.find('.day button.prev-view')
-    .attr('aria-label', 'return to ' + this.state.returnToView + ' view');
+    .attr('aria-label', 'return to ' + this.state.previousView + ' view');
   this[view + 'View']();
   this.container.find('.view .day[data-date-key="' + this.state.today + '"]').addClass('today');
   this.focus();
@@ -501,7 +509,7 @@ CsvEventCalendar.prototype.populate = function() {
       if (events) {
         calendarEvents[key] = events;
         $(dayNode).addClass('has-events');
-        $.each(events, function(e, calEvent) {
+        $.each(events, function(_, calEvent) {
           eventsNode.append(me.eventHtml(calEvent));
         });
         button.attr('aria-label', title + ' (' + eventCount +
