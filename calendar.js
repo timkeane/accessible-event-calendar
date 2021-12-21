@@ -296,8 +296,15 @@ CsvEventCalendar.prototype.controls = function() {
     .append('<option value="month">View by month</option>')
     .append('<option value="week">View by week</option>')
     .append('<option value="day">View by day</option>')
-    .on('input', function() {
-      me.view(select.val());
+    .data('last-val', 'month')
+    .on('keydown click', function(e) {
+      var changedWithMouse = e.type === 'click' && select.val() !== select.data('last-val');
+      var changedWithKeyboard = e.type === 'keydown' && (e.keyCode === 32 || e.keyCode === 13);
+      if (changedWithMouse || changedWithKeyboard) {
+        var val = select.val();
+        select.data('last-val', val);
+        me.view(val);
+      }
     });
   var h2 = $('<h2 aria-polite="assertive"></h2>')
     .append(
