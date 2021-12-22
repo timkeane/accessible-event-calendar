@@ -51,6 +51,7 @@
 .calendar .controls button.back,
 .calendar .controls button.next {
   width: 80px;
+  padding: 0;
 }
 .calendar .controls button.back {
   top: 0;
