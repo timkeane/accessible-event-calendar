@@ -103,14 +103,14 @@ CsvEventCalendar.prototype.updateState = function(options) {
   var key = this.state.key();
   var view = this.state.view;
   this.container.find('.controls input[type="date"]').val(key);
-  this.container.find('.controls fieldset button[role="radio"]').attr({
+  this.container.find('.controls fieldset input').attr({
     'aria-checked': false,
     'aria-selected': false
-  });
-  this.container.find('.controls fieldset button[value="' + view + '"]').attr({
+  }).prop('checked', false);
+  this.container.find('.controls fieldset input[value="' + view + '"]').attr({
     'aria-checked': true,
     'aria-selected': true
-  });
+  }).prop('checked', true);
   this.container.find('.controls fieldset button.btn').html('View by ' + view);
   if (after !== before) {
     this.week();
@@ -307,11 +307,28 @@ CsvEventCalendar.prototype.controls = function() {
         me.alert(key);
       }
     });
+  var views = ['Month', 'Week', 'Day'];
   var fieldset = $('<fieldset role="listbox" aria-collapsed="true" aria-expanded="false"></fieldset>')
-    .append('<button class="btn" aria-pressed="false" aria-label="click to choose a view">View by month</button>')
-    .append('<button role="radio" value="month" aria-checked="true" aria-selected="true">Month</button>')
-    .append('<button role="radio" value="week" aria-checked="false" aria-selected="false">Week</button>')
-    .append('<button role="radio" value="day" aria-checked="false" aria-selected="false">Day</button>');
+    .append('<button class="btn" aria-pressed="false" aria-label="click to choose a view">View by month</button>');
+  for (var i = 0; i < views.length; i++) {
+    var id = CsvEventCalendar.nextId('view');
+    var view = views[i].toLocaleLowerCase();
+    var radio = $('<input name="view-choice" type="radio">')
+      .attr({
+        id: id,
+        value: view,
+        'aria-checked': i === 0,
+        'aria-selected': i === 0,
+        'aria-label': 'View by ' + view
+      }).prop('checked', i === 0);
+    var label = $('<label></label>')
+      .html(views[i])
+      .attr({
+        for: id,
+        'aria-label': 'View by ' + view
+      });
+    fieldset.append($('<div class="view-choice"></div>').append(radio).append(label));
+  }
   var activeateBtn = fieldset.find('button.btn');
   activeateBtn.on('click', function() {
     var open = activeateBtn.attr('aria-pressed') === 'true';
@@ -321,27 +338,27 @@ CsvEventCalendar.prototype.controls = function() {
     });
     activeateBtn.attr('aria-pressed', !open);
   });
-  fieldset.find('button').on('blur', function(domEvent) {
-    var parent = $(domEvent.relatedTarget).parent()[0];
-    if (parent && parent.tagName !== 'FIELDSET') {
+  fieldset.find('input').on('click keyup', function(domEvent) {
+    if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.keyCode === 32 || domEvent.keyCode === 13)) {
       fieldset.attr({
         'aria-collapsed': true,
         'aria-expanded': false
       });
-      activeateBtn.attr('aria-pressed', false);
-      }
+      activeateBtn.attr('aria-pressed', false).focus();
+      me.view($(domEvent.target).val());
+    }
   });
-  fieldset.find('button[role="radio"]').on('click', function(domEvent) {
+  fieldset.find('button[value]').on('click', function(domEvent) {
     var choice = $(domEvent.target);
     var view = choice.val();
-    fieldset.find('button[role="radio"]').attr({
+    fieldset.find('button[value]').attr({
       'aria-checked': false,
       'aria-selected': false
     });
     choice.attr({
       'aria-checked': true,
       'aria-selected': true
-    });
+    }).prop('checked', true);
     fieldset.attr({
       'aria-collapsed': true,
       'aria-expanded': false
@@ -349,7 +366,7 @@ CsvEventCalendar.prototype.controls = function() {
     activeateBtn.html('View by ' + view).attr('aria-pressed', false);
     me.view(view);
   });
-  var h2 = $('<h2 aria-polite="assertive"></h2>')
+  var h2 = $('<h2 aria-live="assertive"></h2>')
     .append(
       $('<span class="month"></span>')
         .append('<span class="long"></span>')
@@ -723,3 +740,9 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
   }
   return parts.join(':') + suffix;
 };
+
+CsvEventCalendar.nextId = function(prefix) {
+  CsvEventCalendar.id = CsvEventCalendar.id || 0;
+  CsvEventCalendar.id = CsvEventCalendar.id + 1;
+  return prefix + CsvEventCalendar.id;
+}

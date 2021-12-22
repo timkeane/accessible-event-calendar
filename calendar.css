@@ -24,7 +24,7 @@
   text-align: center;
 }
 .calendar div.alert p {
-  margin-bottom: 10px;
+  margin: 0 0 10px;
   padding: 0;
 }
 .calendar .controls {
@@ -33,6 +33,12 @@
 }
 .calendar .controls h2 {
   display: inline;
+}
+.calendar .controls button,
+.calendar .controls input[type="date"] {
+  border-radius: 4px;
+  background-color: #eee;
+  border: none;
 }
 .calendar .controls button.back,
 .calendar .controls button.next,
@@ -54,7 +60,7 @@
   top: 0;
   right: 0;
 }
-.calendar .controls input {
+.calendar .controls input[type="date"] {
   top: 40px;
   left: 0;
 }
@@ -63,6 +69,7 @@
   right: 0;
   overflow: hidden;
   margin-right: -1px;
+  padding: 0;
 }
 .calendar .controls fieldset[aria-collapsed="false"] {
   height: auto;
@@ -70,36 +77,57 @@
 .calendar .controls input[type="date"],
 .calendar .controls fieldset {
   width: 120px;
-  background-color: #eee;
-  border-radius: 4px;
   border: none;
 }
-.calendar .controls fieldset button {
+
+
+
+
+.calendar .controls fieldset button,
+.calendar .controls fieldset .view-choice {
   display: block;
   width: 100%;
   padding-left: 0;
   padding-right: 0;
+  height: 35px;
+  background-color: #eee;
 }
 .calendar .controls fieldset button[aria-pressed="true"] {
   border: 1px solid #333;
 }
-.calendar .controls fieldset button[role="radio"] {
+.calendar .controls fieldset .view-choice {
   border: 1px solid #333;
   border-top: none;
   height: 35px;
-  text-align: left;
-  padding-left: 35px;
   position: relative;
   display: none;
+  width: calc(100% - 2px);
 }
-.calendar .controls fieldset[aria-collapsed="false"] button[role="radio"] {
+.calendar .controls fieldset[aria-collapsed="false"] .view-choice {
   display: block;
 }
-.calendar .controls fieldset button:last-child {
+.calendar .controls fieldset .view-choice:last-child {
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-.calendar .controls fieldset button[role="radio"]:before {
+.calendar .controls fieldset .view-choice input {
+  float: left;
+  width: 15px;
+  height: 15px;
+  margin: 10px;
+}
+.calendar .controls fieldset .view-choice label {
+  display: block;
+  text-align: left;
+  padding: 8px 0 8px 30px;
+  font-weight: normal;
+}
+.calendar .controls fieldset .view-choice input:focus+label {
+  background-color: #333;
+  color: #fff;
+}
+
+/* .calendar .controls fieldset button[value]:before {
   content: '';
   display: block;
   position: absolute;
@@ -119,17 +147,14 @@
   width: 17px;
   height: 17px;
 }
-.calendar .controls fieldset button[role="radio"]:focus {
-  background-color: #333;
-  color: #fff;
-}
-.calendar .controls fieldset button[role="radio"]:focus:before,
-.calendar .controls fieldset button[aria-checked="true"]:focus:before {
+.calendar .controls fieldset .view-choice:focus:before {
   border-color: #fff;
-}
+} */
 
 
-.calendar .controls input::-webkit-calendar-picker-indicator {
+
+
+.calendar .controls input[type="date"]::-webkit-calendar-picker-indicator {
   margin-left: 0px;
 }
 .calendar .controls .buttons {
@@ -232,7 +257,9 @@
 
 .calendar .view.month *,
 .calendar .view-wo-events *,
-.calendar .controls div.alert {
+.calendar .controls div,
+.calendar .controls button,
+.calendar .controls input {
   font-size: 16px;
 }
 .calendar .view.month li,
