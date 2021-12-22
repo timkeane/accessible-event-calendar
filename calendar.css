@@ -28,25 +28,97 @@
   padding: 0;
 }
 .calendar .controls {
-  margin-bottom: 10px;
+  position: relative;
+  height: 80px;
   width: 100%;
 }
-.calendar .controls div {
-  overflow: hidden;
-}
-.calendar .controls button,
-.calendar .controls h2,
-.calendar .controls input[type="date"],
-.calendar .controls select {
+.calendar .controls h2 {
   display: inline;
 }
-.calendar .controls button {
+.calendar .controls button.back,
+.calendar .controls button.next,
+.calendar .controls input[type="date"],
+.calendar .controls fieldset {
+  position: absolute;
+  display: block;
+  height: 35px;
+}
+.calendar .controls button.back,
+.calendar .controls button.next {
   width: 80px;
 }
+.calendar .controls button.back {
+  top: 0;
+  left: 0;
+}
+.calendar .controls button.next {
+  top: 0;
+  right: 0;
+}
+.calendar .controls input {
+  top: 40px;
+  left: 0;
+}
+.calendar .controls fieldset {
+  top: 40px;
+  right: 0;
+  overflow: hidden;
+  margin-right: -1px;
+}
+.calendar .controls fieldset[aria-collapsed="false"] {
+  height: auto;
+}
 .calendar .controls input[type="date"],
-.calendar .controls select {
-  height: 24px;
+.calendar .controls fieldset {
   width: 120px;
+  background-color: #eee;
+  border-radius: 4px;
+  border: none;
+}
+.calendar .controls fieldset button {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+.calendar .controls fieldset button[aria-pressed="true"] {
+  border: 1px solid #333;
+}
+.calendar .controls fieldset button[role="radio"] {
+  border: 1px solid #333;
+  border-top: none;
+  height: 35px;
+  text-align: left;
+  padding-left: 35px;
+  position: relative;
+  display: none;
+}
+.calendar .controls fieldset[aria-collapsed="false"] button[role="radio"] {
+  display: block;
+}
+.calendar .controls fieldset button:last-child {
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.calendar .controls fieldset button[role="radio"]:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  width: 13px;
+  height: 13px;
+}
+.calendar .controls fieldset button[aria-checked="true"]:before {
+  top: 7px;
+  border-style: double;
+  border-width: 5px;
+  border-color: #eee;
+  background-color: #333;
+  width: 17px;
+  height: 17px;
 }
 .calendar .controls input::-webkit-calendar-picker-indicator {
   margin-left: 0px;
@@ -61,8 +133,7 @@
 .calendar .controls input[type="date"] {
   float: left;
 }
-.calendar .controls button.next,
-.calendar .controls select {
+.calendar .controls button.next {
   float: right;
 }
 .calendar .controls,
@@ -73,7 +144,7 @@
 .calendar .controls span.abbr {
   display: none;
 }
-.calendar .controls.controls-wo-views select {
+.calendar .controls.controls-wo-views fieldset {
   display: none;
 }
 .calendar .view.month .day button {
@@ -109,7 +180,7 @@
 }
 .calendar .day h3 {
   padding: 3px;
-  margin: 20px 0 10px 0;
+  margin: 0px 0 10px 0;
   font-size: 24px;
   background-color: #333;
   color: #fff;
@@ -127,6 +198,9 @@
   border: inherit;
   background-color: inherit;
   font-size: inherit;
+}
+.calendar .day .events .no-events {
+  margin-bottom: 15px;
 }
 .calendar .view .day h4 {
   margin: 5px 0;
@@ -366,7 +440,8 @@
 
 
 /* max-width : 400px */
-.calendar.w-400 .controls button {
+.calendar.w-400 .controls button.back,
+.calendar.w-400 .controls button.next {
   width: auto;
 }
 .calendar.w-400 .controls button span.long {
@@ -397,7 +472,7 @@
   display: none;
 }
 .calendar.w-360 .controls input[type="date"],
-.calendar.w-360 .controls select {
+.calendar.w-360 .controls fieldset {
   width: 130px;
 }
 /* max-width : 360px */
@@ -405,7 +480,7 @@
 
 /* max-width : 300px */
 .calendar.w-300 .controls input[type="date"],
-.calendar.w-300 .controls select {
+.calendar.w-300 .controls fieldset {
   width: 45%;
 }
 /* max-width : 300px */
