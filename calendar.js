@@ -16,7 +16,7 @@ function CsvEventCalendar(options) {
   $(options.target).append(this.container);
 
   this.state = {
-    today: this.dateKey(this.today),
+    today: CsvEventCalendar.dateKey(this.today),
     year: this.today.getFullYear(),
     month: this.today.getMonth(),
     date: this.today.getDate(),
@@ -83,9 +83,9 @@ CsvEventCalendar.prototype.updateState = function(options) {
     this.state.date = lastDayOfMonth;
   }
   if (options.key) {
-    this.state.year = this.yearNumber(options.key);
-    this.state.month = this.monthNumber(options.key) - 1;
-    this.state.date = this.dateNumber(options.key);
+    this.state.year = CsvEventCalendar.yearNumber(options.key);
+    this.state.month = CsvEventCalendar.monthNumber(options.key) - 1;
+    this.state.date = CsvEventCalendar.dateNumber(options.key);
   }
   if (this.state.key() > this.max) {
     this.updateState({key: this.max});
@@ -119,66 +119,18 @@ CsvEventCalendar.prototype.updateState = function(options) {
   }
 };
 
-CsvEventCalendar.prototype.dateKey = function(date) {
-  var parts =  date.toLocaleString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).split('/');
-  return parts[2] + '-' + parts[0] + '-' + parts[1];
-};
-
-CsvEventCalendar.prototype.dateFromKey = function(key) {
-  return new Date(key + 'T00:00');
-};
-
-CsvEventCalendar.prototype.dateNumber = function(key) {
-  return key.split('-')[2] * 1;
-};
-
-CsvEventCalendar.prototype.dayNumber = function(key) {
-  var date = this.dateFromKey(key);
-  return date.getDay();
-};
-
-CsvEventCalendar.prototype.dayName = function(key) {
-  var day = this.dayNumber(key);
-  return CsvEventCalendar.DAY_NAMES[day];
-};
-
-CsvEventCalendar.prototype.monthNumber = function(key) {
-  return key.split('-')[1] * 1;
-};
-
-CsvEventCalendar.prototype.monthName = function(key) {
-  var month = this.monthNumber(key);
-  return CsvEventCalendar.MONTH_NAMES[month - 1];
-};
-
-CsvEventCalendar.prototype.sameMonth = function(key1, key2) {
-  return this.monthNumber(key1) === this.monthNumber(key2);
-};
-
-CsvEventCalendar.prototype.yearNumber = function(key) {
-  return key.split('-')[0] * 1;
-};
-
-CsvEventCalendar.prototype.sameYear = function(key1, key2) {
-  return this.yearNumber(key1) === this.yearNumber(key2);
-};
-
 CsvEventCalendar.prototype.dayNode = function(key) {
   return this.container.find('[data-date-key="' + key + '"]')
 };
 
 CsvEventCalendar.prototype.title = function(options) {
   var key = options.key || this.state.key();
-  var year = this.yearNumber(key);
-  var month = this.monthName(key);
+  var year = CsvEventCalendar.yearNumber(key);
+  var month = CsvEventCalendar.monthName(key);
   var mo = month.substr(0, 3);
-  var m = this.monthNumber(key);
-  var date = this.dateNumber(key);
-  var day = this.dayName(key);
+  var m = CsvEventCalendar.monthNumber(key);
+  var date = CsvEventCalendar.dateNumber(key);
+  var day = CsvEventCalendar.dayName(key);
   var d = day.substr(0, 3);
   var title = {
     month: {
@@ -204,7 +156,7 @@ CsvEventCalendar.prototype.previousMonth = function(dates) {
   var totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate();
   for (var i = 1; i <= firstDay; i++) {
     var prevMonthDate = totalDaysInPrevMonth - firstDay + i;
-    var key = this.dateKey(new Date(this.state.year, this.state.month - 1, prevMonthDate));    
+    var key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month - 1, prevMonthDate));    
     dates.push({key: key, date: prevMonthDate, monthClass: 'prev'});
   }
 };
@@ -212,7 +164,7 @@ CsvEventCalendar.prototype.previousMonth = function(dates) {
 CsvEventCalendar.prototype.currentMonth = function(dates) {
   var totalDaysInMonth = new Date(this.state.year, this.state.month + 1, 0).getDate();
   for (var i = 1; i <= totalDaysInMonth; i++) {
-    var key = this.dateKey(new Date(this.state.year, this.state.month, i));
+    var key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month, i));
     dates.push({key: key, date: i, monthClass: 'current'});
   }  
 };
@@ -222,7 +174,7 @@ CsvEventCalendar.prototype.nextMonth = function(dates) {
   if(dates.length < gridsize) {
     var count = gridsize - dates.length;
     for(var i = 1; i <= count; i++) {
-      var key = this.dateKey(new Date(this.state.year, this.state.month + 1, i));
+      var key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month + 1, i));
       dates.push({key: key, date: i, monthClass: 'next'});
     }
   }
@@ -254,9 +206,9 @@ CsvEventCalendar.prototype.monthNavigate = function(delta) {
 
 CsvEventCalendar.prototype.weekNavigate = function(delta) {
   var key = this.state.key();
-  var date = this.dateFromKey(key);
+  var date = CsvEventCalendar.dateFromKey(key);
   date.setDate(date.getDate() + (delta * 7));
-  this.updateState({key: this.dateKey(date)});
+  this.updateState({key: CsvEventCalendar.dateKey(date)});
   var dayNode = this.dayNode(this.state.key())
   if (!dayNode.length) {
     this.monthView();
@@ -268,10 +220,10 @@ CsvEventCalendar.prototype.weekNavigate = function(delta) {
 
 CsvEventCalendar.prototype.dayNavigate = function(delta) {
   var key = this.state.key();
-  var date = this.dateFromKey(key);
+  var date = CsvEventCalendar.dateFromKey(key);
   date.setDate(date.getDate() + delta);
 
-  var nextKey = this.dateKey(date);
+  var nextKey = CsvEventCalendar.dateKey(date);
   this.updateState({key: nextKey});
 
   var dayNode = this.dayNode(this.state.key())
@@ -380,7 +332,7 @@ CsvEventCalendar.prototype.calendar = function(dates) {
     me.day(date, weekOfMonth, month);
     if ((i + 1) % 7 === 0) {
       weekOfMonth = weekOfMonth + 1;
-      if (i === 34 && !me.sameMonth(endOfWeek1, startOfWeek6)) {
+      if (i === 34 && !CsvEventCalendar.sameMonth(endOfWeek1, startOfWeek6)) {
         return false;
       }
     }
@@ -564,7 +516,7 @@ CsvEventCalendar.prototype.populate = function() {
 CsvEventCalendar.prototype.indexData = function(response) {
   var me = this;
   var calEvents = response.data;
-  this.sortByDate(calEvents);
+  CsvEventCalendar.sortByDate(calEvents);
   if (!this.min) {
     this.min = calEvents[0].date;
     this.container.find('.controls input[type="date"]').attr('min', this.min);
@@ -577,7 +529,7 @@ CsvEventCalendar.prototype.indexData = function(response) {
     var key = calEvent.date;
     me.eventsIndex[key] = me.eventsIndex[key] || [];
     me.eventsIndex[key].push(calEvent);
-    me.sortByStartTime(me.eventsIndex[key]);
+    CsvEventCalendar.sortByStartTime(me.eventsIndex[key]);
   });
   this.eventsIndex.ready = true;
   this.populate();
@@ -628,36 +580,6 @@ CsvEventCalendar.prototype.focus = function() {
   this.firstLoad = false;
 };
 
-CsvEventCalendar.prototype.sortByStartTime = function(events) {
-  var fmt = CsvEventCalendar.timeFormat;
-  events.sort(function(event1, event2) {
-    var time1 = fmt(event1.start);
-    var time2 = fmt(event2.start);
-    if (time1 < time2) {
-      return -1;
-    } else if (time1 < time2) {
-      return 1;
-    }
-    return 0;
-  });
-};
-
-CsvEventCalendar.prototype.sortByDate = function(events) {
-  events.sort(function(event1, event2) {
-    var date1 = event1.date;
-    var date2 = event2.date;
-    if (date1 < date2) {
-      return -1;
-    } else if (date1 < date2) {
-      return 1;
-    }
-    return 0;
-  });
-  while(!events[0].date) {
-    events.shift();
-  }
-};
-
 CsvEventCalendar.prototype.resize = function() {
   var container = this.container;
   var changes = [645, 500, 400, 360, 340, 300, 280];
@@ -691,6 +613,50 @@ CsvEventCalendar.prototype.eventHtml = function(calEvent) {
 CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; 
 CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+CsvEventCalendar.dateKey = function(date) {
+  var parts =  date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).split('/');
+  return parts[2] + '-' + parts[0] + '-' + parts[1];
+};
+
+CsvEventCalendar.dateFromKey = function(key) {
+  return new Date(key + 'T00:00');
+};
+
+CsvEventCalendar.dateNumber = function(key) {
+  return key.split('-')[2] * 1;
+};
+
+CsvEventCalendar.dayNumber = function(key) {
+  var date = CsvEventCalendar.dateFromKey(key);
+  return date.getDay();
+};
+
+CsvEventCalendar.dayName = function(key) {
+  var day = CsvEventCalendar.dayNumber(key);
+  return CsvEventCalendar.DAY_NAMES[day];
+};
+
+CsvEventCalendar.monthNumber = function(key) {
+  return key.split('-')[1] * 1;
+};
+
+CsvEventCalendar.monthName = function(key) {
+  var month = CsvEventCalendar.monthNumber(key);
+  return CsvEventCalendar.MONTH_NAMES[month - 1];
+};
+
+CsvEventCalendar.sameMonth = function(key1, key2) {
+  return CsvEventCalendar.monthNumber(key1) === CsvEventCalendar.monthNumber(key2);
+};
+
+CsvEventCalendar.yearNumber = function(key) {
+  return key.split('-')[0] * 1;
+};
+
 CsvEventCalendar.timeFormat = function(time, ampm) {
   if (time.trim().length === 0) return ''; 
   var parts = time.split(':');
@@ -721,6 +687,36 @@ CsvEventCalendar.timeFormat = function(time, ampm) {
     suffix = ' PM';
   }
   return parts.join(':') + suffix;
+};
+
+CsvEventCalendar.sortByStartTime = function(events) {
+  var fmt = CsvEventCalendar.timeFormat;
+  events.sort(function(event1, event2) {
+    var time1 = fmt(event1.start);
+    var time2 = fmt(event2.start);
+    if (time1 < time2) {
+      return -1;
+    } else if (time1 < time2) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
+CsvEventCalendar.sortByDate = function(events) {
+  events.sort(function(event1, event2) {
+    var date1 = event1.date;
+    var date2 = event2.date;
+    if (date1 < date2) {
+      return -1;
+    } else if (date1 < date2) {
+      return 1;
+    }
+    return 0;
+  });
+  while(!events[0].date) {
+    events.shift();
+  }
 };
 
 CsvEventCalendar.nextId = function(prefix) {
