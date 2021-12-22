@@ -280,18 +280,32 @@ CsvEventCalendar.prototype.controls = function() {
     fieldset.append($('<div class="view-choice"></div>').append(radio).append(label));
   }
   var activeateBtn = fieldset.find('button.btn');
-  activeateBtn.on('click', function() {
-    var open = fieldset.attr('aria-expanded') === true;
-    fieldset.attr('aria-expanded', !open);
-    setTimeout(function() {
-      fieldset.find('input[aria-checked="true"]').focus();
-    }, 200);
+  activeateBtn.on('click keyup', function(domEvent) {
+    if (domEvent.type === 'click' || domEvent.key === 'ArrowDown') {
+      var open = fieldset.attr('aria-expanded') === true;
+      fieldset.attr('aria-expanded', !open);
+      setTimeout(function() {
+        fieldset.find('input[aria-checked="true"]').focus();
+      }, 200);
+    }
   });
   fieldset.find('input').on('click keyup', function(domEvent) {
     if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
       fieldset.attr('aria-expanded', false);
       activeateBtn.focus();
       me.view($(domEvent.target).val());
+    }
+  });
+  $(this.container).on('click', function(domEvent) {
+    var next = domEvent.target;
+    if (next && !$.contains(fieldset.get(0), next)) {
+      fieldset.attr('aria-expanded', false);
+    }
+  });
+  fieldset.find('button, input').on('blur', function(domEvent) {
+    var next = domEvent.relatedTarget;
+    if (next && !$.contains(fieldset.get(0), next)) {
+      fieldset.attr('aria-expanded', false);
     }
   });
   var h2 = $('<h2 aria-live="assertive"></h2>')
