@@ -306,20 +306,28 @@ CsvEventCalendar.prototype.controls = function() {
     .append('<button role="radio" value="month" aria-checked="true">Month</button>')
     .append('<button role="radio" value="week">Week</button>')
     .append('<button role="radio" value="day">Day</button>');
-  fieldset.find('button.btn').on('click', function(domEvent) {
-    var open = $(domEvent.target).attr('aria-pressed') === 'true';
+  var activeateBtn = fieldset.find('button.btn');
+  activeateBtn.on('click', function() {
+    var open = activeateBtn.attr('aria-pressed') === 'true';
     fieldset.attr('aria-collapsed', open);
     fieldset.attr('aria-expanded', !open);
-    $(domEvent.target).attr('aria-pressed', !open);
+    activeateBtn.attr('aria-pressed', !open);
+  });
+  fieldset.find('button').on('blur', function(domEvent) {
+    var parent = $(domEvent.relatedTarget).parent()[0];
+    if (parent && parent.tagName !== 'FIELDSET') {
+      fieldset.attr('aria-collapsed', true);
+      fieldset.attr('aria-expanded', false);
+      activeateBtn.attr('aria-pressed', false);
+      }
   });
   fieldset.find('button[role="radio"]').on('click', function(domEvent) {
-    var choice = $(domEvent.target)
+    var choice = $(domEvent.target);
     var view = choice.val();
     fieldset.find('button[role="radio"]').attr('aria-checked', false);
     choice.attr('aria-checked', true);
     fieldset.attr('aria-collapsed', true);
-    fieldset.find('button.btn').html('View by ' + view)
-      .attr('aria-pressed', false);
+    activeateBtn.html('View by ' + view).attr('aria-pressed', false);
     me.view(view);
   });
   var h2 = $('<h2 aria-polite="assertive"></h2>')
@@ -342,7 +350,6 @@ CsvEventCalendar.prototype.controls = function() {
       alert.hide();
     });
   this.container.append(alert.append(ok));
-
 };
 
 CsvEventCalendar.prototype.calendar = function(dates) {

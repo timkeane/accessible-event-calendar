@@ -200,7 +200,7 @@
   font-size: inherit;
 }
 .calendar .day .events .no-events {
-  margin-bottom: 15px;
+  margin: 0 0 15px 10px;
 }
 .calendar .view .day h4 {
   margin: 5px 0;
