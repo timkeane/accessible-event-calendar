@@ -403,7 +403,7 @@
   display: block;
 }
 .calendar .view.day .day h3 {
-  line-height: 30px;
+  /* line-height: 30px; */
 }
 
 .calendar .controls button.back span.short,
@@ -515,7 +515,7 @@
   display: inline;
 }
 .calendar.w-360 .controls button span.short {
-  display: inline;
+  display: table-cell;
 }
 .calendar.w-360 .controls h2 span.short {
   display: inline;
