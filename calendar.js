@@ -148,6 +148,7 @@ CsvEventCalendar.prototype.title = function(options) {
   $(options.node).find('.month .long').html(title.month.long);
   $(options.node).find('.month .short').html(title.month.short);
   $(options.node).find('.month .abbr').html(title.month.abbr);
+  $(options.node).attr('aria-label', title.month.long);
   return title;
 };
 
@@ -419,6 +420,7 @@ CsvEventCalendar.prototype.view = function(view) {
     'aria-label': 'previous ' + view,
     title: 'previous ' + view
   });
+  this.container.find('.view').removeAttr('aria-label');
   this.container.find('.day button.name').removeAttr('aria-live');
   this.container.find('.day button[data-old-label]').each(function(i, btn) {
     $(btn).attr('aria-label', $(btn).attr('data-old-label'))
