@@ -101,8 +101,11 @@ CsvEventCalendar.prototype.updateState = function(options) {
   }
   var after = JSON.stringify(this.state);
   var key = this.state.key();
+  var view = this.state.view;
   this.container.find('.controls input[type="date"]').val(key);
-  //this.container.find('.controls input[value="' + this.state.view + '"]').trigger('click');
+  this.container.find('.controls fieldset button[role="radio"]').attr('aria-selected', false);
+  this.container.find('.controls fieldset button[value="' + view + '"]').attr('aria-selected', true);
+  this.container.find('.controls fieldset button.btn').html('View by ' + view);
   if (after !== before) {
     this.week();
     this.selectionChanged({
