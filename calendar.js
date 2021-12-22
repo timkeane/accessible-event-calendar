@@ -281,9 +281,8 @@ CsvEventCalendar.prototype.controls = function() {
   }
   var activeateBtn = fieldset.find('button.btn');
   activeateBtn.on('click', function() {
-    var open = activeateBtn.attr('aria-pressed') === 'true';
+    var open = fieldset.attr('aria-expanded') === true;
     fieldset.attr('aria-expanded', !open);
-    activeateBtn.attr('aria-pressed', !open);
     setTimeout(function() {
       fieldset.find('input[aria-checked="true"]').focus();
     }, 200);

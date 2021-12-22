@@ -91,7 +91,7 @@
   height: 35px;
   background-color: #eee;
 }
-.calendar .controls fieldset button[aria-pressed="true"] {
+.calendar .controls fieldset[aria-expanded="true"] button {
   border: 1px solid #333;
 }
 .calendar .controls fieldset .view-choice {
