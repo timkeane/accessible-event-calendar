@@ -107,6 +107,8 @@ CsvEventCalendar.prototype.updateState = function(options) {
     'aria-checked': false,
     'aria-selected': false
   }).prop('checked', false);
+  this.container.find('.controls fieldset button')
+    .attr('aria-label', 'showing' + view + 'view - click to choose a view');
   this.container.find('.controls fieldset input[value="' + view + '"]').attr({
     'aria-checked': true,
     'aria-selected': true
@@ -309,7 +311,7 @@ CsvEventCalendar.prototype.controls = function() {
     });
   var views = ['Month', 'Week', 'Day'];
   var fieldset = $('<fieldset role="listbox" aria-collapsed="true" aria-expanded="false"></fieldset>')
-    .append('<button class="btn" aria-pressed="false" aria-label="click to choose a view">View by month</button>');
+    .append('<button class="btn" aria-pressed="false" aria-label="showing month view - click to choose a view">View by month</button>');
   for (var i = 0; i < views.length; i++) {
     var id = CsvEventCalendar.nextId('view');
     var view = views[i].toLocaleLowerCase();
@@ -321,7 +323,7 @@ CsvEventCalendar.prototype.controls = function() {
         'aria-selected': i === 0,
         'aria-label': 'View by ' + view
       }).prop('checked', i === 0);
-    var label = $('<label></label>')
+    var label = $('<label aria-hidden="true"></label>')
       .html(views[i])
       .attr({
         for: id,
