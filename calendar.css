@@ -117,11 +117,15 @@
 .calendar .controls fieldset .view-choice label {
   display: block;
   text-align: left;
-  padding: 8px 0 8px 30px;
+  padding: 6px 0 6px 30px;
   font-weight: normal;
 }
 .calendar .controls fieldset .view-choice input:focus+label {
   background-color: #333;
+  color: #fff;
+}
+.calendar .controls fieldset .view-choice:hover label {
+  background-color: #777;
   color: #fff;
 }
 
@@ -398,8 +402,8 @@
 .calendar .controls button.next span.short,
 .calendar .view button.prev-view {
   display: none;
-  width: 14px;
-  height: 14px;
+  width: 34px;
+  height: 34px;
   color: transparent;
   background-color: transparent;
   background-position: center;
@@ -410,7 +414,7 @@
 .calendar .view .day button.prev-view {
   float: right;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
-  margin: -34px 11px;
+  margin: -44px 0;
 }
 .calendar .controls button.back span.short,
 .calendar .view .day.today button.prev-view {
