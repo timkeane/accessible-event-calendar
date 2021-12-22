@@ -68,10 +68,9 @@
   top: 40px;
   right: 0;
   overflow: hidden;
-  margin-right: -1px;
   padding: 0;
 }
-.calendar .controls fieldset[aria-collapsed="false"] {
+.calendar .controls fieldset[aria-expanded="true"] {
   height: auto;
 }
 .calendar .controls input[type="date"],
@@ -101,9 +100,8 @@
   height: 35px;
   position: relative;
   display: none;
-  width: calc(100% - 2px);
 }
-.calendar .controls fieldset[aria-collapsed="false"] .view-choice {
+.calendar .controls fieldset[aria-expanded="true"] .view-choice {
   display: block;
 }
 .calendar .controls fieldset .view-choice:last-child {
