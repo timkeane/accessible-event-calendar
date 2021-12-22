@@ -120,6 +120,16 @@
   width: 17px;
   height: 17px;
 }
+.calendar .controls fieldset button[role="radio"]:focus {
+  background-color: #333;
+  color: #fff;
+}
+.calendar .controls fieldset button[role="radio"]:focus:before,
+.calendar .controls fieldset button[aria-checked="true"]:focus:before {
+  border-color: #fff;
+}
+
+
 .calendar .controls input::-webkit-calendar-picker-indicator {
   margin-left: 0px;
 }
