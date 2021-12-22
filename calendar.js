@@ -103,8 +103,14 @@ CsvEventCalendar.prototype.updateState = function(options) {
   var key = this.state.key();
   var view = this.state.view;
   this.container.find('.controls input[type="date"]').val(key);
-  this.container.find('.controls fieldset button[role="radio"]').attr('aria-selected', false);
-  this.container.find('.controls fieldset button[value="' + view + '"]').attr('aria-selected', true);
+  this.container.find('.controls fieldset button[role="radio"]').attr({
+    'aria-checked': false,
+    'aria-selected': false
+  });
+  this.container.find('.controls fieldset button[value="' + view + '"]').attr({
+    'aria-checked': true,
+    'aria-selected': true
+  });
   this.container.find('.controls fieldset button.btn').html('View by ' + view);
   if (after !== before) {
     this.week();
@@ -303,30 +309,43 @@ CsvEventCalendar.prototype.controls = function() {
     });
   var fieldset = $('<fieldset role="listbox" aria-collapsed="true" aria-expanded="false"></fieldset>')
     .append('<button class="btn" aria-pressed="false" aria-label="click to choose a view">View by month</button>')
-    .append('<button role="radio" value="month" aria-checked="true">Month</button>')
-    .append('<button role="radio" value="week">Week</button>')
-    .append('<button role="radio" value="day">Day</button>');
+    .append('<button role="radio" value="month" aria-checked="true" aria-selected="true">Month</button>')
+    .append('<button role="radio" value="week" aria-checked="false" aria-selected="false">Week</button>')
+    .append('<button role="radio" value="day" aria-checked="false" aria-selected="false">Day</button>');
   var activeateBtn = fieldset.find('button.btn');
   activeateBtn.on('click', function() {
     var open = activeateBtn.attr('aria-pressed') === 'true';
-    fieldset.attr('aria-collapsed', open);
-    fieldset.attr('aria-expanded', !open);
+    fieldset.attr({
+      'aria-collapsed': open,
+      'aria-expanded': !open
+    });
     activeateBtn.attr('aria-pressed', !open);
   });
   fieldset.find('button').on('blur', function(domEvent) {
     var parent = $(domEvent.relatedTarget).parent()[0];
     if (parent && parent.tagName !== 'FIELDSET') {
-      fieldset.attr('aria-collapsed', true);
-      fieldset.attr('aria-expanded', false);
+      fieldset.attr({
+        'aria-collapsed': true,
+        'aria-expanded': false
+      });
       activeateBtn.attr('aria-pressed', false);
       }
   });
   fieldset.find('button[role="radio"]').on('click', function(domEvent) {
     var choice = $(domEvent.target);
     var view = choice.val();
-    fieldset.find('button[role="radio"]').attr('aria-checked', false);
-    choice.attr('aria-checked', true);
-    fieldset.attr('aria-collapsed', true);
+    fieldset.find('button[role="radio"]').attr({
+      'aria-checked': false,
+      'aria-selected': false
+    });
+    choice.attr({
+      'aria-checked': true,
+      'aria-selected': true
+    });
+    fieldset.attr({
+      'aria-collapsed': true,
+      'aria-expanded': false
+    });
     activeateBtn.html('View by ' + view).attr('aria-pressed', false);
     me.view(view);
   });
@@ -498,9 +517,11 @@ CsvEventCalendar.prototype.dayView = function() {
     label = title + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? 'event' : 'events');
   }
   dayNode.addClass('selected');
-  button.attr('aria-live', 'assertive')
-    .attr('data-old-label', button.attr('aria-label'))
-    .attr('aria-label', label);
+  button.attr('data-old-label', button.attr('aria-label'))
+    .attr({
+      'aria-live': 'assertive',
+      'aria-label': label
+    });
 };
 
 CsvEventCalendar.prototype.populate = function() {
@@ -526,8 +547,10 @@ CsvEventCalendar.prototype.populate = function() {
           (eventCount === 1 ? ' event' : ' events') + ' scheduled');
       } else {
         $(dayNode).attr('aria-hidden', 'true');
-        button.attr('aria-label', title + ' (no events scheduled)')
-          .attr('tabindex', -1);
+        button.attr({
+          'aria-label': title + ' (no events scheduled)',
+          tabindex: -1
+        });
         $(dayNode).find('button.prev-view').attr('tabindex', -1);
           eventsNode.html('<div class="no-events">no events scheduled</div>');
       }
@@ -573,8 +596,7 @@ CsvEventCalendar.prototype.alert = function(minMaxKey) {
   }
   this.container.find('.alert p').html(message);
   var alert = this.container.find('.alert')
-    .attr('aria-label', message)
-    .attr('tabindex', 0)
+    .attr({'aria-label': message, tabindex: 0})
     .show()
     .focus();
   var ok = alert.find('button.ok')
