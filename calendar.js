@@ -258,8 +258,8 @@ CsvEventCalendar.prototype.controls = function() {
       }
     });
   var views = ['Month', 'Week', 'Day'];
-  var fieldset = $('<fieldset role="listbox" aria-expanded="false"></fieldset>')
-    .append('<button class="btn" aria-pressed="false" aria-label="showing month view - click to choose a view">View by month</button>');
+  var fieldset = $('<fieldset aria-expanded="false"></fieldset>')
+    .append('<button class="btn" aria-label="showing month view - click to choose a view">View by month</button>');
   for (var i = 0; i < views.length; i++) {
     var id = CsvEventCalendar.nextId('view');
     var view = views[i].toLocaleLowerCase();
@@ -283,22 +283,16 @@ CsvEventCalendar.prototype.controls = function() {
     var open = activeateBtn.attr('aria-pressed') === 'true';
     fieldset.attr('aria-expanded', !open);
     activeateBtn.attr('aria-pressed', !open);
+    setTimeout(function() {
+      fieldset.find('input[aria-checked="true"]').focus();
+    }, 200);
   });
   fieldset.find('input').on('click keyup', function(domEvent) {
     if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
       fieldset.attr('aria-expanded', false);
-      activeateBtn.attr('aria-pressed', false).focus();
+      activeateBtn.focus();
       me.view($(domEvent.target).val());
     }
-  });
-  fieldset.find('button[value]').on('click', function(domEvent) {
-    var choice = $(domEvent.target);
-    var view = choice.val();
-    fieldset.find('button[value]').attr('aria-checked', false);
-    choice.attr('aria-checked', true).prop('checked', true);
-    fieldset.attr('aria-expanded', false);
-    activeateBtn.html('View by ' + view).attr('aria-pressed', false);
-    me.view(view);
   });
   var h2 = $('<h2 aria-live="assertive"></h2>')
     .append(
