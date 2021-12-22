@@ -67,8 +67,12 @@ function CsvEventCalendar(options) {
 
 CsvEventCalendar.prototype.updateState = function(options) {
   var before = JSON.stringify(this.state);
-  var previousView = this.state.view;
-  this.state.view = options.view || this.state.view;
+  if (options.view === 'week') {
+    this.state.previousView = 'month';
+  } else if (this.state.view !== 'day') {
+    this.state.previousView = this.state.view;
+  }
+this.state.view = options.view || this.state.view;
   this.state.year = options.year || this.state.year;
   this.state.month = options.month !== undefined ? options.month : this.state.month;
   var currentMonth = new Date(this.state.year, this.state.month + 1, 0);
@@ -77,12 +81,6 @@ CsvEventCalendar.prototype.updateState = function(options) {
   if (this.state.date > lastDayOfMonth) {
     this.state.month = this.state.month;
     this.state.date = lastDayOfMonth;
-  }
-  if (this.state.view === 'day' && previousView !== 'day') {
-    this.state.previousView = previousView;
-  }
-  if (this.state.view === 'week') {
-    this.state.previousView = 'month';
   }
   if (options.key) {
     this.state.year = this.yearNumber(options.key);
