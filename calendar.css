@@ -194,7 +194,14 @@
 .calendar button.prev-view {
     cursor: pointer;
 }
-
+.calendar .view .day button.name:focus {
+  background-color: orange;
+  color: #333;
+}
+.calendar .view .day.today button.name:focus {
+  background-color: #333;
+  color: #fff;
+}
 
 .calendar .day-names {
   text-decoration: none;
@@ -403,8 +410,8 @@
 .calendar .controls button.next span.short,
 .calendar .view button.prev-view {
   display: none;
-  width: 34px;
-  height: 34px;
+  width: 33px;
+  height: 33px;
   color: transparent;
   background-color: transparent;
   background-position: center;
@@ -418,14 +425,20 @@
   margin: -44px 0;
 }
 .calendar .controls button.back span.short,
-.calendar .view .day.today button.prev-view {
+.calendar .view .day.today button.prev-view,
+.calendar .view .day button.prev-view:focus {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
 }
 .calendar .controls button.next span.short {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%223.404%2C2.051%208.354%2C7%203.404%2C11.95%205.525%2C14.07%2012.596%2C7%205.525%2C-0.071%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
 }
-
-
+.calendar .view .day button.prev-view:focus {
+  background-color: orange;
+}
+.calendar .view .day.today button.prev-view:focus {
+  background-color: #333;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+}
 /* max-width : 645px */
 .calendar.w-645 .view.month ul span.medium,
 .calendar.w-645 .view-wo-events ul span.medium {
