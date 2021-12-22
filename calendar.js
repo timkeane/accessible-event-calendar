@@ -72,7 +72,7 @@ CsvEventCalendar.prototype.updateState = function(options) {
   } else if (this.state.view !== 'day') {
     this.state.previousView = this.state.view;
   }
-this.state.view = options.view || this.state.view;
+  this.state.view = options.view || this.state.view;
   this.state.year = options.year || this.state.year;
   this.state.month = options.month !== undefined ? options.month : this.state.month;
   var currentMonth = new Date(this.state.year, this.state.month + 1, 0);
