@@ -371,8 +371,9 @@
 .calendar .view.day .dates .day.selected {
   display: block;
 }
+.calendar .view.day button.prev-view,
 .calendar .view.week button.prev-view {
-  display: block;
+    display: block;
 }
 
 
