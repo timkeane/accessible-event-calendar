@@ -371,13 +371,10 @@
 .calendar .view.day .dates .day.selected {
   display: block;
 }
-.calendar .view.day .day.selected button.prev-view,
 .calendar .view.week button.prev-view {
   display: block;
 }
-.calendar .view.day .day h3 {
-  /* line-height: 30px; */
-}
+
 
 .calendar .controls button.back span.short,
 .calendar .controls button.next span.short,
@@ -478,29 +475,29 @@
 /* max-width : 400px */
 
 
-/* max-width : 360px */
-.calendar.w-360 .view.day .day h3 span.long,
-.calendar.w-360 .view.week .day h3 span.long {
+/* max-width : 375px */
+.calendar.w-375 .view.day .day h3 span.long,
+.calendar.w-375 .view.week .day h3 span.long {
   display: none;
 }
-.calendar.w-360 .view.day .day h3 span.medium,
-.calendar.w-360 .view.week .day h3 span.medium {
+.calendar.w-375 .view.day .day h3 span.medium,
+.calendar.w-375 .view.week .day h3 span.medium {
   display: inline;
 }
-.calendar.w-360 .controls button span.short {
+.calendar.w-375 .controls button span.short {
   display: table-cell;
 }
-.calendar.w-360 .controls h2 span.short {
+.calendar.w-375 .controls h2 span.short {
   display: inline;
 }
-.calendar.w-360 .controls h2 span.long {
+.calendar.w-375 .controls h2 span.long {
   display: none;
 }
-.calendar.w-360 .controls input[type="date"],
-.calendar.w-360 .controls fieldset {
+.calendar.w-375 .controls input[type="date"],
+.calendar.w-375 .controls fieldset {
   width: 130px;
 }
-/* max-width : 360px */
+/* max-width : 375px */
 
 
 /* max-width : 300px */

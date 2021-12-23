@@ -591,7 +591,7 @@ CsvEventCalendar.prototype.focus = function() {
 
 CsvEventCalendar.prototype.resize = function() {
   var container = this.container;
-  var changes = [645, 500, 400, 360, 340, 300, 280];
+  var changes = [645, 500, 400, 375, 340, 300, 280];
   var width = container.width();
   for (var i = 0; i < changes.length; i++) {
     var w = changes[i];
