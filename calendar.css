@@ -130,33 +130,6 @@
   color: #fff;
 }
 
-/* .calendar .controls fieldset button[value]:before {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 9px;
-  left: 10px;
-  border: 2px solid #333;
-  border-radius: 50%;
-  width: 13px;
-  height: 13px;
-}
-.calendar .controls fieldset button[aria-checked="true"]:before {
-  top: 7px;
-  border-style: double;
-  border-width: 5px;
-  border-color: #eee;
-  background-color: #333;
-  width: 17px;
-  height: 17px;
-}
-.calendar .controls fieldset .view-choice:focus:before {
-  border-color: #fff;
-} */
-
-
-
-
 .calendar .controls input[type="date"]::-webkit-calendar-picker-indicator {
   margin-left: 0px;
 }
@@ -195,7 +168,7 @@
     cursor: pointer;
 }
 .calendar .view .day button.name:focus {
-  background-color: orange;
+  background-color: #fff;
   color: #333;
 }
 .calendar .view .day.today button.name:focus {
@@ -433,7 +406,7 @@
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%223.404%2C2.051%208.354%2C7%203.404%2C11.95%205.525%2C14.07%2012.596%2C7%205.525%2C-0.071%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
 }
 .calendar .view .day button.prev-view:focus {
-  background-color: orange;
+  background-color: #fff;
 }
 .calendar .view .day.today button.prev-view:focus {
   background-color: #333;
