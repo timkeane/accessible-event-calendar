@@ -140,9 +140,9 @@ CsvEventCalendar.prototype.title = function(options) {
     },
     day: {
       long: day + ' ' + month + ' ' + date + ', ' + year,
-      medium: day.substr(0, 3) + ' ' + mo + ' ' + date + ', ' + year,
+      medium: d + ' ' + mo + ' ' + date + ', ' + year,
       short: date,
-      abbr: m + '/' + date + '/' + year
+      abbr: d + ' ' + m + '/' + date + '/' + year
     }
   }
   $(options.node).find('.month .long').html(title.month.long);
