@@ -5,7 +5,7 @@
 
 function CsvEventCalendar(options) {
   var me = this;
-  this.firstLoad = true;
+  this.firstView = true;
   this.eventsIndex = {ready: false, noData: false};
   this.container = $('<div class="calendar"></div>')
   this.min = options.min;
@@ -32,11 +32,8 @@ function CsvEventCalendar(options) {
     }
   };
 
+  this.container.attr('id', CsvEventCalendar.nextId('calendar'));
   this.controls();
-  this.view('month');
-  this.resize();
-
-  $(window).on('resize', this.resize.bind(this));
 
   if (options.url) {
     Papa.parse(options.url, {
@@ -44,25 +41,42 @@ function CsvEventCalendar(options) {
       header: true,
       complete: function(response) {
         me.indexData(response);
-        me.container.find('.controls h2').attr('aria-label', 
-          me.title({key: me.state.key()}).month.long + 
-          ' - showing ' + $('.view .event').length + ' events');
-        }
+      }
     });
   } else {
     this.eventsIndex.noData = true;
+    this.view('month');
     this.container.find('.view').get(0).className = 'view-wo-events';
     this.container.find('.controls').addClass('controls-wo-views');
-    this.noCsvUrl = true;
   }
 
   $(document).on('keyup', function(domEvent) {
     if (domEvent.key === 'Escape') {
-      me.view(me.state.previousView);
+      window.location.hash = me.state.previousView + '/' + me.state.key();
     }
   });
 
+  $(window).on('resize', this.resize.bind(this));
+
+  $(window).on('hashchange', this.hashChanged.bind(this));
+
+  this.resize();
+
   return this;
+};
+
+CsvEventCalendar.prototype.hashChanged = function() {
+  var values = window.location.hash.substr(1).split('/');
+  if (values[0] === this.container.attr('id') && values.length === 3) {
+    this.updateState({
+      view: values[1],
+      key: values[2]
+    });
+    this.view(values[1]);
+  } else if (this.firstView) {
+    this.view('month');
+  }
+  this.firstView = false;
 };
 
 CsvEventCalendar.prototype.updateState = function(options) {
@@ -135,7 +149,7 @@ CsvEventCalendar.prototype.title = function(options) {
   var title = {
     month: {
       long: month + ' ' + year,
-      short: mo + ' ' + year,
+      medium: mo + ' ' + year,
       abbr: m + '/' + year
     },
     day: {
@@ -146,7 +160,7 @@ CsvEventCalendar.prototype.title = function(options) {
     }
   }
   $(options.node).find('.month .long').html(title.month.long);
-  $(options.node).find('.month .short').html(title.month.short);
+  $(options.node).find('.month .short').html(title.month.medium);
   $(options.node).find('.month .abbr').html(title.month.abbr);
   $(options.node).attr('aria-label', title.month.long);
   return title;
@@ -259,8 +273,8 @@ CsvEventCalendar.prototype.controls = function() {
       }
     });
   var views = ['Month', 'Week', 'Day'];
-  var fieldset = $('<fieldset aria-expanded="false"></fieldset>')
-    .append('<button class="btn" aria-label="showing month view - click to choose a view">View by month</button>');
+  var fieldset = $('<fieldset></fieldset>')
+    .append('<button class="btn" aria-label="showing month view - click to choose a view" aria-expanded="false">View by month</button>');
   for (var i = 0; i < views.length; i++) {
     var id = CsvEventCalendar.nextId('view');
     var view = views[i].toLocaleLowerCase();
@@ -282,8 +296,9 @@ CsvEventCalendar.prototype.controls = function() {
   var activeateBtn = fieldset.find('button.btn');
   activeateBtn.on('click keyup', function(domEvent) {
     if (domEvent.type === 'click' || domEvent.key === 'ArrowDown') {
-      var open = fieldset.attr('aria-expanded') === true;
-      fieldset.attr('aria-expanded', !open);
+      var open = activeateBtn.attr('aria-expanded') === true;
+      activeateBtn.attr('aria-expanded', !open);
+      fieldset[!open ? 'addClass' : 'removeClass']('expanded');
       setTimeout(function() {
         fieldset.find('input[aria-checked="true"]').focus();
       }, 200);
@@ -291,9 +306,10 @@ CsvEventCalendar.prototype.controls = function() {
   });
   fieldset.find('input').on('click keyup', function(domEvent) {
     if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
-      fieldset.attr('aria-expanded', false);
+      fieldset.removeClass('expanded');
+      activeateBtn.attr('aria-expanded', false);
       activeateBtn.focus();
-      me.view($(domEvent.target).val());
+      window.location.hash = '#' + me.container.attr('id') + '/' + $(domEvent.target).val() + '/' + me.state.key();
     }
   });
   $(this.container).on('click', function(domEvent) {
@@ -351,10 +367,11 @@ CsvEventCalendar.prototype.month = function() {
   var viewContainer = this.container.find('.view, .view-wo-events');
   var days = $('<ul class="day-names" aria-hidden="true"></ul>');
   var dates = $('<ol class="dates"></ol>');
+  var viewDesc = $('<div class="view-desc"><a tabindex="0"><span class="long"></span><span class="medium"></span><span class="abbr"></span></a></a>');
   if (!viewContainer.length) {
     viewContainer = $('<div class="view month"></div>');
   }
-  this.container.append(viewContainer.empty().append(days).append(dates));
+  this.container.append(viewContainer.empty().append(viewDesc).append(days).append(dates));
   $.each(CsvEventCalendar.DAY_NAMES, function(d, name) {
     var li = $('<li></li>')
       .append('<span class="long">' + name + '</span>')
@@ -380,18 +397,15 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
   var me = this;
   var key = date.key;
   var title = this.title({key: key}).day;
-  var prevView = $('<button class="prev-view"></button>')
-    .on('click', function(domEvent) {
-      domEvent.stopImmediatePropagation();
-      me.view(me.state.previousView);
-    });
+  var prevView = $('<a class="prev-view"></a>');
   var h3 = $('<h3></h3>');
-  var button = $('<button class="name"></button>');
-  h3.append(button);
-  button.append('<span class="long">' + title.long + '</span>')
+  var a = $('<a class="name"></a>');
+  h3.append(a);
+  a.append('<span class="long">' + title.long + '</span>')
     .append('<span class="medium">' + title.medium + '</span>')
     .append('<span class="abbr">' + title.abbr + '</span>')
-    .append('<span class="short">' + title.short + '</span>');
+    .append('<span class="short">' + title.short + '</span>')
+    .attr('href', '#' + this.container.attr('id') + '/day/' + key);
   var day = $('<li class="day"></li>')
     .data('week', week)
     .addClass(date.monthClass + '-mo')
@@ -401,10 +415,8 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
     .append(prevView)
     .append('<div class="events"></div>')
     .on('click', function() {
-      if (me.eventsIndex.noData || day.hasClass('has-events')) {
-        me.updateState({key: key});
-        me.view('day');
-      }
+      if ($(this).hasClass('has-events'))
+        window.location = $(this).find('a.name').attr('href');
     });
     month.append(day);
     return day;
@@ -434,13 +446,17 @@ CsvEventCalendar.prototype.view = function(view) {
     title: 'previous ' + view
   });
   this.container.find('.view').removeAttr('aria-label');
-  this.container.find('.day button.name').removeAttr('aria-live');
-  this.container.find('.day button[data-old-label]').each(function(i, btn) {
+  this.container.find('.day a.name').removeAttr('aria-live');
+  this.container.find('.day a[data-old-label]').each(function(i, btn) {
     $(btn).attr('aria-label', $(btn).attr('data-old-label'))
       .removeAttr('data-old-label');
   });
-  this.container.find('.day button.prev-view')
-    .attr('aria-label', 'return to ' + this.state.previousView + ' view');
+  this.container.find('.day a.prev-view')
+    .attr({
+      'aria-label': 'return to ' + this.state.previousView + ' view',
+      title: 'return to ' + this.state.previousView + ' view',
+      href: '#'  + this.container.attr('id') + '/' + this.state.previousView + '/' + key
+    });
   this[view + 'View']();
   this.container.find('.view .day[data-date-key="' + this.state.today + '"]').addClass('today');
   this.focus();
@@ -453,15 +469,27 @@ CsvEventCalendar.prototype.monthView = function() {
   this.nextMonth(dates);
   this.calendar(dates);
   this.populate();
-  this.container.find('.controls h2').attr('aria-label', 
+  this.container.find('.view-desc a .long').html( 
     this.title({key: this.state.key()}).month.long + 
+    ' - showing ' + $('.view .event').length + ' scheduled events');
+  this.container.find('.view-desc a .medium').html( 
+    this.title({key: this.state.key()}).month.medium + 
+    ' - showing ' + $('.view .event').length + ' scheduled events');
+  this.container.find('.view-desc a .abbr').html( 
+    this.title({key: this.state.key()}).month.medium + 
     ' - showing ' + $('.view .event').length + ' events');
 };
 
 CsvEventCalendar.prototype.weekView = function() {
   var key = this.container.find('.day.start-of-week').attr('data-date-key');
-  this.container.find('.view').attr('aria-label', 
-    'week of ' + this.title({key: key}).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
+  this.container.find('.view-desc a .long').html( 
+    'Week of ' + this.title({key: key}).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
+  );
+  this.container.find('.view-desc a .medium').html( 
+    'Week of ' + this.title({key: key}).day.medium + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
+  );
+  this.container.find('.view-desc a .abbr').html( 
+    'Week of ' + this.title({key: key}).day.abbr.substr(4) + ' - ' + this.container.find('.selected-week .event').length + ' events'
   );
 };
 
@@ -469,19 +497,31 @@ CsvEventCalendar.prototype.dayView = function() {
   var key = this.state.key();
   var dayNode = this.dayNode(key);
   var eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0;
-  var button = dayNode.find('h3 button.name');
+  var a = dayNode.find('h3 a.name');
   this.container.find('li.day').removeClass('selected');
-  var title = this.title({key: key}).day.long;
-  var label = title + ' - there no scheduled events to show';
-  if (eventCount) {
-    label = title + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? 'event' : 'events');
-  }
   dayNode.addClass('selected');
-  button.attr('data-old-label', button.attr('aria-label'))
-    .attr({
-      'aria-live': 'assertive',
-      'aria-label': label
-    });
+  var title = this.title({key: key}).day;
+  if (eventCount) {
+    this.container.find('.view-desc a .long').html(
+      title.long + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? 'event' : 'events')
+    );
+    this.container.find('.view-desc a .medium').html(
+      title.medium + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? ' event' : ' events')
+    );
+    this.container.find('.view-desc a .abbr').html(
+      title.abbr + ' - ' + eventCount + (eventCount === 1 ? ' event' : ' events')
+    );
+  } else {
+    this.container.find('.view-desc a .long').html(
+      title.long + ' - there no scheduled events to show'
+    );
+    this.container.find('.view-desc a .medium').html(
+      title.medium + ' - no scheduled events'
+    );
+    this.container.find('.view-desc a .abbr').html(
+      title.abbr + ' - no events'
+    );
+  }
 };
 
 CsvEventCalendar.prototype.populate = function() {
@@ -494,7 +534,7 @@ CsvEventCalendar.prototype.populate = function() {
     var events = me.eventsIndex[key];
     var eventCount = events && events.length || 0;
     var eventsNode = $(dayNode).find('.events');
-    var button = $(dayNode).find('h3 button');
+    var a = $(dayNode).find('h3 a');
     $(dayNode).append(eventsNode);
     if (me.eventsIndex.ready) {
       if (events) {
@@ -503,16 +543,14 @@ CsvEventCalendar.prototype.populate = function() {
         $.each(events, function(_, calEvent) {
           eventsNode.append(me.eventHtml(calEvent));
         });
-        button.attr('aria-label', title + ' (' + eventCount +
+        a.attr('href', '#' + me.container.attr('id') + '/day/' + key)
+          .attr('aria-label', title + ' (' + eventCount +
           (eventCount === 1 ? ' event' : ' events') + ' scheduled');
       } else {
         $(dayNode).attr('aria-hidden', 'true');
-        button.attr({
-          'aria-label': title + ' (no events scheduled)',
-          tabindex: -1
-        });
-        $(dayNode).find('button.prev-view').attr('tabindex', -1);
-          eventsNode.html('<div class="no-events">no events scheduled</div>');
+        a.removeAttr('href')
+          .attr('aria-label', title + ' (no events scheduled)');
+        eventsNode.html('<div class="no-events">no events scheduled</div>');
       }
     }
   });
@@ -541,7 +579,7 @@ CsvEventCalendar.prototype.indexData = function(response) {
     CsvEventCalendar.sortByStartTime(me.eventsIndex[key]);
   });
   this.eventsIndex.ready = true;
-  this.populate();
+  this.hashChanged();
 };
 
 CsvEventCalendar.prototype.alert = function(minMaxKey) {
@@ -570,23 +608,14 @@ CsvEventCalendar.prototype.alert = function(minMaxKey) {
 
 CsvEventCalendar.prototype.focus = function() {
   var me = this;
-  if (!this.firstLoad && !this.container.find('.alert').is(':visible')) {
+  if (!this.container.find('.alert').is(':visible')) {
     var scroll = $(document).scrollTop();
     setTimeout(function() {
-      var view = me.state.view;
-      var container = me.container;
-      if (view === 'month') {
-        container.find('.controls h2').attr('tabindex', 0).focus();
-      } else if (view === 'week') {
-        container.find('.view').attr('tabindex', 0).focus();
-        container.scrollTop(0);
-        $(document).scrollTop(scroll);
-      } else {
-        container.find('.view .day.selected button.name').focus();
-      }
-    }, 300);
+      me.container.find('.view-desc a').focus();
+      me.container.scrollTop(0);
+      $(document).scrollTop(scroll);
+    }, 200);
   }
-  this.firstLoad = false;
 };
 
 CsvEventCalendar.prototype.resize = function() {
@@ -729,7 +758,8 @@ CsvEventCalendar.sortByDate = function(events) {
 };
 
 CsvEventCalendar.nextId = function(prefix) {
-  CsvEventCalendar.id = CsvEventCalendar.id || 0;
-  CsvEventCalendar.id = CsvEventCalendar.id + 1;
-  return prefix + CsvEventCalendar.id;
-}
+  CsvEventCalendar[prefix] = CsvEventCalendar[prefix] || {};
+  CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id || 0;
+  CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id + 1;
+  return prefix + CsvEventCalendar[prefix].id;
+};

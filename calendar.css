@@ -71,7 +71,7 @@
   overflow: hidden;
   padding: 0;
 }
-.calendar .controls fieldset[aria-expanded="true"] {
+.calendar .controls fieldset.expanded {
   height: auto;
 }
 .calendar .controls input[type="date"],
@@ -92,7 +92,7 @@
   height: 35px;
   background-color: #eee;
 }
-.calendar .controls fieldset[aria-expanded="true"] button {
+.calendar .controls fieldset.expanded button {
   border: 1px solid #333;
 }
 .calendar .controls fieldset .view-choice {
@@ -102,7 +102,7 @@
   position: relative;
   display: none;
 }
-.calendar .controls fieldset[aria-expanded="true"] .view-choice {
+.calendar .controls fieldset.expanded .view-choice {
   display: block;
 }
 .calendar .controls fieldset .view-choice:last-child {
@@ -147,31 +147,42 @@
   float: right;
 }
 .calendar .controls,
-.calendar .controls * {
+.calendar .controls *,
+.calendar .view-desc {
   text-align: center;
 }
+.calendar .view-desc {
+  margin: -3px 0 5px 0;
+  font-size: 16px;
+}
+.calendar .view-desc a,
+.calendar .view-desc a:visited {
+  text-decoration: none;
+  color: #333;
+  padding: 3px;
+}
 .calendar .controls span.short,
-.calendar .controls span.abbr {
+.calendar .controls span.abbr,
+.calendar .view-desc span.medium,
+.calendar .view-desc span.abbr {
   display: none;
 }
 .calendar .controls.controls-wo-views fieldset {
   display: none;
 }
-.calendar .view.month .day button {
+.calendar .view.month .day a {
   cursor: unset;
 }
 .calendar .controls button,
 .calendar .view.month .day.has-events,
-.calendar .view.month .day.has-events button,
-.calendar .view-wo-events .day,
-.calendar button.prev-view {
+.calendar .view-wo-events .day {
     cursor: pointer;
 }
-.calendar .view .day button.name:focus {
+.calendar .view .day a.name:focus {
   background-color: #fff;
   color: #333;
 }
-.calendar .view .day.today button.name:focus {
+.calendar .view .day.today a.name:focus {
   background-color: #333;
   color: #fff;
 }
@@ -206,15 +217,17 @@
   display: none;
 }
 .calendar .day h3 span,
-.calendar .day h3 button {
+.calendar .day h3 a {
   background-color: inherit;
   color: inherit;
   font-size: inherit;
 }
-.calendar .day h3 button {
+.calendar .day h3 a {
   border: inherit;
   background-color: inherit;
   font-size: inherit;
+  padding: 1px 6px;
+  text-decoration: none;
 }
 .calendar .day .events .no-events {
   margin: 0 0 15px 10px;
@@ -240,10 +253,14 @@
 
 .calendar .view.month *,
 .calendar .view-wo-events *,
+.calendar .view-wo-events h3,
 .calendar .controls div,
 .calendar .controls button,
 .calendar .controls input {
   font-size: 16px;
+}
+.calendar .view-wo-events .view-desc {
+  display: none;
 }
 .calendar .view.month li,
 .calendar .view-wo-events li {
@@ -267,7 +284,7 @@
 .calendar .view.month .day h3,
 .calendar .view-wo-events .day h3 {
   margin: 0;
-  padding: 2px 3px;
+  padding: 3px;
   background-color: #333;
   color: #fff;
   box-shadow: 
@@ -359,7 +376,8 @@
   margin-bottom: 10px;
 }
 .calendar .view.week .day h3 span.long,
-.calendar .view.day .day h3 span.long {
+.calendar .view.day .day h3 span.long,
+.calendar .view-desc span.long {
   display: inline;
 }
 
@@ -371,15 +389,15 @@
 .calendar .view.day .dates .day.selected {
   display: block;
 }
-.calendar .view.day button.prev-view,
-.calendar .view.week button.prev-view {
+.calendar .view.day a.prev-view,
+.calendar .view.week a.prev-view {
     display: block;
 }
 
 
 .calendar .controls button.back span.short,
 .calendar .controls button.next span.short,
-.calendar .view button.prev-view {
+.calendar .view a.prev-view {
   display: none;
   width: 33px;
   height: 33px;
@@ -390,23 +408,23 @@
   border: none;
   opacity: 1;
 }
-.calendar .view .day button.prev-view {
+.calendar .view .day a.prev-view {
   float: right;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
   margin: -44px 0;
 }
 .calendar .controls button.back span.short,
-.calendar .view .day.today button.prev-view,
-.calendar .view .day button.prev-view:focus {
+.calendar .view .day.today a.prev-view,
+.calendar .view .day a.prev-view:focus {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
 }
 .calendar .controls button.next span.short {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%223.404%2C2.051%208.354%2C7%203.404%2C11.95%205.525%2C14.07%2012.596%2C7%205.525%2C-0.071%20%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E");
 }
-.calendar .view .day button.prev-view:focus {
+.calendar .view .day a.prev-view:focus {
   background-color: #fff;
 }
-.calendar .view .day.today button.prev-view:focus {
+.calendar .view .day.today a.prev-view:focus {
   background-color: #333;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
 }
@@ -455,9 +473,19 @@
   overflow: hidden;
   height: 50px;
 }
-.calendar.w-500 .view.month .day.today h3 {
+.calendar.w-500 .view.month .day.today h3,
+.calendar.w-500 .view-wo-events .day.today h3 {
   box-shadow: inset 0 0 0 10px orange;
   margin: 1px 0 0 1px;
+}
+.calendar.w-500 .view .day .event {
+  box-shadow: none;
+}
+.calendar.w-500 .view-desc span.long {
+  display: none;
+}
+.calendar.w-500 .view-desc span.medium {
+  display: inline;
 }
 /* max-width : 500px */
 
@@ -499,6 +527,16 @@
   width: 130px;
 }
 /* max-width : 375px */
+
+
+/* max-width : 340px */
+.calendar.w-340 .view-desc span.medium {
+  display: none;
+}
+.calendar.w-340 .view-desc span.abbr {
+  display: inline;
+}
+/* max-width : 340px */
 
 
 /* max-width : 300px */
