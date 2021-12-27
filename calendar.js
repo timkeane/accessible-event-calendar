@@ -317,7 +317,8 @@ CsvEventCalendar.prototype.controls = function() {
   $(this.container).on('click', function(domEvent) {
     var next = domEvent.target;
     if (next && !$.contains(fieldset.get(0), next)) {
-      fieldset.attr('aria-expanded', false);
+      activeateBtn.attr('aria-expanded', false);
+      fieldset.removeClass('expanded');
     }
   });
   fieldset.find('button, input').on('blur', function(domEvent) {
