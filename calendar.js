@@ -216,7 +216,8 @@ CsvEventCalendar.prototype.monthNavigate = function(delta) {
   } else {
     month = this.state.month + delta;
   }
-  this.updateState({month: month, year: year})
+  this.updateState({month: month, year: year});
+  window.location.hash = '#' + this.container.attr('id') + '/month/' + this.state.key();
 };
 
 CsvEventCalendar.prototype.weekNavigate = function(delta) {
@@ -231,6 +232,7 @@ CsvEventCalendar.prototype.weekNavigate = function(delta) {
   this.container.find('li.day').removeClass('selected');
   dayNode.addClass('selected');
   this.week();
+  window.location.hash = '#' + this.container.attr('id') + '/week/' + this.state.key();
 };
 
 CsvEventCalendar.prototype.dayNavigate = function(delta) {
@@ -241,7 +243,7 @@ CsvEventCalendar.prototype.dayNavigate = function(delta) {
   var nextKey = CsvEventCalendar.dateKey(date);
   this.updateState({key: nextKey});
 
-  var dayNode = this.dayNode(this.state.key())
+  var dayNode = this.dayNode(this.state.key());
   if (!dayNode.length) {
     this.monthView();
   }
@@ -251,6 +253,7 @@ CsvEventCalendar.prototype.dayNavigate = function(delta) {
   }
   this.container.find('li.day').removeClass('selected');
   dayNode.addClass('selected');
+  window.location.hash = '#' + this.container.attr('id') + '/day/' + this.state.key();
 };
 
 CsvEventCalendar.prototype.controls = function() {
@@ -266,8 +269,7 @@ CsvEventCalendar.prototype.controls = function() {
     .on('change', function() {
       var key = input.val();
       if (me.eventsIndex[key]) {
-        me.updateState({key: key});
-        me.view('day');
+        window.location.hash = '#' + me.container.attr('id') + '/day/' + key; 
       } else {
         me.alert(key);
       }
@@ -425,7 +427,6 @@ CsvEventCalendar.prototype.day = function(date, week, month) {
 
 CsvEventCalendar.prototype.view = function(view) {
   if (!view) return;
-  this.updateState({view: view});
   var key = this.state.key();
   var dayNode = this.dayNode(key);
   if (!dayNode.length) {
