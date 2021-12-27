@@ -119,7 +119,7 @@ CsvEventCalendar.prototype.updateState = function(options) {
     .attr('aria-checked', false)
     .prop('checked', false);
   this.container.find('.controls fieldset button')
-    .attr('aria-label', 'showing ' + view + ' view - click to choose a view');
+    .attr('aria-label', 'showing ' + view + ' view');
   this.container.find('.controls fieldset input[value="' + view + '"]')
     .attr('aria-checked', true)
     .prop('checked', true);
@@ -338,12 +338,13 @@ CsvEventCalendar.prototype.controls = function() {
     .append(input)
     .append(fieldset);
   this.container.append(controls);
-  var alert = $('<div class="alert" aria-live="assertive"><p></p></div>');
-  var ok = $('<button class="btn ok" aria-label="click OK to continue">OK</button></div>')
-    .on('click', function() {
-      alert.hide();
-    });
-  this.container.append(alert.append(ok));
+  var alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok">OK</button></div></div></div>');
+  alert.find('.ok').on('click', function() {
+    alert.hide();
+    controls.removeAttr('aria-hidden');
+    me.container.find('.view').removeAttr('aria-hidden');
+  });
+  this.container.append(alert);
 };
 
 CsvEventCalendar.prototype.calendar = function(dates) {
@@ -592,6 +593,8 @@ CsvEventCalendar.prototype.alert = function(minMaxKey) {
   } else {
     message = 'No events scheduled on ' + this.title({key: minMaxKey}).day.long;
   }
+  this.container.find('.controls').attr('aria-hidden', true);
+  this.container.find('.view').attr('aria-hidden', true);
   this.container.find('.alert p').html(message);
   var alert = this.container.find('.alert')
     .attr({'aria-label': message, tabindex: 0})

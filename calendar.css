@@ -10,6 +10,13 @@
 .calendar div.alert {
   display: none;
   position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.calendar div.alert div {
+  position: absolute;
   max-width: 280px;
   top: 40%;
   left: 50%;
