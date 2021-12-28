@@ -127,6 +127,7 @@ CsvEventCalendar.prototype.updateState = function(options) {
   if (after !== before) {
     this.week();
     this.selectionChanged({
+      view: view,
       date: key,
       events: this.eventsIndex[key] || []
     });
