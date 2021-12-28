@@ -123,7 +123,7 @@ CsvEventCalendar.prototype.updateState = function(options) {
   this.container.find('.controls fieldset input[value="' + view + '"]')
     .attr('aria-checked', true)
     .prop('checked', true);
-  this.container.find('.controls fieldset button.btn').html('View by ' + view);
+  this.container.find('.controls fieldset .btn span').html('View by ' + view);
   if (after !== before) {
     this.week();
     this.selectionChanged({
@@ -276,7 +276,7 @@ CsvEventCalendar.prototype.controls = function() {
     });
   var views = ['Month', 'Week', 'Day'];
   var fieldset = $('<fieldset></fieldset>')
-    .append('<button class="btn" aria-label="showing month view - click to choose a view" aria-expanded="false">View by month</button>');
+    .append('<button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button>');
   for (var i = 0; i < views.length; i++) {
     var id = CsvEventCalendar.nextId('view');
     var view = views[i].toLocaleLowerCase();
@@ -341,7 +341,7 @@ CsvEventCalendar.prototype.controls = function() {
     .append(input)
     .append(fieldset);
   this.container.append(controls);
-  var alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok">OK</button></div></div></div>');
+  var alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>');
   alert.find('.ok').on('click', function() {
     alert.hide();
     controls.removeAttr('aria-hidden');
@@ -486,7 +486,7 @@ CsvEventCalendar.prototype.viewDesc = function(view, key, count) {
   } else {
     long.html(title.day.long + ' - there no scheduled events to show');
     medium.html(title.day.medium + ' - no scheduled events');
-    abbr.html(title.abbr + ' - no events');
+    abbr.html(title.day.abbr + ' - no events');
   }
 };
 
