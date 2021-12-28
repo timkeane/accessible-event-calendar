@@ -465,6 +465,31 @@ CsvEventCalendar.prototype.view = function(view) {
   this.focus();
 };
 
+CsvEventCalendar.prototype.viewDesc = function(view, key, count) {
+  var title = this.title({key: key});
+  var long = this.container.find('.view-desc a .long');
+  var medium = this.container.find('.view-desc a .medium');
+  var abbr = this.container.find('.view-desc a .abbr');
+  var events = count === 1 ? 'event' : 'events';
+  if (view === 'month') {
+    long.html(title.month.long + ' - showing ' + count + ' scheduled ' + events);
+    medium.html(title.month.medium + ' - showing ' + count + ' scheduled ' + events);
+    abbr.html(title.month.medium + ' - showing ' + count + ' ' + events);
+  } else if (view === 'week') {
+    long.html('Week of ' + title.day.long + ' - showing ' + count + ' ' + events);
+    medium.html('Week of ' + title.day.medium + ' - showing ' + count + ' ' + events);
+    abbr.html( 'Week of ' + title.day.abbr.substr(4) + ' - ' + count + ' ' + events);
+  } else if (count) {
+    long.html(title.day.long + ' - showing ' + count + ' scheduled ' + events);
+    medium.html(title.day.medium + ' - showing ' + count + ' scheduled ' + events);
+    abbr.html(title.day.abbr + ' - ' + count + ' ' + events);
+  } else {
+    long.html(title.day.long + ' - there no scheduled events to show');
+    medium.html(title.day.medium + ' - no scheduled events');
+    abbr.html(title.abbr + ' - no events');
+  }
+};
+
 CsvEventCalendar.prototype.monthView = function() {
   var dates = [];
   this.previousMonth(dates);
@@ -472,28 +497,13 @@ CsvEventCalendar.prototype.monthView = function() {
   this.nextMonth(dates);
   this.calendar(dates);
   this.populate();
-  this.container.find('.view-desc a .long').html( 
-    this.title({key: this.state.key()}).month.long + 
-    ' - showing ' + $('.view .event').length + ' scheduled events');
-  this.container.find('.view-desc a .medium').html( 
-    this.title({key: this.state.key()}).month.medium + 
-    ' - showing ' + $('.view .event').length + ' scheduled events');
-  this.container.find('.view-desc a .abbr').html( 
-    this.title({key: this.state.key()}).month.medium + 
-    ' - showing ' + $('.view .event').length + ' events');
+  this.viewDesc('month', this.state.key(), $('.view .event').length);
 };
 
 CsvEventCalendar.prototype.weekView = function() {
   var key = this.container.find('.day.start-of-week').attr('data-date-key');
-  this.container.find('.view-desc a .long').html( 
-    'Week of ' + this.title({key: key}).day.long + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
-  );
-  this.container.find('.view-desc a .medium').html( 
-    'Week of ' + this.title({key: key}).day.medium + ' - showing ' + this.container.find('.selected-week .event').length + ' events'
-  );
-  this.container.find('.view-desc a .abbr').html( 
-    'Week of ' + this.title({key: key}).day.abbr.substr(4) + ' - ' + this.container.find('.selected-week .event').length + ' events'
-  );
+  var count = this.container.find('.selected-week .event').length;
+  this.viewDesc('week', key, count);
 };
 
 CsvEventCalendar.prototype.dayView = function() {
@@ -503,28 +513,7 @@ CsvEventCalendar.prototype.dayView = function() {
   var a = dayNode.find('h3 a.name');
   this.container.find('li.day').removeClass('selected');
   dayNode.addClass('selected');
-  var title = this.title({key: key}).day;
-  if (eventCount) {
-    this.container.find('.view-desc a .long').html(
-      title.long + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? 'event' : 'events')
-    );
-    this.container.find('.view-desc a .medium').html(
-      title.medium + ' - showing ' + eventCount + ' scheduled ' + (eventCount === 1 ? ' event' : ' events')
-    );
-    this.container.find('.view-desc a .abbr').html(
-      title.abbr + ' - ' + eventCount + (eventCount === 1 ? ' event' : ' events')
-    );
-  } else {
-    this.container.find('.view-desc a .long').html(
-      title.long + ' - there no scheduled events to show'
-    );
-    this.container.find('.view-desc a .medium').html(
-      title.medium + ' - no scheduled events'
-    );
-    this.container.find('.view-desc a .abbr').html(
-      title.abbr + ' - no events'
-    );
-  }
+  this.viewDesc('day', key, eventCount);
 };
 
 CsvEventCalendar.prototype.populate = function() {
@@ -551,8 +540,7 @@ CsvEventCalendar.prototype.populate = function() {
           (eventCount === 1 ? ' event' : ' events') + ' scheduled');
       } else {
         $(dayNode).attr('aria-hidden', 'true');
-        a.removeAttr('href')
-          .attr('aria-label', title + ' (no events scheduled)');
+        a.removeAttr('href').attr('aria-label', title + ' (no events scheduled)');
         eventsNode.html('<div class="no-events">no events scheduled</div>');
       }
     }
