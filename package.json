@@ -8,9 +8,11 @@
   "author": "Tim Keane <t.d.keane@gmail.com> (https://timkeane.github.io/)",
   "license": "Apache-2.0",
   "dependencies": {
-    "jquery": "^3.5.0"
+    "jquery": "3.5.0"
   },
   "devDependencies": {
+    "papaparse": "^5.3.1",
+    "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"
   }
 }

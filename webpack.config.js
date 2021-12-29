@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  entry: './claendar.js',
+  entry: './src/js/index.js',
   output: {
-    filename: 'claendar.js',
+    filename: 'calendar.js',
     path: path.resolve(__dirname, 'dist')
   }
 };
