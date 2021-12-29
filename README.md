@@ -1,1 +1,1 @@
-# accessible-events-calendar
+# accessible-event-calendar
