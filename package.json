@@ -1,0 +1,16 @@
+{
+  "name": "accessible-events-calendar",
+  "version": "0.6.1",
+  "description": "CSV fed event calendar",
+  "scripts": {
+    "build": "npx webpack"
+  },
+  "author": "Tim Keane <t.d.keane@gmail.com> (https://timkeane.github.io/)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "jquery": "^3.5.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.9.1"
+  }
+}
