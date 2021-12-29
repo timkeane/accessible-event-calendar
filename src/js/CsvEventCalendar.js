@@ -13,14 +13,14 @@ class CsvEventCalendar {
    * @param {module:CsvEventCalendar.Options} options CsvEventCalendar options
    */
   constructor(options) {
-    var me = this
     this.firstView = true
     this.eventsIndex = {ready: false, noData: false}
     this.container = $('<div class="calendar"></div>')
     this.min = options.min
     this.max = options.max
     this.eventHtml = options.eventHtml || this.eventHtml
-    this.selectionChanged = options.selectionChanged || this.selectionChanged
+    this.stateChanged = options.stateChanged || this.stateChanged
+    this.dateChanged = options.dateChanged || this.dateChanged
     this.today = new Date()
     $(options.target).append(this.container)
     this.state = {
@@ -29,8 +29,8 @@ class CsvEventCalendar {
       month: this.today.getMonth(),
       date: this.today.getDate(),
       day: this.today.getDay(),
-      view: 'month',
-      previousView: 'month',
+      view: CsvEventCalendar.VIEW_NAMES.month,
+      previousView: CsvEventCalendar.VIEW_NAMES.month,
       key: () => {
         var m = this.state.month + 1
         var d = this.state.date
@@ -45,17 +45,15 @@ class CsvEventCalendar {
       Papa.parse(options.url, {
         download: true,
         header: true,
-        complete:response => {
-          me.indexData(response)
-        }
+        complete: this.indexData.bind(this)
       })
     } else {
       this.eventsIndex.noData = true
-      this.view('month')
+      this.view(CsvEventCalendar.VIEW_NAMES.month)
       this.container.find('.view').get(0).className = 'view-wo-events'
       this.container.find('.controls').addClass('controls-wo-views')
     }
-    $(document).on('keyup', function(domEvent) {
+    $(document).on('keyup', domEvent => {
       if (domEvent.key === 'Escape') {
         window.location.hash = `${me.state.previousView}/${me.state.key()}`
       }
@@ -65,8 +63,11 @@ class CsvEventCalendar {
     this.resize()
   }
 
+  dateChanged() {}
+  stateChanged() {}
+
   hashChanged() {
-    var values = window.location.hash.substr(1).split('/')
+    const values = window.location.hash.substr(1).split('/')
     if (values[0] === this.container.attr('id') && values.length === 3) {
       this.updateState({
         view: values[1],
@@ -74,16 +75,17 @@ class CsvEventCalendar {
       })
       this.view(values[1])
     } else if (this.firstView) {
-      this.view('month')
+      this.view(CsvEventCalendar.VIEW_NAMES.month)
     }
     this.firstView = false
   }
 
   updateState(options) {
-    var before = JSON.stringify(this.state)
-    if (options.view === 'week') {
-      this.state.previousView = 'month'
-    } else if (this.state.view !== 'day') {
+    const beforeState = JSON.stringify(this.state)
+    const beforeKey = this.state.key()
+    if (options.view === CsvEventCalendar.VIEW_NAMES.week) {
+      this.state.previousView = CsvEventCalendar.VIEW_NAMES.month
+    } else if (this.state.view !== CsvEventCalendar.VIEW_NAMES.day) {
       this.state.previousView = this.state.view
     }
     this.state.view = options.view || this.state.view
@@ -109,24 +111,32 @@ class CsvEventCalendar {
     if (this.state.key() < this.min) {
       this.updateState({key: this.min})
       this.alert('min')
-      return;
+      return
     }
-    var after = JSON.stringify(this.state)
-    var key = this.state.key()
-    var view = this.state.view
+    const afterState = JSON.stringify(this.state)
+    const key = this.state.key()
+    const view = this.state.view
     this.container.find('.controls input[type="date"]').val(key)
     this.container.find('.controls fieldset input')
       .attr('aria-checked', false)
       .prop('checked', false);
     this.container.find('.controls fieldset button')
-      .attr('aria-label', 'showing ' + view + ' view')
-    this.container.find('.controls fieldset input[value="' + view + '"]')
+      .attr('aria-label', `showing ${view} view`)
+    this.container.find(`.controls fieldset input[value="${view}"]`)
       .attr('aria-checked', true)
       .prop('checked', true)
     this.container.find('.controls fieldset .btn span').html('View by ' + view)
-    if (after !== before) {
+    if (afterState !== beforeState) {
       this.week()
-      this.selectionChanged({
+      this.stateChanged({
+        view: view,
+        date: key,
+        events: this.eventsIndex[key] || []
+      })
+    }
+    if (key !== beforeKey) {
+      this.week()
+      this.dateChanged({
         view: view,
         date: key,
         events: this.eventsIndex[key] || []
@@ -393,7 +403,7 @@ class CsvEventCalendar {
     this.container.find('li.day')
       .removeClass('start-of-week')
       .removeClass('selected-week')
-    $(`.week-${dayNode.data('week')}`)
+    $(`.week-${dayNode.data(CsvEventCalendar.VIEW_NAMES.week)}`)
       .addClass('selected-week')
       .first().addClass('start-of-week')
   }
@@ -412,7 +422,7 @@ class CsvEventCalendar {
       .append('<span class="short">' + title.short + '</span>')
       .attr('href', '#' + this.container.attr('id') + '/day/' + key)
     var day = $('<li class="day"></li>')
-      .data('week', week)
+      .data(CsvEventCalendar.VIEW_NAMES.week, week)
       .addClass(date.monthClass + '-mo')
       .addClass( 'week-' + week)
       .attr('data-date-key', date.key)
@@ -437,9 +447,9 @@ class CsvEventCalendar {
       return this.view(view)
     }
     this.container.find('.view')
-      .removeClass('month')
-      .removeClass('week')
-      .removeClass('day')
+      .removeClass(CsvEventCalendar.VIEW_NAMES.month)
+      .removeClass(CsvEventCalendar.VIEW_NAMES.week)
+      .removeClass(CsvEventCalendar.VIEW_NAMES.day)
       .addClass(view)
     this.title({node: this.container.find('.controls h2')})
     this.container.find('.controls .next').attr({
@@ -475,12 +485,12 @@ class CsvEventCalendar {
     var abbr = desc.find('a .abbr')
     var events = count === 1 ? 'event' : 'events'
     var msg
-    if (view === 'month') {
+    if (view === CsvEventCalendar.VIEW_NAMES.month) {
       msg = `Showing ${count} scheduled ${events} for ${title.month.long}`
       long.html(msg)
       medium.html(`Showing ${count} scheduled ${events} for ${title.month.medium}`)
       abbr.html(`Showing ${count} ${events} for ${title.month.medium}`)
-    } else if (view === 'week') {
+    } else if (view === CsvEventCalendar.VIEW_NAMES.week) {
       msg = `Showing ${count} ${events} for week of ${title.day.long}`
       long.html(msg)
       medium.html(`Showing ${count} ${events} for week of ${title.day.medium}`)
@@ -506,13 +516,13 @@ class CsvEventCalendar {
     this.nextMonth(dates)
     this.calendar(dates)
     this.populate()
-    this.viewDesc('month', this.state.key(), $('.view .event').length)
+    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), $('.view .event').length)
   }
 
   weekView() {
     var key = this.container.find('.day.start-of-week').attr('data-date-key')
     var count = this.container.find('.selected-week .event').length
-    this.viewDesc('week', key, count)
+    this.viewDesc(CsvEventCalendar.VIEW_NAMES.week, key, count)
   }
 
   dayView() {
@@ -522,7 +532,7 @@ class CsvEventCalendar {
     var a = dayNode.find('h3 a.name')
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
-    this.viewDesc('day', key, eventCount)
+    this.viewDesc(CsvEventCalendar.VIEW_NAMES.day, key, eventCount)
   }
 
   populate() {
@@ -649,8 +659,9 @@ class CsvEventCalendar {
   }
 }
 
-CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; 
-CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+CsvEventCalendar.VIEW_NAMES = {month: 'month', week: 'week', day: 'day'}
+CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 CsvEventCalendar.dateKey = date => {
   var parts =  date.toLocaleString('en-US', {

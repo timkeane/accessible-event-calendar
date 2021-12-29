@@ -50,8 +50,11 @@
       target: $('#calendar-1'), 
       url: './calendar.csv',
       eventHtml: eventHtml,
-      selectionChanged: function(day) {
-        console.log('calendar1 selectionChanged', day);
+      dateChanged: function(day) {
+        console.log('calendar1 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar1 stateChanged', day);
       }
     });
 
@@ -59,8 +62,11 @@
       target: $('#calendar-2'), 
       url: './calendar.csv',
       eventHtml: eventHtml,
-      selectionChanged: function(day) {
-        console.log('calendar2 selectionChanged', day);
+      dateChanged: function(day) {
+        console.log('calendar2 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar2 stateChanged', day);
       }
     });
 
@@ -69,8 +75,11 @@
       url: './calendar.csv',
       min: '2021-01-01',
       max: '2021-12-31',
-      selectionChanged: function(day) {
-        console.log('calendar3 selectionChanged', day);
+      dateChanged: function(day) {
+        console.log('calendar3 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar3 stateChanged', day);
       }
     });
 
