@@ -512,7 +512,7 @@ class CsvEventCalendar {
     this.nextMonth(dates)
     this.calendar(dates)
     this.populate()
-    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), $('.view .event').length)
+    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .event').length)
   }
 
   weekView() {
