@@ -129,7 +129,7 @@
 .calendar .controls fieldset .view-choice label {
   display: block;
   text-align: left;
-  padding: 6px 0 6px 30px;
+  padding: 7.5px 0 7.5px 30px;
   font-weight: normal;
 }
 .calendar .controls fieldset .view-choice input:focus+label {
