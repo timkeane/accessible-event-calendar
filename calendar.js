@@ -470,8 +470,8 @@ CsvEventCalendar.prototype.viewDesc = function(view, key, count) {
   var title = this.title({key: key});
   var desc = this.container.find('.view-desc')
   var long = desc.find('a .long');
-  var medium = desc.find('.view-desc a .medium');
-  var abbr = desc.find('.view-desc a .abbr');
+  var medium = desc.find('a .medium');
+  var abbr = desc.find('a .abbr');
   var events = count === 1 ? 'event' : 'events';
   var msg;
   if (view === 'month') {
