@@ -372,7 +372,7 @@ CsvEventCalendar.prototype.month = function() {
   var viewContainer = this.container.find('.view, .view-wo-events');
   var days = $('<ul class="day-names" aria-hidden="true"></ul>');
   var dates = $('<ol class="dates"></ol>');
-  var viewDesc = $('<div class="view-desc"><a tabindex="0"><span class="long"></span><span class="medium"></span><span class="abbr"></span></a></a>');
+  var viewDesc = $('<h2 class="view-desc"><a tabindex="0"><span class="long"></span><span class="medium"></span><span class="abbr"></span></a></h2>');
   if (!viewContainer.length) {
     viewContainer = $('<div class="view month"></div>');
   }
@@ -468,27 +468,34 @@ CsvEventCalendar.prototype.view = function(view) {
 
 CsvEventCalendar.prototype.viewDesc = function(view, key, count) {
   var title = this.title({key: key});
-  var long = this.container.find('.view-desc a .long');
-  var medium = this.container.find('.view-desc a .medium');
-  var abbr = this.container.find('.view-desc a .abbr');
+  var desc = this.container.find('.view-desc')
+  var long = desc.find('a .long');
+  var medium = desc.find('.view-desc a .medium');
+  var abbr = desc.find('.view-desc a .abbr');
   var events = count === 1 ? 'event' : 'events';
+  var msg;
   if (view === 'month') {
-    long.html(title.month.long + ' - showing ' + count + ' scheduled ' + events);
-    medium.html(title.month.medium + ' - showing ' + count + ' scheduled ' + events);
-    abbr.html(title.month.medium + ' - showing ' + count + ' ' + events);
+    msg = 'Showing ' + count + ' scheduled ' + events + ' for ' + title.month.long;
+    long.html(msg);
+    medium.html('Showing ' + count + ' scheduled ' + events + ' for ' + title.month.medium);
+    abbr.html('Showing ' + count + ' ' + events + ' for ' + title.month.medium);
   } else if (view === 'week') {
-    long.html('Week of ' + title.day.long + ' - showing ' + count + ' ' + events);
-    medium.html('Week of ' + title.day.medium + ' - showing ' + count + ' ' + events);
-    abbr.html( 'Week of ' + title.day.abbr.substr(4) + ' - ' + count + ' ' + events);
+    msg = 'Showing ' + count + ' ' + events + ' for week of ' + title.day.long;
+    long.html(msg);
+    medium.html('Showing ' + count + ' ' + events + ' for week of ' + title.day.medium);
+    abbr.html(count + ' ' + events + ' for week of ' + title.day.abbr.substr(4));
   } else if (count) {
-    long.html(title.day.long + ' - showing ' + count + ' scheduled ' + events);
-    medium.html(title.day.medium + ' - showing ' + count + ' scheduled ' + events);
-    abbr.html(title.day.abbr + ' - ' + count + ' ' + events);
+    var msg = 'Showing ' + count + ' scheduled ' + events + ' on ' + title.day.long;
+    long.html(msg);
+    medium.html('Showing ' + count + ' ' + events + ' on ' + title.day.medium);
+    abbr.html(count + ' ' + events + ' on ' + title.day.abbr);
   } else {
-    long.html(title.day.long + ' - there no scheduled events to show');
-    medium.html(title.day.medium + ' - no scheduled events');
-    abbr.html(title.day.abbr + ' - no events');
+    msg = 'There no scheduled events on ' + title.day.long;
+    long.html(msg);
+    medium.html('No scheduled events on ' + title.day.medium);
+    abbr.html('No events on ' + title.day.abbr);
   }
+  desc.attr('aria-label', msg);
 };
 
 CsvEventCalendar.prototype.monthView = function() {
