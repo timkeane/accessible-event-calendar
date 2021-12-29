@@ -30,13 +30,28 @@
     #calendar-2 {
       width: 645px;
     }
+    #error {
+      display: none;
+    }
+    #error span {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
+  <div id="error">
+    This example must be run from the <span>dist</span> folder
+    after running <span>yarn build</span>
+  </div>
   <div id="calendar-1"></div>
   <div id="calendar-2"></div>
   <div id="calendar-3"></div>
   <script>
+
+    if (!window.CsvEventCalendar) {
+      $('#error').show();
+    }
 
     function eventHtml(calEvent) {
       var html = CsvEventCalendar.prototype.eventHtml.call(this, calEvent);

@@ -32,8 +32,8 @@ class CsvEventCalendar {
       view: CsvEventCalendar.VIEW_NAMES.month,
       previousView: CsvEventCalendar.VIEW_NAMES.month,
       key: () => {
-        var m = this.state.month + 1
-        var d = this.state.date
+        let m = this.state.month + 1
+        let d = this.state.date
         if (m < 10) m = `0${m}`
         if (d < 10) d = `0${d}`
         return `${this.state.year}-${m}-${d}`
@@ -91,8 +91,8 @@ class CsvEventCalendar {
     this.state.view = options.view || this.state.view
     this.state.year = options.year || this.state.year
     this.state.month = options.month !== undefined ? options.month : this.state.month
-    var currentMonth = new Date(this.state.year, this.state.month + 1, 0)
-    var lastDayOfMonth = currentMonth.getDate()
+    const currentMonth = new Date(this.state.year, this.state.month + 1, 0)
+    const lastDayOfMonth = currentMonth.getDate()
     this.state.date = options.date || this.state.date
     if (this.state.date > lastDayOfMonth) {
       this.state.month = this.state.month
@@ -145,15 +145,15 @@ class CsvEventCalendar {
   }
 
   title(options) {
-    var key = options.key || this.state.key()
-    var year = CsvEventCalendar.yearNumber(key)
-    var month = CsvEventCalendar.monthName(key)
-    var mo = month.substr(0, 3)
-    var m = CsvEventCalendar.monthNumber(key)
-    var date = CsvEventCalendar.dateNumber(key)
-    var day = CsvEventCalendar.dayName(key)
-    var d = day.substr(0, 3)
-    var title = {
+    const key = options.key || this.state.key()
+    const year = CsvEventCalendar.yearNumber(key)
+    const month = CsvEventCalendar.monthName(key)
+    const mo = month.substr(0, 3)
+    const m = CsvEventCalendar.monthNumber(key)
+    const date = CsvEventCalendar.dateNumber(key)
+    const day = CsvEventCalendar.dayName(key)
+    const d = day.substr(0, 3)
+    const title = {
       month: {
         long: `${month} ${year}`,
         medium: `${mo} ${year}`,
@@ -178,46 +178,46 @@ class CsvEventCalendar {
   }
 
   previousMonth (dates) {
-    var firstDay = new Date(this.state.year, this.state.month).getDay()
-    var totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate()
-    for (var i = 1; i <= firstDay; i++) {
-      var prevMonthDate = totalDaysInPrevMonth - firstDay + i
-      var key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month - 1, prevMonthDate))
+    const firstDay = new Date(this.state.year, this.state.month).getDay()
+    const totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate()
+    for (let i = 1; i <= firstDay; i++) {
+      const prevMonthDate = totalDaysInPrevMonth - firstDay + i
+      const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month - 1, prevMonthDate))
       dates.push({key: key, date: prevMonthDate, monthClass: 'prev'})
     }
   }
 
   currentMonth(dates) {
-    var totalDaysInMonth = new Date(this.state.year, this.state.month + 1, 0).getDate()
-    for (var i = 1; i <= totalDaysInMonth; i++) {
-      var key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month, i))
+    const totalDaysInMonth = new Date(this.state.year, this.state.month + 1, 0).getDate()
+    for (let i = 1; i <= totalDaysInMonth; i++) {
+      const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month, i))
       dates.push({key: key, date: i, monthClass: 'current'})
     }
   }
 
   nextMonth(dates) {
-    var gridsize = 42
+    const gridsize = 42
     if(dates.length < gridsize) {
-      var count = gridsize - dates.length
-      for(var i = 1; i <= count; i++) {
-        var key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month + 1, i))
+      const count = gridsize - dates.length
+      for(let i = 1; i <= count; i++) {
+        const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month + 1, i))
         dates.push({key: key, date: i, monthClass: 'next'})
       }
     }
   }
 
   navigate(domEvent) {
-    var delta =  $(domEvent.currentTarget).data('delta')
-    var view = this.state.view
+    const delta =  $(domEvent.currentTarget).data('delta')
+    const view = this.state.view
     this.container.find('.controls button').removeAttr('disabled')
     this[`${view}Navigate`](delta)
     this.view(view)
   }
 
   monthNavigate(delta) {
-    var before = this.state.month
-    var month = this.state.month
-    var year = this.state.year
+    const before = this.state.month
+    let month = this.state.month
+    let year = this.state.year
     if (before === 11 && delta === 1) {
       month = 0
       year = this.state.year + 1
@@ -232,11 +232,11 @@ class CsvEventCalendar {
   }
 
   weekNavigate(delta) {
-    var key = this.state.key()
-    var date = CsvEventCalendar.dateFromKey(key)
+    const key = this.state.key()
+    const date = CsvEventCalendar.dateFromKey(key)
     date.setDate(date.getDate() + (delta * 7))
     this.updateState({key: CsvEventCalendar.dateKey(date)})
-    var dayNode = this.dayNode(this.state.key())
+    const dayNode = this.dayNode(this.state.key())
     if (!dayNode.length) {
       this.monthView();
     }
@@ -247,14 +247,14 @@ class CsvEventCalendar {
   }
 
   dayNavigate(delta) {
-    var key = this.state.key()
-    var date = CsvEventCalendar.dateFromKey(key)
+    const key = this.state.key()
+    const date = CsvEventCalendar.dateFromKey(key)
     date.setDate(date.getDate() + delta)
   
-    var nextKey = CsvEventCalendar.dateKey(date)
+    const nextKey = CsvEventCalendar.dateKey(date)
     this.updateState({key: nextKey})
   
-    var dayNode = this.dayNode(this.state.key())
+    const dayNode = this.dayNode(this.state.key())
     if (!dayNode.length) {
       this.monthView()
     }
@@ -268,48 +268,47 @@ class CsvEventCalendar {
   }
 
   controls() {
-    var me = this
-    var back = $('<button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button>')
+    const me = this
+    const back = $('<button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button>')
       .data('delta', -1)
       .on('click', this.navigate.bind(this))
-    var next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
+    const next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
-    var input = $('<input type="date">')
+    const input = $('<input type="date">')
       .val(this.state.key())
       .on('change', function() {
-        var key = input.val()
+        const key = input.val()
         if (me.eventsIndex[key]) {
           window.location.hash = `#${me.container.attr('id')}/day/${key}`
         } else {
           me.alert(key)
         }
       })
-    var views = ['Month', 'Week', 'Day']
-    var fieldset = $('<fieldset></fieldset>')
+    const fieldset = $('<fieldset></fieldset>')
       .append('<button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button>')
-    for (var i = 0; i < views.length; i++) {
-      var id = CsvEventCalendar.nextId('view')
-      var view = views[i].toLocaleLowerCase()
-      var radio = $('<input name="view-choice" type="radio">')
+    Object.keys(CsvEventCalendar.VIEW_NAMES).forEach(view => {
+      const id = CsvEventCalendar.nextId('view')
+      const radio = $('<input name="view-choice" type="radio">')
         .attr({
-          id: id,
+          id,
           value: view,
-          'aria-checked': i === 0,
+          'aria-checked': view === CsvEventCalendar.VIEW_NAMES.month,
           'aria-label': `View by ${view}`
-        }).prop('checked', i === 0)
-      var label = $('<label aria-hidden="true"></label>')
-        .html(views[i])
+        }).prop('checked', view === CsvEventCalendar.VIEW_NAMES.month)
+      const label = $('<label aria-hidden="true"></label>')
+        .html(view)
         .attr({
           for: id,
           'aria-label': `View by ${view}`
         })
       fieldset.append($('<div class="view-choice"></div>').append(radio).append(label))
-    }
-    var activeateBtn = fieldset.find('button.btn')
+    
+    })
+    const activeateBtn = fieldset.find('button.btn')
     activeateBtn.on('click keyup', function(domEvent) {
       if (domEvent.type === 'click' || domEvent.key === 'ArrowDown') {
-        var open = activeateBtn.attr('aria-expanded') === true
+        const open = activeateBtn.attr('aria-expanded') === true
         activeateBtn.attr('aria-expanded', !open)
         fieldset[!open ? 'addClass' : 'removeClass']('expanded')
         setTimeout(function() {
@@ -326,34 +325,34 @@ class CsvEventCalendar {
       }
     })
     $(this.container).on('click', function(domEvent) {
-      var next = domEvent.target
+      const next = domEvent.target
       if (next && !$.contains(fieldset.get(0), next)) {
         activeateBtn.attr('aria-expanded', false)
         fieldset.removeClass('expanded')
       }
     })
     fieldset.find('button, input').on('blur', function(domEvent) {
-      var next = domEvent.relatedTarget
+      const next = domEvent.relatedTarget
       if (next && !$.contains(fieldset.get(0), next)) {
         fieldset.attr('aria-expanded', false)
       }
     })
-    var h2 = $('<h2 aria-live="assertive"></h2>')
+    const h2 = $('<h2 aria-live="assertive"></h2>')
       .append(
         $('<span class="month"></span>')
           .append('<span class="long"></span>')
           .append('<span class="short"></span>')
           .append('<span class="abbr"></span>')
       )
-    var controls = $('<div class="controls"></div>')
+    const controls = $('<div class="controls"></div>')
       .append(back)
       .append(h2)
       .append(next)
       .append(input)
       .append(fieldset)
     this.container.append(controls)
-    var alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
-    alert.find('.ok').on('click', function() {
+    const alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
+    alert.find('.ok').on('click', () => {
       alert.hide()
       controls.removeAttr('aria-hidden')
       me.container.find('.view').removeAttr('aria-hidden')
@@ -362,13 +361,12 @@ class CsvEventCalendar {
   }
 
   calendar(dates) {
-    var me = this
-    var month = this.month()
-    var endOfWeek1 = dates[6].key
-    var startOfWeek6 = dates[35].key
-    var weekOfMonth = 0
-    $.each(dates, function(i, date) {
-      me.day(date, weekOfMonth, month)
+    const month = this.month()
+    const endOfWeek1 = dates[6].key
+    const startOfWeek6 = dates[35].key
+    let weekOfMonth = 0
+    dates.forEach((date, i) => {
+      this.day(date, weekOfMonth, month)
       if ((i + 1) % 7 === 0) {
         weekOfMonth = weekOfMonth + 1
         if (i === 34 && !CsvEventCalendar.sameMonth(endOfWeek1, startOfWeek6)) {
@@ -379,27 +377,27 @@ class CsvEventCalendar {
   }
 
   month() {
-    var viewContainer = this.container.find('.view, .view-wo-events')
-    var days = $('<ul class="day-names" aria-hidden="true"></ul>')
-    var dates = $('<ol class="dates"></ol>')
-    var viewDesc = $('<h2 class="view-desc"><a tabindex="0"><span class="long"></span><span class="medium"></span><span class="abbr"></span></a></h2>')
+    const days = $('<ul class="day-names" aria-hidden="true"></ul>')
+    const dates = $('<ol class="dates"></ol>')
+    const viewDesc = $('<h2 class="view-desc"><a tabindex="0"><span class="long"></span><span class="medium"></span><span class="abbr"></span></a></h2>')
+    let viewContainer = this.container.find('.view, .view-wo-events')
     if (!viewContainer.length) {
       viewContainer = $('<div class="view month"></div>')
     }
     this.container.append(viewContainer.empty().append(viewDesc).append(days).append(dates))
-    $.each(CsvEventCalendar.DAY_NAMES, function(d, name) {
-      var li = $('<li></li>')
+    CsvEventCalendar.DAY_NAMES.forEach(name => {
+      const li = $('<li></li>')
         .append('<span class="long">' + name + '</span>')
         .append('<span class="medium">' + name.substr(0, 3) + '</span>')
         .append('<span class="short">' + name.substr(0, 1) + '</span>')
         days.append(li)
-    });
+    })
     return dates
   }
 
   week() {
-    var key = this.state.key()
-    var dayNode = this.dayNode(key)
+    const key = this.state.key()
+    const dayNode = this.dayNode(key)
     this.container.find('li.day')
       .removeClass('start-of-week')
       .removeClass('selected-week')
@@ -409,19 +407,18 @@ class CsvEventCalendar {
   }
 
   day = function(date, week, month) {
-    var me = this
-    var key = date.key
-    var title = this.title({key: key}).day
-    var prevView = $('<a class="prev-view"></a>')
-    var h3 = $('<h3></h3>')
-    var a = $('<a class="name"></a>')
+    const key = date.key
+    const title = this.title({key: key}).day
+    const prevView = $('<a class="prev-view"></a>')
+    const h3 = $('<h3></h3>')
+    const a = $('<a class="name"></a>')
     h3.append(a)
     a.append('<span class="long">' + title.long + '</span>')
       .append('<span class="medium">' + title.medium + '</span>')
       .append('<span class="abbr">' + title.abbr + '</span>')
       .append('<span class="short">' + title.short + '</span>')
       .attr('href', '#' + this.container.attr('id') + '/day/' + key)
-    var day = $('<li class="day"></li>')
+    const day = $('<li class="day"></li>')
       .data(CsvEventCalendar.VIEW_NAMES.week, week)
       .addClass(date.monthClass + '-mo')
       .addClass( 'week-' + week)
@@ -438,10 +435,9 @@ class CsvEventCalendar {
   }
 
   view = function(view) {
-    if (!view) return;
-    var key = this.state.key();
-    var dayNode = this.dayNode(key);
-    var previousView = this.state.previousView
+    const key = this.state.key()
+    const dayNode = this.dayNode(key)
+    const previousView = this.state.previousView
     if (!dayNode.length) {
       this.monthView()
       return this.view(view)
@@ -455,17 +451,17 @@ class CsvEventCalendar {
     this.container.find('.controls .next').attr({
       'aria-label': `next ${view}`,
       title: `next ${view}`
-    });
+    })
     this.container.find('.controls .back').attr({
       'aria-label': `previous ${view}`,
       title: `previous ${view}`
-    });
-    this.container.find('.view').removeAttr('aria-label');
-    this.container.find('.day a.name').removeAttr('aria-live');
+    })
+    this.container.find('.view').removeAttr('aria-label')
+    this.container.find('.day a.name').removeAttr('aria-live')
     this.container.find('.day a[data-old-label]').each(function(i, btn) {
       $(btn).attr('aria-label', $(btn).attr('data-old-label'))
         .removeAttr('data-old-label')
-    });
+    })
     this.container.find('.day a.prev-view')
       .attr({
         'aria-label': `return to ${previousView} view`,
@@ -478,13 +474,13 @@ class CsvEventCalendar {
   }
 
   viewDesc(view, key, count) {
-    var title = this.title({key: key})
-    var desc = this.container.find('.view-desc')
-    var long = desc.find('a .long')
-    var medium = desc.find('a .medium')
-    var abbr = desc.find('a .abbr')
-    var events = count === 1 ? 'event' : 'events'
-    var msg
+    const title = this.title({key: key})
+    const desc = this.container.find('.view-desc')
+    const long = desc.find('a .long')
+    const medium = desc.find('a .medium')
+    const abbr = desc.find('a .abbr')
+    const events = count === 1 ? 'event' : 'events'
+    let msg
     if (view === CsvEventCalendar.VIEW_NAMES.month) {
       msg = `Showing ${count} scheduled ${events} for ${title.month.long}`
       long.html(msg)
@@ -496,7 +492,7 @@ class CsvEventCalendar {
       medium.html(`Showing ${count} ${events} for week of ${title.day.medium}`)
       abbr.html(`${count} ${events} for week of ${title.day.abbr.substr(4)}`)
     } else if (count) {
-      var msg = `Showing ${count} scheduled ${events} on ${title.day.long}`
+      msg = `Showing ${count} scheduled ${events} on ${title.day.long}`
       long.html(msg)
       medium.html(`Showing ${count} ${events} on ${title.day.medium}`)
       abbr.html(`${count} ${events} on ${title.day.abbr}`)
@@ -510,7 +506,7 @@ class CsvEventCalendar {
   }
 
   monthView() {
-    var dates = []
+    const dates = []
     this.previousMonth(dates)
     this.currentMonth(dates)
     this.nextMonth(dates)
@@ -520,32 +516,31 @@ class CsvEventCalendar {
   }
 
   weekView() {
-    var key = this.container.find('.day.start-of-week').attr('data-date-key')
-    var count = this.container.find('.selected-week .event').length
+    const key = this.container.find('.day.start-of-week').attr('data-date-key')
+    const count = this.container.find('.selected-week .event').length
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.week, key, count)
   }
 
   dayView() {
-    var key = this.state.key()
-    var dayNode = this.dayNode(key)
-    var eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0
-    var a = dayNode.find('h3 a.name')
+    const key = this.state.key()
+    const dayNode = this.dayNode(key)
+    const eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.day, key, eventCount)
   }
 
   populate() {
-    var me = this
-    var calendarEvents = {}
-    var dayNodes = this.container.find('.view li.day')
+    const me = this
+    const calendarEvents = {}
+    const dayNodes = this.container.find('.view li.day')
     dayNodes.each(function(i, dayNode) {
-      var key = $(dayNode).attr('data-date-key')
-      var title = me.title({key: key}).day.long
-      var events = me.eventsIndex[key]
-      var eventCount = events && events.length || 0
-      var eventsNode = $(dayNode).find('.events')
-      var a = $(dayNode).find('h3 a')
+      const key = $(dayNode).attr('data-date-key')
+      const title = me.title({key: key}).day.long
+      const events = me.eventsIndex[key]
+      const eventCount = events && events.length || 0
+      const eventsNode = $(dayNode).find('.events')
+      const a = $(dayNode).find('h3 a')
       $(dayNode).append(eventsNode)
       if (me.eventsIndex.ready) {
         if (events) {
@@ -563,15 +558,14 @@ class CsvEventCalendar {
         }
       }
     })
-    var dayNode = this.dayNode(this.state.key())
+    const dayNode = this.dayNode(this.state.key())
     this.container.find('.view.month .day').removeClass('selected')
     dayNode.addClass('selected')
     this.week()
   }
 
   indexData(response) {
-    var me = this
-    var calEvents = response.data
+    const calEvents = response.data
     CsvEventCalendar.sortByDate(calEvents)
     if (!this.min) {
       this.min = calEvents[0].date
@@ -581,18 +575,18 @@ class CsvEventCalendar {
       this.max = calEvents[calEvents.length - 1].date
       this.container.find('.controls input[type="date"]').attr('max', this.max)
     }
-    $.each(calEvents, function(i, calEvent) {
-      var key = calEvent.date
-      me.eventsIndex[key] = me.eventsIndex[key] || []
-      me.eventsIndex[key].push(calEvent)
-      CsvEventCalendar.sortByStartTime(me.eventsIndex[key])
+    calEvents.forEach(calEvent => {
+      const key = calEvent.date
+      this.eventsIndex[key] = this.eventsIndex[key] || []
+      this.eventsIndex[key].push(calEvent)
+      CsvEventCalendar.sortByStartTime(this.eventsIndex[key])
     })
     this.eventsIndex.ready = true
     this.hashChanged()
   }
 
   alert(minMaxKey) {
-    var msg;
+    let msg
     if (['min', 'max'].indexOf(minMaxKey) > -1) {
       this.container.find(`.controls button.${(minMaxKey === 'min' ? 'back' : 'next')}`)
         .attr('disabled', true);
@@ -603,23 +597,23 @@ class CsvEventCalendar {
     this.container.find('.controls').attr('aria-hidden', true)
     this.container.find('.view').attr('aria-hidden', true)
     this.container.find('.alert p').html(msg)
-    var alert = this.container.find('.alert')
+    const alert = this.container.find('.alert')
       .attr({'aria-label': msg, tabindex: 0})
       .show()
       .focus()
-    var ok = alert.find('button.ok')
-    var timeout = setTimeout(function() {
+    const ok = alert.find('button.ok')
+    const timeout = setTimeout(function() {
       ok.focus()
     }, 6500)
-    ok.on('click', function() {
+    ok.on('click', () => {
       clearTimeout(timeout)
     })
   }
 
   focus() {
-    var me = this
+    const me = this
     if (!this.container.find('.alert').is(':visible')) {
-      var scroll = $(document).scrollTop()
+      const scroll = $(document).scrollTop()
       setTimeout(function() {
         me.container.find('.view-desc a').focus()
         me.container.scrollTop(0)
@@ -629,24 +623,22 @@ class CsvEventCalendar {
   }
 
   resize () {
-    var container = this.container
-    var changes = [645, 500, 400, 375, 340, 300, 280]
-    var width = container.width()
-    for (var i = 0; i < changes.length; i++) {
-      var w = changes[i]
+    const container = this.container
+    const width = container.width()
+    CsvEventCalendar.CSS_WIDTHS.forEach(w => {
       container.removeClass('w-' + w)
       if (width <= w) {
         container.addClass('w-' + w)
       }
-    }
+    })
   }
 
   eventHtml(calEvent) {
-    var fmt = CsvEventCalendar.timeFormat
-    var time = $('<div class="time"></div>')
+    const fmt = CsvEventCalendar.timeFormat
+    const time = $('<div class="time"></div>')
       .append('<strong>Start:</strong>')
       .append(`<span>${fmt(calEvent.start, true)}</span>`)
-    var about = $('<div class="about"></div>')
+    const about = $('<div class="about"></div>')
       .append(calEvent.about)
     if (calEvent.end) {
       time.append('<strong>End:</strong>')
@@ -662,9 +654,10 @@ class CsvEventCalendar {
 CsvEventCalendar.VIEW_NAMES = {month: 'month', week: 'week', day: 'day'}
 CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
 
 CsvEventCalendar.dateKey = date => {
-  var parts =  date.toLocaleString('en-US', {
+  const parts =  date.toLocaleString('en-US', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit'
@@ -681,12 +674,12 @@ CsvEventCalendar.dateNumber = key => {
 }
 
 CsvEventCalendar.dayNumber = key => {
-  var date = CsvEventCalendar.dateFromKey(key)
+  const date = CsvEventCalendar.dateFromKey(key)
   return date.getDay()
 }
 
 CsvEventCalendar.dayName = key => {
-  var day = CsvEventCalendar.dayNumber(key)
+  const day = CsvEventCalendar.dayNumber(key)
   return CsvEventCalendar.DAY_NAMES[day]
 }
 
@@ -695,7 +688,7 @@ CsvEventCalendar.monthNumber = key => {
 }
 
 CsvEventCalendar.monthName = key => {
-  var month = CsvEventCalendar.monthNumber(key)
+  const month = CsvEventCalendar.monthNumber(key)
   return CsvEventCalendar.MONTH_NAMES[month - 1]
 }
 
@@ -709,8 +702,8 @@ CsvEventCalendar.yearNumber = key => {
 
 CsvEventCalendar.timeFormat = (time, ampm) => {
   if (time.trim().length === 0) return '';
-  var parts = time.split(':')
-  for (var i = 0; i < parts.length; i++) {
+  const parts = time.split(':')
+  for (let i = 0; i < parts.length; i++) {
     parts[i] = parseInt(parts[i])
     if (('' + parts[i]).length === 1) {
       parts[i] = `0${parts[i]}`
@@ -727,8 +720,8 @@ CsvEventCalendar.timeFormat = (time, ampm) => {
   if (parts.length < 2) {
     parts.push('00')
   }
-  var hh24 = parts.join(':')
-  var suffix = ' AM'
+  const hh24 = parts.join(':')
+  let suffix = ' AM'
   if (!ampm) return hh24;
   if (parseInt(parts[0]) > 12) {
     suffix = ' PM'
@@ -740,10 +733,10 @@ CsvEventCalendar.timeFormat = (time, ampm) => {
 }
 
 CsvEventCalendar.sortByStartTime = events => {
-  var fmt = CsvEventCalendar.timeFormat
+  const fmt = CsvEventCalendar.timeFormat
   events.sort(function(event1, event2) {
-    var time1 = fmt(event1.start)
-    var time2 = fmt(event2.start)
+    const time1 = fmt(event1.start)
+    const time2 = fmt(event2.start)
     if (time1 < time2) {
       return -1
     } else if (time1 < time2) {
@@ -755,8 +748,8 @@ CsvEventCalendar.sortByStartTime = events => {
 
 CsvEventCalendar.sortByDate = events => {
   events.sort(function(event1, event2) {
-    var date1 = event1.date
-    var date2 = event2.date
+    const date1 = event1.date
+    const date2 = event2.date
     if (date1 < date2) {
       return -1
     } else if (date1 < date2) {
@@ -775,5 +768,18 @@ CsvEventCalendar.nextId = prefix => {
   CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id + 1
   return prefix + CsvEventCalendar[prefix].id
 }
+
+/**
+ * @desc Constructor options for {@link module:CsvEventCalendar}
+ * @public
+ * @typedef {Object}
+ * @property {jQuery|Element|string} target The target DOM node for creating the calendar
+ * @property {string} url The URL to the CSV event data
+ * @property {string} min The minimum date formatted as yyyy-mm-dd
+ * @property {string} max The maximum date formatted as yyyy-mm-dd
+ * @property {function} dateChanged Handler for date changed event
+ * @property {function} stateChanged Handler for state changed event
+ */
+ CsvEventCalendar.Options
 
 export default CsvEventCalendar
