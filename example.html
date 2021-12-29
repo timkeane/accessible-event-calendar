@@ -5,8 +5,8 @@
   <title>calendar</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.4.0/papaparse.min.js"></script>
-  <script src="./calendar.js?v0.6.2"></script>
-  <link href="./calendar.css?v0.6.2" rel="stylesheet">
+  <script src="./calendar.js"></script>
+  <link href="./calendar.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <style>
     body {
@@ -30,13 +30,28 @@
     #calendar-2 {
       width: 645px;
     }
+    #error {
+      display: none;
+    }
+    #error span {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
+  <div id="error">
+    This example must be run from the <span>dist</span> folder
+    after running <span>yarn build</span>
+  </div>
   <div id="calendar-1"></div>
   <div id="calendar-2"></div>
   <div id="calendar-3"></div>
   <script>
+
+    if (!window.CsvEventCalendar) {
+      $('#error').show();
+    }
 
     function eventHtml(calEvent) {
       var html = CsvEventCalendar.prototype.eventHtml.call(this, calEvent);
@@ -50,8 +65,11 @@
       target: $('#calendar-1'), 
       url: './calendar.csv',
       eventHtml: eventHtml,
-      selectionChanged: function(day) {
-        console.log('calendar1 selectionChanged', day);
+      dateChanged: function(day) {
+        console.log('calendar1 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar1 stateChanged', day);
       }
     });
 
@@ -59,8 +77,11 @@
       target: $('#calendar-2'), 
       url: './calendar.csv',
       eventHtml: eventHtml,
-      selectionChanged: function(day) {
-        console.log('calendar2 selectionChanged', day);
+      dateChanged: function(day) {
+        console.log('calendar2 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar2 stateChanged', day);
       }
     });
 
@@ -69,8 +90,11 @@
       url: './calendar.csv',
       min: '2021-01-01',
       max: '2021-12-31',
-      selectionChanged: function(day) {
-        console.log('calendar3 selectionChanged', day);
+      dateChanged: function(day) {
+        console.log('calendar3 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar3 stateChanged', day);
       }
     });
 
