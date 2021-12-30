@@ -48,11 +48,11 @@
   <div id="calendar-2"></div>
   <div id="calendar-3"></div>
   <script>
-    var search = window.location.search.substring(1)
     var multi = search.split('=')[1] === 'true'
     if (!window.CsvEventCalendar) {
       $('#error').show();
     } else {
+      var search = window.location.search.substring(1)
       function eventHtml(calEvent) {
         var html = CsvEventCalendar.prototype.eventHtml.call(this, calEvent);
         var sponsor = $('<div class="sponsor"></div>')
