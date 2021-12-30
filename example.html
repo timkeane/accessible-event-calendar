@@ -97,6 +97,8 @@
           target: $('#calendar-2'), 
           url: './calendar.csv',
           eventHtml: eventHtml,
+          min: '2021-01-01',
+          max: '2021-12-31',
           dateChanged: function(day) {
             console.log('calendar2 dateChanged', day);
           },
@@ -111,8 +113,6 @@
       var calendar3 = new CsvEventCalendar({
         target: $('#calendar-3'), 
         url: './calendar.csv',
-        min: '2021-01-01',
-        max: '2021-12-31',
         dateChanged: function(day) {
           console.log('calendar3 dateChanged', day);
         },

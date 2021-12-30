@@ -16,8 +16,8 @@ class CsvEventCalendar {
     this.firstView = true
     this.eventsIndex = {ready: false, noData: false}
     this.container = $('<div class="calendar"></div>')
-    this.min = options.min
-    this.max = options.max
+    this.min = options.min || '1900-01-01'
+    this.max = options.max || '2200-12-31'
     this.eventProperties = options.eventProperties || CsvEventCalendar.EVENT_PROPERTIES
     this.eventHtml = options.eventHtml || this.eventHtml
     this.viewChanged = options.viewChanged || this.viewChanged
