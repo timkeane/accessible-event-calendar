@@ -641,22 +641,21 @@ class CsvEventCalendar {
   }
 
   eventHtml(calEvent) {
-    const props = this.eventProperties
     const fmt = CsvEventCalendar.timeFormat
+    const props = this.eventProperties
+    const location = calEvent[props.location]
     const time = $('<div class="time"></div>')
       .append('<strong>Start:</strong>')
-      .append(`<span>${fmt(calEvent[this.eventProperties.start], true)}</span>`)
+      .append(`<span>${fmt(calEvent[props.start], true)}</span>`)
     const about = $('<div class="about"></div>')
-      .append(calEvent[props[this.eventProperties.about]])
+      .append(calEvent[props.about])
     if (calEvent.end) {
       time.append('<strong>End:</strong>')
-        .append(`<span>${fmt(calEvent[this.eventProperties.end], true)}</span>`)
+        .append(`<span>${fmt(calEvent[props.end], true)}</span>`)
     }
-    const loc = calEvent[this.eventProperties.location]
-
     return $('<div class="event"></div>')
-      .append(`<h4>${calEvent[this.eventProperties.name]}</h4>`)
-      .append(loc ? `<h5><strong>Location:</strong> ${loc}</h5>` : '')
+      .append(`<h4>${calEvent[props.name]}</h4>`)
+      .append(location ? `<h5><strong>Location:</strong> ${location}</h5>` : '')
       .append(time)
       .append(about)
   }
