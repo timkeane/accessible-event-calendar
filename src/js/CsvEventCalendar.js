@@ -435,7 +435,7 @@ class CsvEventCalendar {
       .append('<div class="events"></div>')
       .on('click', function() {
         if ($(this).hasClass('has-events'))
-          window.location = $(this).find('a.name').attr('href')
+          window.location.hash = $(this).find('a.name').attr('href')
       })
       month.append(day)
       return day
@@ -645,15 +645,18 @@ class CsvEventCalendar {
     const fmt = CsvEventCalendar.timeFormat
     const time = $('<div class="time"></div>')
       .append('<strong>Start:</strong>')
-      .append(`<span>${fmt(calEvent.start, true)}</span>`)
+      .append(`<span>${fmt(calEvent[this.eventProperties.start], true)}</span>`)
     const about = $('<div class="about"></div>')
-      .append(calEvent[props.about])
+      .append(calEvent[props[this.eventProperties.about]])
     if (calEvent.end) {
       time.append('<strong>End:</strong>')
-        .append(`<span>${fmt(calEvent[props.end], true)}</span>`)
+        .append(`<span>${fmt(calEvent[this.eventProperties.end], true)}</span>`)
     }
+    const loc = calEvent[this.eventProperties.location]
+
     return $('<div class="event"></div>')
-      .append(`<h4>${calEvent[props.name]}</h4>`)
+      .append(`<h4>${calEvent[this.eventProperties.name]}</h4>`)
+      .append(loc ? `<h5><strong>Location:</strong> ${loc}</h5>` : '')
       .append(time)
       .append(about)
   }
@@ -671,7 +674,7 @@ CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Th
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
 CsvEventCalendar.EVENT_PROPERTIES = {
   name: 'name',
-  location: 'loction',
+  location: 'location',
   start: 'start',
   end: 'end',
   about: 'about'

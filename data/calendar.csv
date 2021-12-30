@@ -1,5 +1,5 @@
-﻿date,start,end,name,about,sponsor
-2021-12-01,2am,3pm,event 1 with a long name,and a link to <a href="https://nyc.gov">nyc.gov</a>,sponsor 1
+﻿date,start,end,name,about,sponsor,location
+2021-12-01,2am,3pm,event 1 with a long name,and a link to <a href="https://nyc.gov">nyc.gov</a>,sponsor 1,somplace
 2021-12-02,12am,3am,event 2,event details go here 2,sponsor 2
 2021-12-07,12pm,1:30 PM,event 3,event details go here 3,sponsor 3
 2021-12-08,,,event 4,event details go here 4,sponsor 4
