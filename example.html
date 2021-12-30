@@ -61,29 +61,29 @@
       return html;
     };
 
-    // var calendar1 = new CsvEventCalendar({
-    //   target: $('#calendar-1'), 
-    //   url: './calendar.csv',
-    //   eventHtml: eventHtml,
-    //   dateChanged: function(day) {
-    //     console.log('calendar1 dateChanged', day);
-    //   },
-    //   stateChanged: function(day) {
-    //     console.log('calendar1 stateChanged', day);
-    //   }
-    // });
+    var calendar1 = new CsvEventCalendar({
+      target: $('#calendar-1'), 
+      url: './calendar.csv',
+      eventHtml: eventHtml,
+      dateChanged: function(day) {
+        console.log('calendar1 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar1 stateChanged', day);
+      }
+    });
 
-    // var calendar2 = new CsvEventCalendar({
-    //   target: $('#calendar-2'), 
-    //   url: './calendar.csv',
-    //   eventHtml: eventHtml,
-    //   dateChanged: function(day) {
-    //     console.log('calendar2 dateChanged', day);
-    //   },
-    //   stateChanged: function(day) {
-    //     console.log('calendar2 stateChanged', day);
-    //   }
-    // });
+    var calendar2 = new CsvEventCalendar({
+      target: $('#calendar-2'), 
+      url: './calendar.csv',
+      eventHtml: eventHtml,
+      dateChanged: function(day) {
+        console.log('calendar2 dateChanged', day);
+      },
+      stateChanged: function(day) {
+        console.log('calendar2 stateChanged', day);
+      }
+    });
 
     var calendar3 = new CsvEventCalendar({
       target: $('#calendar-3'), 

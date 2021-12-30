@@ -18,6 +18,7 @@ class CsvEventCalendar {
     this.container = $('<div class="calendar"></div>')
     this.min = options.min
     this.max = options.max
+    this.eventProperties = options.eventProperties || CsvEventCalendar.EVENT_PROPERTIES
     this.eventHtml = options.eventHtml || this.eventHtml
     this.stateChanged = options.stateChanged || this.stateChanged
     this.dateChanged = options.dateChanged || this.dateChanged
@@ -371,7 +372,7 @@ class CsvEventCalendar {
     const endOfWeek1 = dates[6].key
     const startOfWeek6 = dates[35].key
     let weekOfMonth = 0
-    dates.forEach((date, i) => {
+    $.each(dates, (i, date) => {
       this.day(date, weekOfMonth, month)
       if ((i + 1) % 7 === 0) {
         weekOfMonth = weekOfMonth + 1
@@ -640,18 +641,19 @@ class CsvEventCalendar {
   }
 
   eventHtml(calEvent) {
+    const props = this.eventProperties
     const fmt = CsvEventCalendar.timeFormat
     const time = $('<div class="time"></div>')
       .append('<strong>Start:</strong>')
       .append(`<span>${fmt(calEvent.start, true)}</span>`)
     const about = $('<div class="about"></div>')
-      .append(calEvent.about)
+      .append(calEvent[props.about])
     if (calEvent.end) {
       time.append('<strong>End:</strong>')
-        .append(`<span>${fmt(calEvent.end, true)}</span>`)
+        .append(`<span>${fmt(calEvent[props.end], true)}</span>`)
     }
     return $('<div class="event"></div>')
-      .append(`<h4>${calEvent.name}</h4>`)
+      .append(`<h4>${calEvent[props.name]}</h4>`)
       .append(time)
       .append(about)
   }
@@ -667,6 +669,13 @@ CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 
 CsvEventCalendar.DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
+CsvEventCalendar.EVENT_PROPERTIES = {
+  name: 'name',
+  location: 'loction',
+  start: 'start',
+  end: 'end',
+  about: 'about'
+}
 
 CsvEventCalendar.localeDayNames = () => {
   return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
