@@ -89,8 +89,8 @@
           dateChanged: function(day) {
             console.log('calendar1 dateChanged', day);
           },
-          stateChanged: function(day) {
-            console.log('calendar1 stateChanged', day);
+          viewChanged: function(day) {
+            console.log('calendar1 viewChanged', day);
           }
         });
         var calendar2 = new CsvEventCalendar({
@@ -100,8 +100,8 @@
           dateChanged: function(day) {
             console.log('calendar2 dateChanged', day);
           },
-          stateChanged: function(day) {
-            console.log('calendar2 stateChanged', day);
+          viewChanged: function(day) {
+            console.log('calendar2 viewChanged', day);
           }
         });
         $('#multi').addClass('selected');
@@ -116,8 +116,8 @@
         dateChanged: function(day) {
           console.log('calendar3 dateChanged', day);
         },
-        stateChanged: function(day) {
-          console.log('calendar3 stateChanged', day);
+        viewChanged: function(day) {
+          console.log('calendar3 viewChanged', day);
         }
       });
     }

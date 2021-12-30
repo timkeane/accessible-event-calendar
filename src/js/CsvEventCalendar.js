@@ -20,7 +20,7 @@ class CsvEventCalendar {
     this.max = options.max
     this.eventProperties = options.eventProperties || CsvEventCalendar.EVENT_PROPERTIES
     this.eventHtml = options.eventHtml || this.eventHtml
-    this.stateChanged = options.stateChanged || this.stateChanged
+    this.viewChanged = options.viewChanged || this.viewChanged
     this.dateChanged = options.dateChanged || this.dateChanged
     this.today = new Date()
     this.today.setHours(0, 0, 0, 0)
@@ -63,7 +63,7 @@ class CsvEventCalendar {
   }
 
   dateChanged() {}
-  stateChanged() {}
+  viewChanged() {}
 
   esc(domEvent) {
     if (domEvent.key === 'Escape') {
@@ -86,8 +86,8 @@ class CsvEventCalendar {
   }
 
   updateState(options) {
-    const beforeState = JSON.stringify(this.state)
     const beforeKey = this.state.key()
+    const beforeView = this.state.view
     if (options.view === CsvEventCalendar.VIEW_NAMES.week) {
       this.state.previousView = CsvEventCalendar.VIEW_NAMES.month
     } else if (this.state.view !== CsvEventCalendar.VIEW_NAMES.day) {
@@ -118,7 +118,6 @@ class CsvEventCalendar {
       this.alert('min')
       return
     }
-    const afterState = JSON.stringify(this.state)
     const key = this.state.key()
     const view = this.state.view
     this.container.find('.controls input[type="date"]').val(key)
@@ -131,9 +130,9 @@ class CsvEventCalendar {
       .attr('aria-checked', true)
       .prop('checked', true)
     this.container.find('.controls fieldset .btn span').html('View by ' + view)
-    if (afterState !== beforeState) {
+    if (view !== beforeView) {
       this.week()
-      this.stateChanged({
+      this.viewChanged({
         view: view,
         date: key,
         events: this.eventsIndex[key] || []
@@ -802,7 +801,7 @@ CsvEventCalendar.nextId = prefix => {
  * @property {string} min The minimum date formatted as yyyy-mm-dd
  * @property {string} max The maximum date formatted as yyyy-mm-dd
  * @property {function} dateChanged Handler for date changed event
- * @property {function} stateChanged Handler for state changed event
+ * @property {function} viewChanged Handler for state changed event
  */
  CsvEventCalendar.Options
 
