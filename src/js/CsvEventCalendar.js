@@ -440,7 +440,7 @@ class CsvEventCalendar {
       return day
   }
 
-  view = function(view) {
+  view(view) {
     const key = this.state.key()
     const dayNode = this.dayNode(key)
     const previousView = this.state.previousView
@@ -474,6 +474,7 @@ class CsvEventCalendar {
         title: `return to ${previousView} view`,
         href: `#${this.container.attr('id')}/${previousView}/${key}`
       })
+    this.container.find('.view .event a').removeAttr('tabindex')
     this[`${view}View`]()
     this.container.find(`.view .day[data-date-key="${this.state.today}"]`).addClass('today')
     this.focus()
@@ -518,6 +519,7 @@ class CsvEventCalendar {
     this.nextMonth(dates)
     this.calendar(dates)
     this.populate()
+    this.container.find('.view .event a').attr('tabindex', -1)
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .event').length)
   }
 
