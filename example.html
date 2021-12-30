@@ -47,6 +47,7 @@
     }
     #error {
       display: none;
+      text-align: center;
     }
     #error span {
       font-family: 'Courier New', Courier, monospace;
@@ -60,7 +61,7 @@
     <a id="multi" href="./example.html?multi=true">Multiple calendars</a>
   </div>
   <div id="error">
-    This example must be run from the <span>dist</span> folder
+    This example must be served from the <span>dist</span> folder
     after running <span>yarn build</span>
   </div>
   <div id="calendar-1"></div>
@@ -68,7 +69,8 @@
   <div id="calendar-3"></div>
   <script>
     if (!window.CsvEventCalendar) {
-      $('#error').show();
+      $('body *').hide();
+      $('#error, #error *').show();
     } else {
       var search = window.location.search.substring(1)
       var multi = search.split('=')[1] === 'true'
