@@ -22,6 +22,8 @@ class CsvEventCalendar {
     this.stateChanged = options.stateChanged || this.stateChanged
     this.dateChanged = options.dateChanged || this.dateChanged
     this.today = new Date()
+    this.today.setHours(0, 0, 0, 0)
+
     $(options.target).append(this.container)
     this.state = {
       today: CsvEventCalendar.dateKey(this.today),
@@ -53,11 +55,7 @@ class CsvEventCalendar {
       this.container.find('.view').get(0).className = 'view-wo-events'
       this.container.find('.controls').addClass('controls-wo-views')
     }
-    $(document).on('keyup', domEvent => {
-      if (domEvent.key === 'Escape') {
-        window.location.hash = `${me.state.previousView}/${me.state.key()}`
-      }
-    })
+    $(document).on('keyup', this.esc.bind(this))
     $(window).on('resize', this.resize.bind(this))
     $(window).on('hashchange', this.hashChanged.bind(this))
     this.resize()
@@ -66,8 +64,14 @@ class CsvEventCalendar {
   dateChanged() {}
   stateChanged() {}
 
+  esc(domEvent) {
+    if (domEvent.key === 'Escape') {
+      window.location.hash = `#${this.container.attr('id')}/${this.state.previousView}/${this.state.key()}`
+    }
+  }
+
   hashChanged() {
-    const values = window.location.hash.substr(1).split('/')
+    const values = window.location.hash.substring(1).split('/')
     if (values[0] === this.container.attr('id') && values.length === 3) {
       this.updateState({
         view: values[1],
@@ -146,13 +150,14 @@ class CsvEventCalendar {
 
   title(options) {
     const key = options.key || this.state.key()
+    const dateStr = CsvEventCalendar.dateFromKey(key).toLocaleDateString(CsvEventCalendar.getLocale())
     const year = CsvEventCalendar.yearNumber(key)
     const month = CsvEventCalendar.monthName(key)
-    const mo = month.substr(0, 3)
+    const mo = month.substring(0, 3)
     const m = CsvEventCalendar.monthNumber(key)
     const date = CsvEventCalendar.dateNumber(key)
     const day = CsvEventCalendar.dayName(key)
-    const d = day.substr(0, 3)
+    const d = day.substring(0, 3)
     const title = {
       month: {
         long: `${month} ${year}`,
@@ -160,10 +165,10 @@ class CsvEventCalendar {
         abbr: `${m}/${year}`
       },
       day: {
-        long: `${day} ${month} ${date}, ${year}`,
-        medium: `${d} ${mo} ${date}, ${year}`,
+        long: CsvEventCalendar.IS_US ? `${day} ${month} ${date}, ${year}` : `${day} ${date} ${month} ${year}`,
+        medium: CsvEventCalendar.IS_US ? `${d} ${mo} ${date}, ${year}` : `${d} ${date} ${mo} ${year}`,
         short: date,
-        abbr: `${d} ${m}/${date}/${year}`
+        abbr: `${d} ${dateStr}`
       }
     }
     $(options.node).find('.month .long').html(title.month.long)
@@ -177,8 +182,9 @@ class CsvEventCalendar {
     return this.container.find(`[data-date-key="${key}"]`)
   }
 
-  previousMonth (dates) {
-    const firstDay = new Date(this.state.year, this.state.month).getDay()
+  previousMonth(dates) {
+    const day = new Date(this.state.year, this.state.month).getDay()
+    const firstDay = CsvEventCalendar.IS_US ? day : (day - 1)
     const totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate()
     for (let i = 1; i <= firstDay; i++) {
       const prevMonthDate = totalDaysInPrevMonth - firstDay + i
@@ -377,22 +383,22 @@ class CsvEventCalendar {
   }
 
   month() {
-    const days = $('<ul class="day-names" aria-hidden="true"></ul>')
-    const dates = $('<ol class="dates"></ol>')
+    const dayNames = $('<ul class="day-names" aria-hidden="true"></ul>')
+    const month = $('<ol class="dates"></ol>')
     const viewDesc = $('<h2 class="view-desc"><a tabindex="0"><span class="long"></span><span class="medium"></span><span class="abbr"></span></a></h2>')
     let viewContainer = this.container.find('.view, .view-wo-events')
     if (!viewContainer.length) {
       viewContainer = $('<div class="view month"></div>')
     }
-    this.container.append(viewContainer.empty().append(viewDesc).append(days).append(dates))
-    CsvEventCalendar.DAY_NAMES.forEach(name => {
+    this.container.append(viewContainer.empty().append(viewDesc).append(dayNames).append(month))
+    CsvEventCalendar.localeDayNames().forEach(name => {
       const li = $('<li></li>')
         .append('<span class="long">' + name + '</span>')
-        .append('<span class="medium">' + name.substr(0, 3) + '</span>')
-        .append('<span class="short">' + name.substr(0, 1) + '</span>')
-        days.append(li)
+        .append('<span class="medium">' + name.substring(0, 3) + '</span>')
+        .append('<span class="short">' + name.substring(0, 1) + '</span>')
+        dayNames.append(li)
     })
-    return dates
+    return month
   }
 
   week() {
@@ -406,7 +412,7 @@ class CsvEventCalendar {
       .first().addClass('start-of-week')
   }
 
-  day = function(date, week, month) {
+  day(date, week, month) {
     const key = date.key
     const title = this.title({key: key}).day
     const prevView = $('<a class="prev-view"></a>')
@@ -490,7 +496,7 @@ class CsvEventCalendar {
       msg = `Showing ${count} ${events} for week of ${title.day.long}`
       long.html(msg)
       medium.html(`Showing ${count} ${events} for week of ${title.day.medium}`)
-      abbr.html(`${count} ${events} for week of ${title.day.abbr.substr(4)}`)
+      abbr.html(`${count} ${events} for week of ${title.day.abbr.substring(4)}`)
     } else if (count) {
       msg = `Showing ${count} scheduled ${events} on ${title.day.long}`
       long.html(msg)
@@ -651,18 +657,25 @@ class CsvEventCalendar {
   }
 }
 
+CsvEventCalendar.getLocale = () => {
+  return navigator.language
+}
+
+CsvEventCalendar.IS_US = CsvEventCalendar.getLocale() === 'en-US'
 CsvEventCalendar.VIEW_NAMES = {month: 'month', week: 'week', day: 'day'}
 CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+CsvEventCalendar.DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
 
+CsvEventCalendar.localeDayNames = () => {
+  return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
+}
+
 CsvEventCalendar.dateKey = date => {
-  const parts =  date.toLocaleString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).split('/')
-  return `${parts[2]}-${parts[0]}-${parts[1]}`
+  const dt = new Date(date.getTime())
+  dt.setHours(0, 0, 0, 0)
+  return dt.toISOString().split('T')[0]
 }
 
 CsvEventCalendar.dateFromKey = key => {
@@ -680,7 +693,7 @@ CsvEventCalendar.dayNumber = key => {
 
 CsvEventCalendar.dayName = key => {
   const day = CsvEventCalendar.dayNumber(key)
-  return CsvEventCalendar.DAY_NAMES[day]
+  return CsvEventCalendar.DAY_NAMES_US[day]
 }
 
 CsvEventCalendar.monthNumber = key => {
