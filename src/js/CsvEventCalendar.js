@@ -429,8 +429,8 @@ class CsvEventCalendar {
       .addClass(date.monthClass + '-mo')
       .addClass( 'week-' + week)
       .attr('data-date-key', date.key)
-      .append(h3)
       .append(prevView)
+      .append(h3)
       .append('<div class="events"></div>')
       .on('click', function() {
         if ($(this).hasClass('has-events'))
@@ -474,8 +474,9 @@ class CsvEventCalendar {
         title: `return to ${previousView} view`,
         href: `#${this.container.attr('id')}/${previousView}/${key}`
       })
-    this.container.find('.view .event a').removeAttr('tabindex')
+    this.container.find('.view .day a').removeAttr('tabindex')
     this[`${view}View`]()
+    this.container.find('.view .day[aria-hidden="true"] a.prev-view').attr('tabindex', -1)
     this.container.find(`.view .day[data-date-key="${this.state.today}"]`).addClass('today')
     this.focus()
   }
@@ -561,6 +562,7 @@ class CsvEventCalendar {
             .attr('aria-label', `${title} (${eventCount} ${(eventCount === 1 ? ' event' : ' events')} scheduled`)
         } else {
           $(dayNode).attr('aria-hidden', 'true')
+            .find('a.prev-view').attr('aria-hidden', 'true')
           a.removeAttr('href').attr('aria-label', `${title} (no events scheduled)`)
           eventsNode.html('<div class="no-events">no events scheduled</div>')
         }
