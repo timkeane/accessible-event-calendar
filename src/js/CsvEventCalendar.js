@@ -4,6 +4,7 @@
 
 import $ from 'jquery'
 import Papa from 'papaparse'
+import Polyglot from 'node-polyglot'
 
 class CsvEventCalendar {
   /**
@@ -16,8 +17,8 @@ class CsvEventCalendar {
     this.firstView = true
     this.eventsIndex = {ready: false, noData: false}
     this.container = $('<div class="calendar"></div>')
-    this.min = options.min || '1900-01-01'
-    this.max = options.max || '2200-12-31'
+    this.min = options.min || CsvEventCalendar.MIN_DEFAULT
+    this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventProperties = options.eventProperties || CsvEventCalendar.EVENT_PROPERTIES
     this.eventHtml = options.eventHtml || this.eventHtml
     this.viewChanged = options.viewChanged || this.viewChanged
@@ -577,11 +578,11 @@ class CsvEventCalendar {
   indexData(response) {
     const calEvents = response.data
     CsvEventCalendar.sortByDate(calEvents)
-    if (!this.min) {
+    if (this.min === CsvEventCalendar.MIN_DEFAULT) {
       this.min = calEvents[0].date
       this.container.find('.controls input[type="date"]').attr('min', this.min)
     }
-    if (!this.max) {
+    if (this.max === CsvEventCalendar.MAX_DEFAULT) {
       this.max = calEvents[calEvents.length - 1].date
       this.container.find('.controls input[type="date"]').attr('max', this.max)
     }
@@ -674,6 +675,9 @@ CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 
 CsvEventCalendar.DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
+CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
+CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
+CsvEventCalendar.I18N = new Polyglot()
 CsvEventCalendar.EVENT_PROPERTIES = {
   name: 'name',
   location: 'location',
