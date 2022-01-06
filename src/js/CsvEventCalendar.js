@@ -632,7 +632,7 @@ class CsvEventCalendar {
     }
   }
 
-  resize () {
+  resize() {
     const container = this.container
     const width = container.width()
     CsvEventCalendar.CSS_WIDTHS.forEach(w => {
