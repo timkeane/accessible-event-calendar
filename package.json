@@ -1,6 +1,6 @@
 {
   "name": "accessible-event-calendar",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Accessible event calendar backed by CSV data",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -14,7 +14,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "jquery": "3.5.0",
-    "node-polyglot": "^2.4.2",
     "papaparse": "^5.3.1"
   },
   "devDependencies": {
