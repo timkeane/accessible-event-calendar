@@ -4,7 +4,6 @@
 
 import $ from 'jquery'
 import Papa from 'papaparse'
-import Polyglot from 'node-polyglot'
 
 class CsvEventCalendar {
   /**
@@ -677,7 +676,6 @@ CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Th
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
 CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
 CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
-CsvEventCalendar.I18N = new Polyglot()
 CsvEventCalendar.EVENT_PROPERTIES = {
   name: 'name',
   location: 'location',
