@@ -282,7 +282,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="all" role="listbox"></ul><ul class="filtered"></ul></div>')
+    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="all" role="listbox"></ul><ul class="filtered"></ul><div class="message" aria-live="polite"></div></div>')
     search.find('input').attr('aria-owns', autoCompleteId)
     search.find('.filtered').attr('id', autoCompleteId)
     const dateInput = $('<input type="date">')
@@ -405,7 +405,15 @@ class CsvEventCalendar {
     const text = search.find('input').val()
     if (text) {
       CsvEventCalendar.filter(search.find('.all'), ul, text)
-      ul.attr('aria-expanded', true).show()
+      clearTimeout(ul.data('message-timeout'))
+      const count = ul.find('li').length
+      const msg = `found ${count} events matching "${text}"`
+      const tOut = setTimeout(() => {
+        search.find('.message').html(msg).attr('aria-label', msg)
+      })
+      ul.data('message-timeout', tOut)
+        .attr('aria-expanded', true)
+        .show()
     }
   }
 
