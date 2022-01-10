@@ -281,7 +281,7 @@ class CsvEventCalendar {
     const next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
-    const search = $('<div class="search"><input><ul class="all"></ul><ul class="filtered"></ul></div>')
+    const search = $('<div class="search"><input placeholder="Search for events by name..."><ul class="all"></ul><ul class="filtered"></ul></div>')
     const dateInput = $('<input type="date">')
       .val(this.state.key())
       .on('change', function() {
