@@ -281,7 +281,10 @@ class CsvEventCalendar {
     const next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
-    const search = $('<div class="search"><input placeholder="Search for events by name..."><ul class="all"></ul><ul class="filtered"></ul></div>')
+    const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
+    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="all" role="listbox"></ul><ul class="filtered"></ul></div>')
+    search.find('input').attr('aria-owns', autoCompleteId)
+    search.find('.filtered').attr('id', autoCompleteId)
     const dateInput = $('<input type="date">')
       .val(this.state.key())
       .on('change', function() {
@@ -338,7 +341,8 @@ class CsvEventCalendar {
         fieldset.removeClass('expanded')
       }
       if (nextElem && !$.contains(search, nextElem)) {
-        search.find('ul').hide()
+        search.find('.filtered').hide()
+        search.find('.all').append(search.find('.filtered li'))
       }
     })
     fieldset.find('button, input').on('blur', function(domEvent) {
@@ -385,7 +389,9 @@ class CsvEventCalendar {
             .attr('href', `#${this.container.attr('id')}/day/${key}`)
             .on('click', () => {
               me.container.find('.controls .search input').val(name)
-              me.container.find('.controls .search ul').hide()
+              me.container.find('.controls .search .all')
+                .attr('aria-expanded', true)
+                .hide()
             })
           all.append($('<li></li>').append(a))
         })
@@ -395,9 +401,11 @@ class CsvEventCalendar {
 
   filterAutoComplete() {
     const search = this.container.find('.controls .search')
+    const ul = search.find('.filtered')
     const text = search.find('input').val()
     if (text) {
-      CsvEventCalendar.filter(search.find('.all'), search.find('.filtered'), text)
+      CsvEventCalendar.filter(search.find('.all'), ul, text)
+      ul.attr('aria-expanded', true).show()
     }
   }
 
@@ -860,7 +868,6 @@ CsvEventCalendar.filter = (inUl, outUl, typed) => {
   } else if (!veryLong) {
     $(outUl).prepend(filtered.possible)
   }
-  $(outUl).show()
 }
 
 /**
