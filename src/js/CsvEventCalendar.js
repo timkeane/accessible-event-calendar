@@ -281,10 +281,11 @@ class CsvEventCalendar {
     const next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
-    const input = $('<input type="date">')
+    const search = $('<div class="search"><input><ul class="all"></ul><ul class="filtered"></ul></div>')
+    const dateInput = $('<input type="date">')
       .val(this.state.key())
       .on('change', function() {
-        const key = input.val()
+        const key = dateInput.val()
         if (me.eventsIndex[key]) {
           window.location.hash = `#${me.container.attr('id')}/day/${key}`
         } else {
@@ -326,15 +327,18 @@ class CsvEventCalendar {
       if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
         fieldset.removeClass('expanded')
         activeateBtn.attr('aria-expanded', false)
-        activeateBtn.focus()
+        activeateBtn.trigger('focus')
         window.location.hash = `#${me.container.attr('id')}/${$(domEvent.target).val()}/${me.state.key()}`
       }
     })
     $(this.container).on('click', function(domEvent) {
-      const next = domEvent.target
-      if (next && !$.contains(fieldset.get(0), next)) {
+      const nextElem = domEvent.target
+      if (nextElem && !$.contains(fieldset.get(0), nextElem)) {
         activeateBtn.attr('aria-expanded', false)
         fieldset.removeClass('expanded')
+      }
+      if (nextElem && !$.contains(search, nextElem)) {
+        search.find('ul').hide()
       }
     })
     fieldset.find('button, input').on('blur', function(domEvent) {
@@ -354,8 +358,10 @@ class CsvEventCalendar {
       .append(back)
       .append(h2)
       .append(next)
-      .append(input)
+      .append(dateInput)
+      .append(search)
       .append(fieldset)
+    search.find('input').on('keyup', this.filterAutoComplete.bind(this))
     this.container.append(controls)
     const alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
     alert.find('.ok').on('click', () => {
@@ -364,6 +370,35 @@ class CsvEventCalendar {
       me.container.find('.view').removeAttr('aria-hidden')
     })
     this.container.append(alert)
+  }
+
+  autoComplete() {
+    const me = this
+    const all = this.container.find('.controls .search .all')
+    Object.keys(this.eventsIndex).forEach(key => {
+      if (key !== 'noData' && key !== 'ready') {
+        const events = this.eventsIndex[key]
+        events.forEach(event => {
+          const name = event[this.eventProperties.name]
+          const a = $('<a></a>')
+            .html(name)
+            .attr('href', `#${this.container.attr('id')}/day/${key}`)
+            .on('click', () => {
+              me.container.find('.controls .search input').val(name)
+              me.container.find('.controls .search ul').hide()
+            })
+          all.append($('<li></li>').append(a))
+        })
+      }
+    })
+  }
+
+  filterAutoComplete() {
+    const search = this.container.find('.controls .search')
+    const text = search.find('input').val()
+    if (text) {
+      CsvEventCalendar.filter(search.find('.all'), search.find('.filtered'), text)
+    }
   }
 
   calendar(dates) {
@@ -419,11 +454,11 @@ class CsvEventCalendar {
     const h3 = $('<h3></h3>')
     const a = $('<a class="name"></a>')
     h3.append(a)
-    a.append('<span class="long">' + title.long + '</span>')
-      .append('<span class="medium">' + title.medium + '</span>')
-      .append('<span class="abbr">' + title.abbr + '</span>')
-      .append('<span class="short">' + title.short + '</span>')
-      .attr('href', '#' + this.container.attr('id') + '/day/' + key)
+    a.append(`<span class="long">${title.long}</span>`)
+      .append(`<span class="medium">${title.medium}</span>`)
+      .append(`<span class="abbr">${title.abbr}</span>`)
+      .append(`<span class="short">${title.short}</span>`)
+      .attr('href',` #${this.container.attr('id')}/day/${key}`)
     const day = $('<li class="day"></li>')
       .data(CsvEventCalendar.VIEW_NAMES.week, week)
       .addClass(date.monthClass + '-mo')
@@ -520,6 +555,7 @@ class CsvEventCalendar {
     this.nextMonth(dates)
     this.calendar(dates)
     this.populate()
+    this.autoComplete()
     this.container.find('.view .event a').attr('tabindex', -1)
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .event').length)
   }
@@ -610,10 +646,10 @@ class CsvEventCalendar {
     const alert = this.container.find('.alert')
       .attr({'aria-label': msg, tabindex: 0})
       .show()
-      .focus()
+      .trigger('focus')
     const ok = alert.find('button.ok')
     const timeout = setTimeout(function() {
-      ok.focus()
+      ok.trigger('focus')
     }, 6500)
     ok.on('click', () => {
       clearTimeout(timeout)
@@ -796,6 +832,78 @@ CsvEventCalendar.nextId = prefix => {
   CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id || 0
   CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id + 1
   return prefix + CsvEventCalendar[prefix].id
+}
+
+/**
+ * @private
+ * @static
+ * @method
+ * @param {jQuery} inUl The ul element to search
+ * @param {jQuery} outUl The ul element to receive results
+ * @param {string} typed The text for searching
+ */
+CsvEventCalendar.filter = (inUl, outUl, typed) => {
+  console.warn(inUl, outUl, typed)
+  const long = typed.length > 3
+  const veryLong = typed.length > 6
+  const filtered = {exact: [], possible: []}
+  const matchers = CsvEventCalendar.regexp(typed)
+  const all = []
+  const test = CsvEventCalendar.filterTest
+  $.merge($(outUl).find('li'), $(inUl).find('li')).each((_, li) => {
+    all.push($(li))
+    test(matchers, $(li), filtered, long)
+  })
+  $(inUl).append(all)
+  if (filtered.exact.length) {
+    $(outUl).prepend(filtered.exact)
+  } else if (!veryLong) {
+    $(outUl).prepend(filtered.possible)
+  }
+  $(outUl).show()
+}
+
+/**
+ * @private
+ * @static
+ * @method
+ * @param {Object<string,RegExp>} matchers Matchers
+ * @param {jQuery} item Item
+ * @param {Object<string,Array<JQuery>>} filtered Filtered
+ * @param {boolean} long If true use exact test
+ */
+CsvEventCalendar.filterTest = (matchers, item, filtered, long) => {
+  const text = item.html()
+  if (long) {
+    if (matchers.exact.test(text)) {
+      filtered.exact.push(item)
+    }
+  }
+  if (matchers.possible.test(text)) {
+    filtered.possible.push(item)
+  }
+}
+
+/**
+ * @private
+ * @static
+ * @method
+ * @param {string} typed Typed string
+ * @return {Object<string,RegExp>} Exact and possible regexes
+ */
+CsvEventCalendar.regexp = typed => {
+  const possibleMatch = new String(typed.replace(/[^a-zA-Z0-9]/g, ''))
+  const exactMatch = new String(typed.replace(/[^a-zA-Z0-9 ]/g, ''))
+  let possible = '^'
+  for (let i = 0; i < possibleMatch.length; i++) {
+    possible += `(?=.*${possibleMatch.charAt(i)})|`
+  }
+  possible = possible.substring(0, possible.length - 1)
+  possible += '.*$'
+  return {
+    exact: new RegExp(`(${exactMatch})`, 'i'),
+    possible: new RegExp(possible, 'i')
+  }
 }
 
 /**

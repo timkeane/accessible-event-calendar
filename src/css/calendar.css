@@ -22,6 +22,12 @@
   bottom: 0;
   right: 0;
 }
+.calendar div.alert div,
+.calendar .controls .search ul {
+  box-shadow: 4px 4px 8px #333;
+  border-radius: 4px;
+}
+
 .calendar div.alert div {
   position: absolute;
   max-width: 280px;
@@ -31,8 +37,6 @@
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  box-shadow: 4px 4px 8px #333;
-  border-radius: 4px;
   padding: 10px;
   margin: 0;
   text-align: center;
@@ -210,7 +214,8 @@
 }
 .calendar .controls button,
 .calendar .view.month .day.has-events,
-.calendar .view-wo-events .day {
+.calendar .view-wo-events .day,
+.calendar .controls .search li {
     cursor: pointer;
 }
 .calendar .view .day a.name:focus {
@@ -433,6 +438,49 @@
   background-color: #333;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
 }
+
+
+.calendar .controls .search {
+  margin: 7px auto;
+  width: 200px;
+}
+.calendar .controls .search ul {
+  display: none;
+  background-color: #eee;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  width: 203px;
+  overflow-y: auto;
+}
+.calendar .controls .search input {
+  height: 35px;
+  text-align: left;
+}
+.calendar .controls .search li {
+  list-style-type: none;
+  border-top: 1px solid #333;
+  display: block;
+}
+.calendar .controls .search li:first-of-type {
+  border-top: none;
+}
+.calendar .controls .search li a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+  padding: 8px 5px;
+  text-align: left;
+}
+.calendar .controls .search a:focus,
+.calendar .controls .search a:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+
 /* max-width : 645px */
 .calendar.w-645 .view.month ul span.medium,
 .calendar.w-645 .view-wo-events ul span.medium {
