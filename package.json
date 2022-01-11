@@ -1,6 +1,6 @@
 {
   "name": "accessible-event-calendar",
-  "version": "0.8.8",
+  "version": "0.9.0",
   "description": "Accessible event calendar backed by CSV data",
   "scripts": {
     "clean": "rm -rf ./dist",
