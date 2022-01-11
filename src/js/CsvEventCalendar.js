@@ -282,7 +282,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="all" role="listbox"></ul><ul class="filtered"></ul><div class="message" aria-live="polite"></div></div>')
+    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="all"></ul><ul class="filtered" role="listbox"></ul><div class="screenreader message" aria-live="polite"></div></div>')
     search.find('input').attr('aria-owns', autoCompleteId)
     search.find('.filtered').attr('id', autoCompleteId)
     const dateInput = $('<input type="date">')
@@ -322,7 +322,7 @@ class CsvEventCalendar {
         activeateBtn.attr('aria-expanded', !open)
         fieldset[!open ? 'addClass' : 'removeClass']('expanded')
         setTimeout(function() {
-          fieldset.find('input[aria-checked="true"]').focus()
+          fieldset.find('input[aria-checked="true"]').trigger('focus')
         }, 200);
       }
     })
@@ -389,11 +389,12 @@ class CsvEventCalendar {
             .attr('href', `#${this.container.attr('id')}/day/${key}`)
             .on('click', () => {
               me.container.find('.controls .search input').val(name)
-              me.container.find('.controls .search .all')
+              me.container.find('.controls .search .filtered')
                 .attr('aria-expanded', true)
                 .hide()
             })
-          all.append($('<li></li>').append(a))
+          const li = $('<li></li>').attr('id', name.replace(/ /g, '-'))
+          all.append(li.append(a))
         })
       }
     })
@@ -571,7 +572,6 @@ class CsvEventCalendar {
     this.nextMonth(dates)
     this.calendar(dates)
     this.populate()
-    this.autoComplete()
     this.container.find('.view .event a').attr('tabindex', -1)
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .event').length)
   }
@@ -644,6 +644,7 @@ class CsvEventCalendar {
       CsvEventCalendar.sortByStartTime(this.eventsIndex[key])
     })
     this.eventsIndex.ready = true
+    this.autoComplete()
     this.hashChanged()
   }
 

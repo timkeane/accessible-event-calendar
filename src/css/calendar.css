@@ -28,6 +28,7 @@
   border-radius: 4px;
 }
 
+
 .calendar div.alert div {
   position: absolute;
   max-width: 280px;
@@ -480,6 +481,12 @@
   color: #fff;
 }
 
+.screenreader {
+  position: fixed;
+  top: -10000px;
+  width: 0;
+  height: 0;
+}
 
 /* max-width : 645px */
 .calendar.w-645 .view.month ul span.medium,
