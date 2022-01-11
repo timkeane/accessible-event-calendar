@@ -378,7 +378,9 @@ class CsvEventCalendar {
 
   autoComplete() {
     const me = this
+    const input = this.container.find('.controls .search input')
     const all = this.container.find('.controls .search .all')
+    const filtered = this.container.find('.controls .search .filtered')
     Object.keys(this.eventsIndex).forEach(key => {
       if (key !== 'noData' && key !== 'ready') {
         const events = this.eventsIndex[key]
@@ -388,33 +390,57 @@ class CsvEventCalendar {
             .html(name)
             .attr('href', `#${this.container.attr('id')}/day/${key}`)
             .on('click', () => {
-              me.container.find('.controls .search input').val(name)
-              me.container.find('.controls .search .filtered')
-                .attr('aria-expanded', true)
-                .hide()
+              input.val(name)
+              filtered.attr('aria-expanded', true).hide()
             })
-          const li = $('<li></li>').attr('id', name.replace(/ /g, '-'))
-          all.append(li.append(a))
+            .on('keydown', domEvent => {
+              const keyName = domEvent.key
+              if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
+                const choices = filtered.find('a')
+                const index = choices.index(domEvent.target)
+                let next
+                if (keyName === 'ArrowUp') {
+                  if (index <= 0) {
+                    next = input
+                  } else {
+                    next = choices.get(index - 1)
+                  }
+                } else if (keyName === 'ArrowDown') {
+                  if (index < choices.length - 1) {
+                    next = choices.get(index + 1)
+                  } else {
+                    next = choices.get(0)
+                  }
+                }
+                domEvent.preventDefault()
+                $(next).trigger('focus')
+              }
+            })
+          all.append($('<li></li>').append(a))
         })
       }
     })
   }
 
-  filterAutoComplete() {
+  filterAutoComplete(domEvent) {
     const search = this.container.find('.controls .search')
     const ul = search.find('.filtered')
-    const text = search.find('input').val()
-    if (text) {
-      CsvEventCalendar.filter(search.find('.all'), ul, text)
-      clearTimeout(ul.data('message-timeout'))
-      const count = ul.find('li').length
-      const msg = `found ${count} events matching "${text}"`
-      const tOut = setTimeout(() => {
-        search.find('.message').html(msg).attr('aria-label', msg)
-      })
-      ul.data('message-timeout', tOut)
-        .attr('aria-expanded', true)
-        .show()
+    if (domEvent.key === 'ArrowDown') {
+      ul.find('a').first().trigger('focus')
+    } else {
+      const text = search.find('input').val()
+      if (text) {
+        CsvEventCalendar.filter(search.find('.all'), ul, text)
+        clearTimeout(ul.data('message-timeout'))
+        const count = ul.find('li').length
+        const msg = `found ${count} events matching "${text}"`
+        const tOut = setTimeout(() => {
+          search.find('.message').html(msg).attr('aria-label', msg)
+        })
+        ul.data('message-timeout', tOut)
+          .attr('aria-expanded', true)
+          .show()
+      }
     }
   }
 
@@ -860,7 +886,6 @@ CsvEventCalendar.nextId = prefix => {
  * @param {string} typed The text for searching
  */
 CsvEventCalendar.filter = (inUl, outUl, typed) => {
-  console.warn(inUl, outUl, typed)
   const long = typed.length > 3
   const veryLong = typed.length > 6
   const filtered = {exact: [], possible: []}
