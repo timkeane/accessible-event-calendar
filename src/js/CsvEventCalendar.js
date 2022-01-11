@@ -660,7 +660,13 @@ class CsvEventCalendar {
       this.container.find('.controls input[type="date"]').attr('min', this.min)
     }
     if (this.max === CsvEventCalendar.MAX_DEFAULT) {
-      this.max = calEvents[calEvents.length - 1].date
+      let max = calEvents[calEvents.length - 1].date
+      let i = 2
+      while (!max) { // papaparse parses blank lines aty the end of file
+        max = calEvents[calEvents.length - i].date
+        i = i + 1
+      }
+      this.max = max
       this.container.find('.controls input[type="date"]').attr('max', this.max)
     }
     calEvents.forEach(calEvent => {
