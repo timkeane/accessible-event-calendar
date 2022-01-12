@@ -282,7 +282,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="all"></ul><ul class="filtered" role="listbox"></ul><div class="screenreader message" aria-live="polite"></div></div>')
+    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="out"></ul><ul class="filtered" role="listbox"></ul><div class="screenreader message" aria-live="polite"></div></div>')
     search.find('input').attr('aria-owns', autoCompleteId)
     search.find('.filtered').attr('id', autoCompleteId)
     const dateInput = $('<input type="date">')
@@ -342,7 +342,7 @@ class CsvEventCalendar {
       }
       if (nextElem && !$.contains(search, nextElem)) {
         search.find('.filtered').hide()
-        search.find('.all').append(search.find('.filtered li'))
+        search.find('.out').append(search.find('.filtered li'))
       }
     })
     fieldset.find('button, input').on('blur', function(domEvent) {
@@ -379,7 +379,7 @@ class CsvEventCalendar {
   autoComplete() {
     const me = this
     const input = this.container.find('.controls .search input')
-    const all = this.container.find('.controls .search .all')
+    const all = this.container.find('.controls .search .out')
     const filtered = this.container.find('.controls .search .filtered')
     Object.keys(this.eventsIndex).forEach(key => {
       if (key !== 'noData' && key !== 'ready') {
@@ -424,18 +424,21 @@ class CsvEventCalendar {
 
   filterAutoComplete(domEvent) {
     const search = this.container.find('.controls .search')
+    const out = search.find('.out')
     const ul = search.find('.filtered')
     if (domEvent.key === 'ArrowDown') {
       ul.find('a').first().trigger('focus')
     } else {
       const text = search.find('input').val()
       if (text) {
-        CsvEventCalendar.filter(search.find('.all'), ul, text)
+        CsvEventCalendar.filter(out, ul, text)
         clearTimeout(ul.data('message-timeout'))
         const count = ul.find('li').length
         const msg = `found ${count} events matching "${text}"`
         const tOut = setTimeout(() => {
-          search.find('.message').html(msg).attr('aria-label', msg)
+          if (out.children().length > 0) {
+            search.find('.message').html(msg).attr('aria-label', msg)
+          }
         })
         ul.data('message-timeout', tOut)
           .attr('aria-expanded', true)
@@ -892,7 +895,7 @@ CsvEventCalendar.nextId = prefix => {
  * @param {string} typed The text for searching
  */
 CsvEventCalendar.filter = (inUl, outUl, typed) => {
-  const long = typed.length > 3
+  const long = typed.length > 1
   const veryLong = typed.length > 6
   const filtered = {exact: [], possible: []}
   const matchers = CsvEventCalendar.regexp(typed)
