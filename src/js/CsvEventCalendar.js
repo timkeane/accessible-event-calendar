@@ -282,7 +282,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="out"></ul><ul class="filtered" role="listbox"></ul><div class="screenreader message" aria-live="polite"></div></div>')
+    const search = $('<div class="search"><input placeholder="Find events by name..." aria-expanded="false" aria-autocomplete="list" autocomplete="off" type="text" role="combobox"><ul class="out"></ul><ul class="filtered"></ul><div class="screenreader message" aria-live="polite"></div></div>')
     search.find('input').attr('aria-owns', autoCompleteId)
     search.find('.filtered').attr('id', autoCompleteId)
     const dateInput = $('<input type="date">')
