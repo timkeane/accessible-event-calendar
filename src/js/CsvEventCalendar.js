@@ -24,6 +24,9 @@ class CsvEventCalendar {
     this.dateChanged = options.dateChanged || this.dateChanged
     this.today = new Date()
     this.today.setHours(0, 0, 0, 0)
+    this.search = null
+    this.dateInput = null
+    this.viewOptions = null
 
     $(options.target).append(this.container)
     this.state = {
@@ -120,16 +123,16 @@ class CsvEventCalendar {
     }
     const key = this.state.key()
     const view = this.state.view
-    this.container.find('.controls input[type="date"]').val(key)
-    this.container.find('.controls fieldset input')
+    this.dateInput.val(key)
+    this.viewOptions.find('input')
       .attr('aria-checked', false)
       .prop('checked', false);
-    this.container.find('.controls fieldset button')
+    this.viewOptions.find('button')
       .attr('aria-label', `showing ${view} view`)
-    this.container.find(`.controls fieldset input[value="${view}"]`)
+    this.viewOptions.find(`input[value="${view}"]`)
       .attr('aria-checked', true)
       .prop('checked', true)
-    this.container.find('.controls fieldset .btn span').html('View by ' + view)
+    this.viewOptions.find('.btn span').html('View by ' + view)
     if (view !== beforeView) {
       this.week()
       this.viewChanged({
@@ -282,21 +285,22 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    const search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..."><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
-    search.find('input').attr('aria-owns', autoCompleteId)
-    search.find('.filtered').attr('id', autoCompleteId)
-    const dateInput = $('<input type="date">')
+    this.search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..."><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
+    this.search.find('input').attr('aria-owns', autoCompleteId)
+    this.search.find('.filtered').attr('id', autoCompleteId)
+    this.dateInput = $('<input type="date">')
       .val(this.state.key())
       .on('change', function() {
-        const key = dateInput.val()
+        const key = me.dateInput.val()
         if (me.eventsIndex[key]) {
           window.location.hash = `#${me.container.attr('id')}/day/${key}`
         } else {
           me.alert(key)
         }
       })
-    const fieldset = $('<fieldset></fieldset>')
+    const viewOptions = $('<fieldset></fieldset>')
       .append('<button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button>')
+    this.viewOptions = viewOptions
     Object.keys(CsvEventCalendar.VIEW_NAMES).forEach(view => {
       const id = CsvEventCalendar.nextId('view')
       const radio = $('<input name="view-choice" type="radio">')
@@ -312,43 +316,43 @@ class CsvEventCalendar {
           for: id,
           'aria-label': `View by ${view}`
         })
-      fieldset.append($('<div class="view-choice"></div>').append(radio).append(label))
-    
+      viewOptions.append($('<div class="view-choice"></div>').append(radio).append(label))
     })
-    const activeateBtn = fieldset.find('button.btn')
+    const activeateBtn = viewOptions.find('button.btn')
     activeateBtn.on('click keyup', function(domEvent) {
       if (domEvent.type === 'click' || domEvent.key === 'ArrowDown') {
         const open = activeateBtn.attr('aria-expanded') === true
         activeateBtn.attr('aria-expanded', !open)
-        fieldset[!open ? 'addClass' : 'removeClass']('expanded')
+        viewOptions[!open ? 'addClass' : 'removeClass']('expanded')
         setTimeout(function() {
-          fieldset.find('input[aria-checked="true"]').trigger('focus')
+          viewOptions.find('input[aria-checked="true"]').trigger('focus')
         }, 200);
       }
     })
-    fieldset.find('input').on('click keyup', function(domEvent) {
+    viewOptions.find('input').on('click keyup', function(domEvent) {
       if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
-        fieldset.removeClass('expanded')
+        viewOptions.removeClass('expanded')
         activeateBtn.attr('aria-expanded', false)
         activeateBtn.trigger('focus')
         window.location.hash = `#${me.container.attr('id')}/${$(domEvent.target).val()}/${me.state.key()}`
       }
     })
-    $(this.container).on('click', function(domEvent) {
+    $(document).on('click', function(domEvent) {
       const nextElem = domEvent.target
-      if (nextElem && !$.contains(fieldset.get(0), nextElem)) {
+      if (nextElem && !$.contains(viewOptions.get(0), nextElem)) {
         activeateBtn.attr('aria-expanded', false)
-        fieldset.removeClass('expanded')
+        viewOptions.removeClass('expanded')
       }
-      if (nextElem && !$.contains(search, nextElem)) {
-        search.find('.filtered').hide()
-        search.find('.out').append(search.find('.filtered li'))
+      if (nextElem && !$.contains(me.search.get(0), nextElem)) {
+        me.search.find('.filtered').hide()
+        me.search.find('.out').append(me.search.find('.filtered a'))
       }
     })
-    fieldset.find('button, input').on('blur', function(domEvent) {
+    viewOptions.find('button, input').on('blur', function(domEvent) {
       const next = domEvent.relatedTarget
-      if (next && !$.contains(fieldset.get(0), next)) {
-        fieldset.attr('aria-expanded', false)
+      if (next && !$.contains(viewOptions.get(0), next)) {
+        activeateBtn.attr('aria-expanded', false)
+        viewOptions.removeClass('expanded')
       }
     })
     const h2 = $('<h2 aria-live="assertive"></h2>')
@@ -362,10 +366,10 @@ class CsvEventCalendar {
       .append(back)
       .append(h2)
       .append(next)
-      .append(dateInput)
-      .append(search)
-      .append(fieldset)
-    search.find('input').on('keyup', this.filterAutoComplete.bind(this))
+      .append(this.dateInput)
+      .append(this.search)
+      .append(viewOptions)
+    this.search.find('input').on('keyup', this.filterAutoComplete.bind(this))
     this.container.append(controls)
     const alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
     alert.find('.ok').on('click', () => {
@@ -378,10 +382,9 @@ class CsvEventCalendar {
 
   autoComplete() {
     const me = this
-    const search = this.container.find('.controls .search')
-    const input = search.find('input')
-    const out = search.find('.out')
-    const filtered = search.find('.filtered')
+    const input = this.search.find('input')
+    const out = this.search.find('.out')
+    const filtered = this.search.find('.filtered')
     Object.keys(this.eventsIndex).forEach(key => {
       if (key !== 'noData' && key !== 'ready') {
         const events = this.eventsIndex[key]
@@ -394,7 +397,7 @@ class CsvEventCalendar {
               input.val(name)
             })
           out.append(a)
-          search.on('keydown', domEvent => {
+          this.search.on('keydown', domEvent => {
             const keyName = domEvent.key
             if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
               const choices = filtered.find('a')
@@ -423,7 +426,7 @@ class CsvEventCalendar {
   }
 
   filterAutoComplete(domEvent) {
-    const search = this.container.find('.controls .search')
+    const search = this.search
     const out = search.find('.out')
     const filtered = search.find('.filtered')
     if (domEvent.key === 'ArrowDown') {
@@ -444,7 +447,6 @@ class CsvEventCalendar {
         filtered.data('message-timeout', tOut).show()
       } else {
         search.find('input').attr('aria-expanded', false)
-
       }
     }
   }
@@ -662,7 +664,7 @@ class CsvEventCalendar {
     CsvEventCalendar.sortByDate(calEvents)
     if (this.min === CsvEventCalendar.MIN_DEFAULT) {
       this.min = calEvents[0].date
-      this.container.find('.controls input[type="date"]').attr('min', this.min)
+      this.dateInput.attr('min', this.min)
     }
     if (this.max === CsvEventCalendar.MAX_DEFAULT) {
       let max = calEvents[calEvents.length - 1].date
@@ -672,7 +674,7 @@ class CsvEventCalendar {
         i = i + 1
       }
       this.max = max
-      this.container.find('.controls input[type="date"]').attr('max', this.max)
+      this.dateInput.attr('max', this.max)
     }
     calEvents.forEach(calEvent => {
       const key = calEvent.date
