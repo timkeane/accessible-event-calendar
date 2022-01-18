@@ -445,7 +445,7 @@
   margin: 7px auto;
   width: 200px;
 }
-.calendar .controls .search ul {
+.calendar .controls .search div {
   display: none;
   background-color: #eee;
   border: 1px solid #333;
@@ -460,20 +460,17 @@
   height: 35px;
   text-align: left;
 }
-.calendar .controls .search li {
-  list-style-type: none;
+.calendar .controls .search a {
   border-top: 1px solid #333;
   display: block;
-}
-.calendar .controls .search li:first-of-type {
-  border-top: none;
-}
-.calendar .controls .search li a {
   text-decoration: none;
   color: #333;
   display: block;
   padding: 8px 5px;
   text-align: left;
+}
+.calendar .controls .search a:first-of-type {
+  border-top: none;
 }
 .calendar .controls .search a:focus,
 .calendar .controls .search a:hover {

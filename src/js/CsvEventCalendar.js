@@ -282,7 +282,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    const search = $('<div class="search"><input placeholder="Find events by name..." aria-autocomplete="list" autocomplete="off" type="text"><ul class="out"></ul><ul class="filtered"></ul><div class="screenreader message" aria-live="polite"></div></div>')
+    const search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..."><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
     search.find('input').attr('aria-owns', autoCompleteId)
     search.find('.filtered').attr('id', autoCompleteId)
     const dateInput = $('<input type="date">')
@@ -378,45 +378,45 @@ class CsvEventCalendar {
 
   autoComplete() {
     const me = this
-    const input = this.container.find('.controls .search input')
-    const all = this.container.find('.controls .search .out')
-    const filtered = this.container.find('.controls .search .filtered')
+    const search = this.container.find('.controls .search')
+    const input = search.find('input')
+    const out = search.find('.out')
+    const filtered = search.find('.filtered')
     Object.keys(this.eventsIndex).forEach(key => {
       if (key !== 'noData' && key !== 'ready') {
         const events = this.eventsIndex[key]
         events.forEach(event => {
           const name = event[this.eventProperties.name]
-          const a = $('<a></a>')
+          const a = $('<a role="option"></a>')
             .html(name)
             .attr('href', `#${this.container.attr('id')}/day/${key}`)
             .on('click', () => {
               input.val(name)
-              filtered.attr('aria-expanded', false).hide()
             })
-            .on('keydown', domEvent => {
-              const keyName = domEvent.key
-              if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
-                const choices = filtered.find('a')
-                const index = choices.index(domEvent.target)
-                let next
-                if (keyName === 'ArrowUp') {
-                  if (index <= 0) {
-                    next = input
-                  } else {
-                    next = choices.get(index - 1)
-                  }
-                } else if (keyName === 'ArrowDown') {
-                  if (index < choices.length - 1) {
-                    next = choices.get(index + 1)
-                  } else {
-                    next = choices.get(0)
-                  }
+          out.append(a)
+          search.on('keydown', domEvent => {
+            const keyName = domEvent.key
+            if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
+              const choices = filtered.find('a')
+              const index = choices.index(domEvent.target)
+              let next
+              if (keyName === 'ArrowUp') {
+                if (index <= 0) {
+                  next = input
+                } else {
+                  next = choices.get(index - 1)
                 }
-                domEvent.preventDefault()
-                $(next).trigger('focus')
+              } else if (keyName === 'ArrowDown') {
+                if (index < choices.length - 1) {
+                  next = choices.get(index + 1)
+                } else {
+                  next = choices.get(0)
+                }
               }
-            })
-          all.append($('<li></li>').append(a))
+              domEvent.preventDefault()
+              $(next).trigger('focus')
+            }
+          })
         })
       }
     })
@@ -425,24 +425,26 @@ class CsvEventCalendar {
   filterAutoComplete(domEvent) {
     const search = this.container.find('.controls .search')
     const out = search.find('.out')
-    const ul = search.find('.filtered')
+    const filtered = search.find('.filtered')
     if (domEvent.key === 'ArrowDown') {
-      ul.find('a').first().trigger('focus')
+      filtered.find('a').first().trigger('focus')
     } else {
       const text = search.find('input').val()
       if (text) {
-        CsvEventCalendar.filter(out, ul, text)
-        clearTimeout(ul.data('message-timeout'))
-        const count = ul.find('li').length
+        search.find('input').attr('aria-expanded', true)
+        CsvEventCalendar.filter(out, filtered, text)
+        clearTimeout(filtered.data('message-timeout'))
+        const count = filtered.children().length
         const msg = `found ${count} events matching "${text}"`
         const tOut = setTimeout(() => {
           if (out.children().length > 0) {
             search.find('.message').html(msg).attr('aria-label', msg)
           }
         })
-        ul.data('message-timeout', tOut)
-          .attr('aria-expanded', true)
-          .show()
+        filtered.data('message-timeout', tOut).show()
+      } else {
+        search.find('input').attr('aria-expanded', false)
+
       }
     }
   }
@@ -890,26 +892,26 @@ CsvEventCalendar.nextId = prefix => {
  * @private
  * @static
  * @method
- * @param {jQuery} inUl The ul element to search
- * @param {jQuery} outUl The ul element to receive results
+ * @param {jQuery} out The ul element to search
+ * @param {jQuery} filtered The ul element to receive results
  * @param {string} typed The text for searching
  */
-CsvEventCalendar.filter = (inUl, outUl, typed) => {
+CsvEventCalendar.filter = (out, filtered, typed) => {
   const long = typed.length > 1
   const veryLong = typed.length > 6
-  const filtered = {exact: [], possible: []}
+  const tested = {exact: [], possible: []}
   const matchers = CsvEventCalendar.regexp(typed)
   const all = []
   const test = CsvEventCalendar.filterTest
-  $.merge($(outUl).find('li'), $(inUl).find('li')).each((_, li) => {
-    all.push($(li))
-    test(matchers, $(li), filtered, long)
+  $.merge($(filtered).children(), $(out).children()).each((_, a) => {
+    all.push($(a))
+    test(matchers, $(a), tested, long)
   })
-  $(inUl).append(all)
-  if (filtered.exact.length) {
-    $(outUl).prepend(filtered.exact)
+  $(out).append(all)
+  if (tested.exact.length) {
+    $(filtered).prepend(tested.exact)
   } else if (!veryLong) {
-    $(outUl).prepend(filtered.possible)
+    $(filtered).prepend(tested.possible)
   }
 }
 
@@ -922,15 +924,15 @@ CsvEventCalendar.filter = (inUl, outUl, typed) => {
  * @param {Object<string,Array<JQuery>>} filtered Filtered
  * @param {boolean} long If true use exact test
  */
-CsvEventCalendar.filterTest = (matchers, item, filtered, long) => {
-  const text = item.html()
+CsvEventCalendar.filterTest = (matchers, item, tested, long) => {
+  const text = item.text()
   if (long) {
     if (matchers.exact.test(text)) {
-      filtered.exact.push(item)
+      tested.exact.push(item)
     }
   }
   if (matchers.possible.test(text)) {
-    filtered.possible.push(item)
+    tested.possible.push(item)
   }
 }
 
