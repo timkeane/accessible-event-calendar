@@ -331,6 +331,10 @@ class CsvEventCalendar {
     })
     viewOptions.find('input').on('click keyup', domEvent => {
       if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
+        me.search.find('.filtered').hide()
+        me.search.find('.message').hide()
+        me.search.find('input').attr('aria-expanded', false).val('')
+        me.search.find('.out').append(me.search.find('.filtered a'))
         viewOptions.removeClass('expanded')
         activeateBtn.attr('aria-expanded', false)
         activeateBtn.trigger('focus')
@@ -345,6 +349,8 @@ class CsvEventCalendar {
       }
       if (nextElem && !$.contains(me.search.get(0), nextElem)) {
         me.search.find('.filtered').hide()
+        me.search.find('.message').hide()
+        me.search.find('input').attr('aria-expanded', false)
         me.search.find('.out').append(me.search.find('.filtered a'))
       }
     })
@@ -439,14 +445,14 @@ class CsvEventCalendar {
         clearTimeout(filtered.data('message-timeout'))
         const count = filtered.children().length
         const msg = `found ${count} events matching "${text}"`
-        const tOut = setTimeout(() => {
-          if (out.children().length > 0) {
-            search.find('.message').html(msg).attr('aria-label', msg)
-          }
-        })
-        filtered.data('message-timeout', tOut).show()
+        if (out.children().length > 0) {
+          search.find('.message').html(msg).attr('aria-label', msg).show()
+        }
+        filtered.show()
       } else {
         search.find('input').attr('aria-expanded', false)
+        search.find('.message').hide()
+        filtered.hide()
       }
     }
   }
