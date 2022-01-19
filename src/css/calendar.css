@@ -409,6 +409,7 @@
 
 .calendar .controls button.back span.short,
 .calendar .controls button.next span.short,
+.calendar .controls button span.short,
 .calendar .view a.prev-view {
   display: none;
   width: 33px;
@@ -558,6 +559,30 @@
 .calendar.w-400 .controls button span.short {
   display: table-cell;
 }
+.calendar.w-400 .controls fieldset button,
+.calendar.w-400 .controls input[type="date"] {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+}
+.calendar.w-400 .controls input[type="date"]::-webkit-calendar-picker-indicator {
+  margin-right: 5px;
+}
+.calendar.w-400 .controls input[type="date"] {
+  color: transparent;
+}
+.calendar.w-400 .controls fieldset button {
+  margin-left: calc(100% - 35px);
+  background-position: center;
+  background-repeat:no-repeat;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2211.949%2C3.404%207%2C8.354%202.05%2C3.404%20-0.071%2C5.525%207%2C12.596%2014.07%2C5.525%20%22%2F%3E%3C%2Fsvg%3E");
+}
+.calendar.w-400 .controls fieldset button span {
+  display: block;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
 /* max-width : 400px */
 
 
@@ -570,16 +595,12 @@
 .calendar.w-375 .view.week .day h3 span.medium {
   display: inline;
 }
-.calendar.w-375 .controls button span.short {
-  display: table-cell;
-}
 .calendar.w-375 .controls h2 span.short {
   display: inline;
 }
 .calendar.w-375 .controls h2 span.long {
   display: none;
 }
-.calendar.w-375 .controls input[type="date"],
 .calendar.w-375 .controls fieldset {
   width: 130px;
 }
@@ -597,10 +618,7 @@
 
 
 /* max-width : 300px */
-.calendar.w-300 .controls input[type="date"],
-.calendar.w-300 .controls fieldset {
-  width: 45%;
-}
+
 /* max-width : 300px */
 
 
