@@ -290,7 +290,7 @@ class CsvEventCalendar {
     this.search.find('.filtered').attr('id', autoCompleteId)
     this.dateInput = $('<input type="date">')
       .val(this.state.key())
-      .on('change', function() {
+      .on('change', () => {
         const key = me.dateInput.val()
         if (me.eventsIndex[key]) {
           window.location.hash = `#${me.container.attr('id')}/day/${key}`
@@ -319,17 +319,17 @@ class CsvEventCalendar {
       viewOptions.append($('<div class="view-choice"></div>').append(radio).append(label))
     })
     const activeateBtn = viewOptions.find('button.btn')
-    activeateBtn.on('click keyup', function(domEvent) {
+    activeateBtn.on('click keyup', domEvent => {
       if (domEvent.type === 'click' || domEvent.key === 'ArrowDown') {
         const open = activeateBtn.attr('aria-expanded') === true
         activeateBtn.attr('aria-expanded', !open)
         viewOptions[!open ? 'addClass' : 'removeClass']('expanded')
-        setTimeout(function() {
+        setTimeout(() => {
           viewOptions.find('input[aria-checked="true"]').trigger('focus')
         }, 200);
       }
     })
-    viewOptions.find('input').on('click keyup', function(domEvent) {
+    viewOptions.find('input').on('click keyup', domEvent => {
       if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
         viewOptions.removeClass('expanded')
         activeateBtn.attr('aria-expanded', false)
@@ -337,7 +337,7 @@ class CsvEventCalendar {
         window.location.hash = `#${me.container.attr('id')}/${$(domEvent.target).val()}/${me.state.key()}`
       }
     })
-    $(document).on('click', function(domEvent) {
+    $(document).on('click', domEvent => {
       const nextElem = domEvent.target
       if (nextElem && !$.contains(viewOptions.get(0), nextElem)) {
         activeateBtn.attr('aria-expanded', false)
@@ -348,7 +348,7 @@ class CsvEventCalendar {
         me.search.find('.out').append(me.search.find('.filtered a'))
       }
     })
-    viewOptions.find('button, input').on('blur', function(domEvent) {
+    viewOptions.find('button, input').on('blur', domEvent => {
       const next = domEvent.relatedTarget
       if (next && !$.contains(viewOptions.get(0), next)) {
         activeateBtn.attr('aria-expanded', false)
@@ -517,7 +517,7 @@ class CsvEventCalendar {
       .append(prevView)
       .append(h3)
       .append('<div class="events"></div>')
-      .on('click', function() {
+      .on('click', () => {
         if ($(this).hasClass('has-events'))
           window.location.hash = $(this).find('a.name').attr('href')
       })
@@ -549,7 +549,7 @@ class CsvEventCalendar {
     })
     this.container.find('.view').removeAttr('aria-label')
     this.container.find('.day a.name').removeAttr('aria-live')
-    this.container.find('.day a[data-old-label]').each(function(i, btn) {
+    this.container.find('.day a[data-old-label]').each((i, btn) => {
       $(btn).attr('aria-label', $(btn).attr('data-old-label'))
         .removeAttr('data-old-label')
     })
@@ -628,7 +628,7 @@ class CsvEventCalendar {
     const me = this
     const calendarEvents = {}
     const dayNodes = this.container.find('.view li.day')
-    dayNodes.each(function(i, dayNode) {
+    dayNodes.each((i, dayNode) => {
       const key = $(dayNode).attr('data-date-key')
       const title = me.title({key: key}).day.long
       const events = me.eventsIndex[key]
@@ -640,7 +640,7 @@ class CsvEventCalendar {
         if (events) {
           calendarEvents[key] = events
           $(dayNode).addClass('has-events')
-          $.each(events, function(_, calEvent) {
+          $.each(events, (_, calEvent) => {
             eventsNode.append(me.eventHtml(calEvent))
           })
           a.attr('href', `#${me.container.attr('id')}/day/${key}`)
@@ -704,7 +704,7 @@ class CsvEventCalendar {
       .show()
       .trigger('focus')
     const ok = alert.find('button.ok')
-    const timeout = setTimeout(function() {
+    const timeout = setTimeout(() => {
       ok.trigger('focus')
     }, 6500)
     ok.on('click', () => {
@@ -716,7 +716,7 @@ class CsvEventCalendar {
     const me = this
     if (!this.container.find('.alert').is(':visible')) {
       const scroll = $(document).scrollTop()
-      setTimeout(function() {
+      setTimeout(() => {
         me.container.find('.view-desc a').focus()
         me.container.scrollTop(0)
         $(document).scrollTop(scroll)
@@ -855,7 +855,7 @@ CsvEventCalendar.timeFormat = (time, ampm) => {
 
 CsvEventCalendar.sortByStartTime = events => {
   const fmt = CsvEventCalendar.timeFormat
-  events.sort(function(event1, event2) {
+  events.sort((event1, event2) => {
     const time1 = fmt(event1.start)
     const time2 = fmt(event2.start)
     if (time1 < time2) {
@@ -868,7 +868,7 @@ CsvEventCalendar.sortByStartTime = events => {
 }
 
 CsvEventCalendar.sortByDate = events => {
-  events.sort(function(event1, event2) {
+  events.sort((event1, event2) => {
     const date1 = event1.date
     const date2 = event2.date
     if (date1 < date2) {
