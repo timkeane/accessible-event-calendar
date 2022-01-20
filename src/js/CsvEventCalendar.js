@@ -81,6 +81,7 @@ class CsvEventCalendar {
         view: values[1],
         key: values[2]
       })
+      this.clearSearch()
       this.view(values[1])
     } else if (this.firstView) {
       this.view(CsvEventCalendar.VIEW_NAMES.month)
@@ -331,10 +332,7 @@ class CsvEventCalendar {
     })
     viewOptions.find('input').on('click keyup', domEvent => {
       if ((domEvent.type === 'click' && domEvent.clientX > 0) || (domEvent.key === ' ' || domEvent.key === 'Enter')) {
-        me.search.find('.filtered').hide()
-        me.search.find('.message').hide()
-        me.search.find('input').attr('aria-expanded', false).val('')
-        me.search.find('.out').append(me.search.find('.filtered a'))
+        me.clearSearch()
         viewOptions.removeClass('expanded')
         activeateBtn.attr('aria-expanded', false)
         activeateBtn.trigger('focus')
@@ -348,10 +346,7 @@ class CsvEventCalendar {
         viewOptions.removeClass('expanded')
       }
       if (nextElem && !$.contains(me.search.get(0), nextElem)) {
-        me.search.find('.filtered').hide()
-        me.search.find('.message').hide()
-        me.search.find('input').attr('aria-expanded', false)
-        me.search.find('.out').append(me.search.find('.filtered a'))
+        me.clearSearch()
       }
     })
     viewOptions.find('button, input').on('blur', domEvent => {
@@ -384,6 +379,13 @@ class CsvEventCalendar {
       me.container.find('.view').removeAttr('aria-hidden')
     })
     this.container.append(alert)
+  }
+
+  clearSearch() {
+    this.search.find('.filtered').hide()
+    this.search.find('.message').hide()
+    this.search.find('input').attr('aria-expanded', false).val('')
+    this.search.find('.out').append(this.search.find('.filtered a'))
   }
 
   autoComplete() {
