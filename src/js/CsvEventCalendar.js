@@ -37,6 +37,7 @@ class CsvEventCalendar {
       day: this.today.getDay(),
       view: CsvEventCalendar.VIEW_NAMES.month,
       previousView: CsvEventCalendar.VIEW_NAMES.month,
+      foundEvent: null,
       key: () => {
         let m = this.state.month + 1
         let d = this.state.date
@@ -286,7 +287,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    this.search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..."><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
+    this.search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Begin typing then press down arrow to access search results"><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
     this.search.find('input').attr('aria-owns', autoCompleteId)
     this.search.find('.filtered').attr('id', autoCompleteId)
     this.dateInput = $('<input type="date">')
@@ -402,7 +403,7 @@ class CsvEventCalendar {
             .html(name)
             .attr('href', `#${this.container.attr('id')}/day/${key}`)
             .on('click', () => {
-              input.val(name)
+              me.state.foundEvent = name
             })
           out.append(a)
           this.search.on('keydown', domEvent => {
@@ -581,19 +582,38 @@ class CsvEventCalendar {
     const medium = desc.find('a .medium')
     const abbr = desc.find('a .abbr')
     const events = count === 1 ? 'event' : 'events'
-    let msg
+    const name = this.state.foundEvent
+    let msg = name ? `Showing details for "${name}"` : ''
     if (view === CsvEventCalendar.VIEW_NAMES.month) {
-      msg = `Showing ${count} scheduled ${events} for ${title.month.long}`
+      if (msg && count > 1) {
+        msg = `${msg}, and ${count - 1} other scheduled ${events} for ${title.month.long}`
+      } else if (msg) {
+        msg = `${msg} scheduled for ${title.month.long}`
+      } else {
+        msg = `Showing ${count} scheduled ${events} for ${title.month.long}`
+      }
       long.html(msg)
       medium.html(`Showing ${count} scheduled ${events} for ${title.month.medium}`)
       abbr.html(`Showing ${count} ${events} for ${title.month.medium}`)
     } else if (view === CsvEventCalendar.VIEW_NAMES.week) {
-      msg = `Showing ${count} ${events} for week of ${title.day.long}`
+      if (msg && count > 1) {
+        msg = `${msg}, and ${count - 1} other scheduled ${events} for week of ${title.day.long}`
+      } else if (msg) {
+        msg = `${msg} scheduled for week of ${title.day.long}`
+      } else {
+        msg = `Showing ${count} scheduled ${events} for week of ${title.day.long}`
+      }
       long.html(msg)
       medium.html(`Showing ${count} ${events} for week of ${title.day.medium}`)
       abbr.html(`${count} ${events} for week of ${title.day.abbr.substring(4)}`)
     } else if (count) {
-      msg = `Showing ${count} scheduled ${events} on ${title.day.long}`
+      if (msg && count > 1) {
+        msg = `${msg}, and ${count - 1} other scheduled ${events} on ${title.day.long}`
+      } else if (msg) {
+        msg = `${msg} scheduled  on ${title.day.long}`
+      } else {
+        msg = `Showing ${count} scheduled ${events} on ${title.day.long}`
+      }
       long.html(msg)
       medium.html(`Showing ${count} ${events} on ${title.day.medium}`)
       abbr.html(`${count} ${events} on ${title.day.abbr}`)
@@ -630,6 +650,7 @@ class CsvEventCalendar {
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.day, key, eventCount)
+    this.state.foundEvent = null
   }
 
   populate() {
