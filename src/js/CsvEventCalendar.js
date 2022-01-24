@@ -606,7 +606,7 @@ class CsvEventCalendar {
       if (msg && count > 1) {
         msg = `${msg}, and ${count - 1} other scheduled ${events} on ${title.day.long}`
       } else if (msg) {
-        msg = `${msg} scheduled  on ${title.day.long}`
+        msg = `${msg} scheduled on ${title.day.long}`
       }
       long.html(`Showing ${count} scheduled ${events} on ${title.day.long}`)
       medium.html(`Showing ${count} ${events} on ${title.day.medium}`)
