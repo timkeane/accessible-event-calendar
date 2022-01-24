@@ -577,10 +577,10 @@ class CsvEventCalendar {
 
   viewDesc(view, key, count) {
     const title = this.title({key: key})
-    const desc = this.container.find('.view-desc')
-    const long = desc.find('a .long')
-    const medium = desc.find('a .medium')
-    const abbr = desc.find('a .abbr')
+    const desc = this.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
     const events = count === 1 ? 'event' : 'events'
     const name = this.state.foundEvent
     let msg = name ? `Showing details for "${name}"` : ''
@@ -589,10 +589,8 @@ class CsvEventCalendar {
         msg = `${msg}, and ${count - 1} other scheduled ${events} for ${title.month.long}`
       } else if (msg) {
         msg = `${msg} scheduled for ${title.month.long}`
-      } else {
-        msg = `Showing ${count} scheduled ${events} for ${title.month.long}`
       }
-      long.html(msg)
+      long.html(`Showing ${count} scheduled ${events} for ${title.month.long}`)
       medium.html(`Showing ${count} scheduled ${events} for ${title.month.medium}`)
       abbr.html(`Showing ${count} ${events} for ${title.month.medium}`)
     } else if (view === CsvEventCalendar.VIEW_NAMES.week) {
@@ -600,10 +598,8 @@ class CsvEventCalendar {
         msg = `${msg}, and ${count - 1} other scheduled ${events} for week of ${title.day.long}`
       } else if (msg) {
         msg = `${msg} scheduled for week of ${title.day.long}`
-      } else {
-        msg = `Showing ${count} scheduled ${events} for week of ${title.day.long}`
       }
-      long.html(msg)
+      long.html(`Showing ${count} scheduled ${events} for week of ${title.day.long}`)
       medium.html(`Showing ${count} ${events} for week of ${title.day.medium}`)
       abbr.html(`${count} ${events} for week of ${title.day.abbr.substring(4)}`)
     } else if (count) {
@@ -611,19 +607,16 @@ class CsvEventCalendar {
         msg = `${msg}, and ${count - 1} other scheduled ${events} on ${title.day.long}`
       } else if (msg) {
         msg = `${msg} scheduled  on ${title.day.long}`
-      } else {
-        msg = `Showing ${count} scheduled ${events} on ${title.day.long}`
       }
-      long.html(msg)
+      long.html(`Showing ${count} scheduled ${events} on ${title.day.long}`)
       medium.html(`Showing ${count} ${events} on ${title.day.medium}`)
       abbr.html(`${count} ${events} on ${title.day.abbr}`)
     } else {
-      msg = `There no scheduled events on ${title.day.long}`
-      long.html(msg)
+      long.html(`There no scheduled events on ${title.day.long}`)
       medium.html(`No scheduled events on ${title.day.medium}`)
       abbr.html(`No events on ${title.day.abbr}`)
     }
-    desc.attr('aria-label', msg)
+    desc.attr('aria-label', msg || long.text())
   }
 
   monthView() {
