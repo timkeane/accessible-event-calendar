@@ -772,7 +772,7 @@ class CsvEventCalendar {
     }
     return $('<div class="event"></div>')
       .append(`<h4>${calEvent[props.name]}</h4>`)
-      .append(location ? `<h5><strong>Location:</strong> ${location}</h5>` : '')
+      .append(location ? `<h5>Location:</h5><p>${location}</p>` : '')
       .append(time)
       .append(about)
   }
