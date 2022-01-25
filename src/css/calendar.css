@@ -258,6 +258,13 @@
 .calendar .view .day h4 {
   margin: 5px 0;
 }
+.calendar .view .day h5 {
+  font-weight: bold;
+}
+.calendar .view .day h5,
+.calendar .view .day .location {
+  display: inline-block;
+}
 .calendar .view .day .event {
   padding: 10px;
   background-color: #add8e6;
@@ -272,11 +279,17 @@
 .calendar .view.month .day .event * {
   display: none;
 }
-.calendar .view .day .event .title {
+.calendar .view .day .event .title,
+.calendar .view.month .day .event.overflow,
+.calendar .view .day .event.more {
   display: none;
 }
+.calendar .view.month .day .event.more,
 .calendar .view.month .day .event .title {
   display: block;
+}
+.calendar .view.month .day .event .title {
+  padding: 1px 0 1px 3px;
 }
 
 .calendar .view .day .event .time strong,
@@ -297,7 +310,7 @@
 }
 .calendar .view.month .day,
 .calendar .view-wo-events .day {
-  height: 126px;
+  min-height: 126px;
   margin-left: 0;
   overflow: hidden;
 }

@@ -627,7 +627,7 @@ class CsvEventCalendar {
     this.calendar(dates)
     this.populate()
     this.container.find('.view .event a').attr('tabindex', -1)
-    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .event').length)
+    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .current-mo .event').length)
   }
 
   weekView() {
@@ -662,8 +662,16 @@ class CsvEventCalendar {
         if (events) {
           calendarEvents[key] = events
           $(dayNode).addClass('has-events')
-          $.each(events, (_, calEvent) => {
-            eventsNode.append(me.eventHtml(calEvent))
+          $.each(events, (i, calEvent) => {
+            if (i < 4) {
+              eventsNode.append(me.eventHtml(calEvent))
+            } else {
+              const a = $('<a class="title"></a>')
+                .html(`${events.length - 4} more...`)
+                .attr('href', `#${me.container.attr('id')}/day/${key}`)
+              eventsNode.append($('<div class="event more"></div>').append(a))            
+              eventsNode.append(me.eventHtml(calEvent).addClass('overflow'))
+            }
           })
           a.attr('href', `#${me.container.attr('id')}/day/${key}`)
             .attr('aria-label', `${title} (${eventCount} ${(eventCount === 1 ? ' event' : ' events')} scheduled`)
@@ -773,7 +781,7 @@ class CsvEventCalendar {
     return $('<div class="event"></div>')
       .append(`<div class="title">${calEvent[props.name]}</div>`)
       .append(`<h4>${calEvent[props.name]}</h4>`)
-      .append(location ? `<h5>Location:</h5><div>${location}</div>` : '')
+      .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '')
       .append(time)
       .append(about)
   }
