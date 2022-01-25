@@ -287,7 +287,7 @@ class CsvEventCalendar {
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
     const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    this.search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Begin typing then press down arrow to access search results"><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
+    this.search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results"><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
     this.search.find('input').attr('aria-owns', autoCompleteId)
     this.search.find('.filtered').attr('id', autoCompleteId)
     this.dateInput = $('<input type="date">')
@@ -527,8 +527,8 @@ class CsvEventCalendar {
       .append(h3)
       .append('<div class="events"></div>')
       .on('click', () => {
-        if ($(this).hasClass('has-events'))
-          window.location.hash = $(this).find('a.name').attr('href')
+        if (day.hasClass('has-events'))
+          window.location.hash = day.find('a.name').attr('href')
       })
       month.append(day)
       return day
