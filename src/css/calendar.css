@@ -268,6 +268,17 @@
     1px 0 0 0 #0000ff inset, 
     0 1px 0 0 #0000ff inset;
 }
+
+.calendar .view.month .day .event * {
+  display: none;
+}
+.calendar .view .day .event .title {
+  display: none;
+}
+.calendar .view.month .day .event .title {
+  display: block;
+}
+
 .calendar .view .day .event .time strong,
 .calendar .view .day .event .time span {
   margin-right: 5px;
