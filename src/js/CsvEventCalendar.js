@@ -530,6 +530,9 @@ class CsvEventCalendar {
         if (day.hasClass('has-events'))
           window.location.hash = day.find('a.name').attr('href')
       })
+      if (day.hasClass('prev-mo') || day.hasClass('next-mo')) {
+        day.attr('aria-hidden', true)
+      }
       month.append(day)
       return day
   }
