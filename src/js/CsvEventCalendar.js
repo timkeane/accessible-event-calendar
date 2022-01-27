@@ -373,7 +373,7 @@ class CsvEventCalendar {
       .append(viewOptions)
     this.search.find('input').on('keyup', this.filterAutoComplete.bind(this))
     this.container.append(controls)
-    const alert = $('<div class="alert" aria-live="assertive"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
+    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
     alert.find('.ok').on('click', () => {
       alert.hide()
       controls.removeAttr('aria-hidden')
@@ -530,9 +530,6 @@ class CsvEventCalendar {
         if (day.hasClass('has-events'))
           window.location.hash = day.find('a.name').attr('href')
       })
-      if (day.hasClass('prev-mo') || day.hasClass('next-mo')) {
-        day.attr('aria-hidden', true)
-      }
       month.append(day)
       return day
   }
@@ -589,13 +586,13 @@ class CsvEventCalendar {
     let msg = name ? `Showing details for "${name}"` : ''
     if (view === CsvEventCalendar.VIEW_NAMES.month) {
       if (msg && count > 1) {
-        msg = `${msg}, and ${count - 1} other scheduled ${events} for ${title.month.long}`
+        msg = `${msg}, and ${count - 1} other scheduled ${events}`
       } else if (msg) {
-        msg = `${msg} scheduled for ${title.month.long}`
+        msg = `${msg} scheduled`
       }
-      long.html(`Showing ${count} scheduled ${events} for ${title.month.long}`)
-      medium.html(`Showing ${count} scheduled ${events} for ${title.month.medium}`)
-      abbr.html(`Showing ${count} ${events} for ${title.month.medium}`)
+      long.html(`Showing ${count} scheduled ${events}`)
+      medium.html(`Showing ${count} scheduled ${events}`)
+      abbr.html(`Showing ${count} ${events}`)
     } else if (view === CsvEventCalendar.VIEW_NAMES.week) {
       if (msg && count > 1) {
         msg = `${msg}, and ${count - 1} other scheduled ${events} for week of ${title.day.long}`
@@ -630,7 +627,7 @@ class CsvEventCalendar {
     this.calendar(dates)
     this.populate()
     this.container.find('.view .event a').attr('tabindex', -1)
-    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .current-mo .event').length)
+    this.viewDesc(CsvEventCalendar.VIEW_NAMES.month, this.state.key(), this.container.find('.view .event').length)
   }
 
   weekView() {
@@ -670,7 +667,7 @@ class CsvEventCalendar {
               eventsNode.append(me.eventHtml(calEvent))
             } else {
               const a = $('<a class="title"></a>')
-                .html(`${events.length - 4} more...`)
+                .html(`+${events.length - 4} for ${me.title({key}).day.abbr.split(' ')[1]}`)
                 .attr('href', `#${me.container.attr('id')}/day/${key}`)
               eventsNode.append($('<div class="event more"></div>').append(a))            
               eventsNode.append(me.eventHtml(calEvent).addClass('overflow'))

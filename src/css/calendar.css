@@ -290,6 +290,8 @@
 }
 .calendar .view.month .day .event .title {
   padding: 1px 0 1px 3px;
+  color: #000;
+  text-decoration: none;
 }
 
 .calendar .view .day .event .time strong,
@@ -552,6 +554,7 @@
 }
 .calendar.w-500 .view.month .day,
 .calendar.w-500 .view-wo-events .day {
+  min-height: auto;
   overflow: hidden;
   height: 50px;
 }
