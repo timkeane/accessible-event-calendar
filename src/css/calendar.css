@@ -208,7 +208,9 @@
 .calendar .view-wo-events .view-desc {
   display: none;
 }
-
+.calendar .view .download {
+  display: none;
+}
 
 .calendar .view.month .day a {
   cursor: unset;
@@ -274,6 +276,15 @@
     1px 1px 0 0 #0000ff,   /* Just to fix the corner */
     1px 0 0 0 #0000ff inset, 
     0 1px 0 0 #0000ff inset;
+}
+.calendar .view .day .event .download {
+  display: block;
+  float: right;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  text-align: center;
+  border: 1px solid black;
 }
 
 .calendar .view.month .day .event * {

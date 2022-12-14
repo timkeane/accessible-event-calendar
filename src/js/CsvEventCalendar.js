@@ -709,7 +709,7 @@ class CsvEventCalendar {
     calEvents.forEach(calEvent => {
       const key = calEvent.date
       this.eventsIndex[key] = this.eventsIndex[key] || []
-      this.eventsIndex[key].push(new CalendarEvent({data: calEvent}))
+      this.eventsIndex[key].push(new CalendarEvent({date: key, data: calEvent}))
       CsvEventCalendar.sortByStartTime(this.eventsIndex[key])
     })
     this.eventsIndex.ready = true
