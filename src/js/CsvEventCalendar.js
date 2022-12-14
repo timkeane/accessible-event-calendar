@@ -4,6 +4,7 @@
 
 import $ from 'jquery'
 import Papa from 'papaparse'
+import CalendarEvent from './CalendarEvent'
 
 class CsvEventCalendar {
   /**
@@ -18,7 +19,6 @@ class CsvEventCalendar {
     this.container = $('<div class="calendar"></div>')
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
-    this.eventProperties = options.eventProperties || CsvEventCalendar.EVENT_PROPERTIES
     this.eventHtml = options.eventHtml || this.eventHtml
     this.viewChanged = options.viewChanged || this.viewChanged
     this.dateChanged = options.dateChanged || this.dateChanged
@@ -398,7 +398,7 @@ class CsvEventCalendar {
       if (key !== 'noData' && key !== 'ready') {
         const events = this.eventsIndex[key]
         events.forEach(event => {
-          const name = event[this.eventProperties.name]
+          const name = event.name
           const a = $('<a role="option"></a>')
             .html(name)
             .attr('href', `#${this.container.attr('id')}/day/${key}`)
@@ -664,13 +664,13 @@ class CsvEventCalendar {
           $(dayNode).addClass('has-events')
           $.each(events, (i, calEvent) => {
             if (i < 4) {
-              eventsNode.append(me.eventHtml(calEvent))
+              eventsNode.append(calEvent.html())
             } else {
               const a = $('<a class="title"></a>')
                 .html(`+${events.length - 4} for ${me.title({key}).day.abbr.split(' ')[1]}`)
                 .attr('href', `#${me.container.attr('id')}/day/${key}`)
               eventsNode.append($('<div class="event more"></div>').append(a))            
-              eventsNode.append(me.eventHtml(calEvent).addClass('overflow'))
+              eventsNode.append(calEvent.html().addClass('overflow'))
             }
           })
           a.attr('href', `#${me.container.attr('id')}/day/${key}`)
@@ -709,7 +709,7 @@ class CsvEventCalendar {
     calEvents.forEach(calEvent => {
       const key = calEvent.date
       this.eventsIndex[key] = this.eventsIndex[key] || []
-      this.eventsIndex[key].push(calEvent)
+      this.eventsIndex[key].push(new CalendarEvent({data: calEvent}))
       CsvEventCalendar.sortByStartTime(this.eventsIndex[key])
     })
     this.eventsIndex.ready = true
@@ -764,27 +764,6 @@ class CsvEventCalendar {
       }
     })
   }
-
-  eventHtml(calEvent) {
-    const fmt = CsvEventCalendar.timeFormat
-    const props = this.eventProperties
-    const location = calEvent[props.location]
-    const time = $('<div class="time"></div>')
-      .append('<strong>Start:</strong>')
-      .append(`<span>${fmt(calEvent[props.start], true)}</span>`)
-    const about = $('<div class="about"></div>')
-      .append(calEvent[props.about])
-    if (calEvent.end) {
-      time.append('<strong>End:</strong>')
-        .append(`<span>${fmt(calEvent[props.end], true)}</span>`)
-    }
-    return $('<div class="event"></div>')
-      .append(`<div class="title">${calEvent[props.name]}</div>`)
-      .append(`<h4>${calEvent[props.name]}</h4>`)
-      .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '')
-      .append(time)
-      .append(about)
-  }
 }
 
 CsvEventCalendar.getLocale = () => {
@@ -799,13 +778,6 @@ CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Th
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
 CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
 CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
-CsvEventCalendar.EVENT_PROPERTIES = {
-  name: 'name',
-  location: 'location',
-  start: 'start',
-  end: 'end',
-  about: 'about'
-}
 
 CsvEventCalendar.localeDayNames = () => {
   return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
@@ -850,42 +822,10 @@ CsvEventCalendar.sameMonth = (key1, key2) => {
 
 CsvEventCalendar.yearNumber = key => {
   return key.split('-')[0] * 1
-};
-
-CsvEventCalendar.timeFormat = (time, ampm) => {
-  if (time.trim().length === 0) return '';
-  const parts = time.split(':')
-  for (let i = 0; i < parts.length; i++) {
-    parts[i] = parseInt(parts[i])
-    if (('' + parts[i]).length === 1) {
-      parts[i] = `0${parts[i]}`
-    }
-  }
-  if (time.toUpperCase().indexOf('M') > -1) {
-    if (parseInt(parts[0]) === 12) {
-      parts[0] = '00'
-    }
-    if (time.toUpperCase().indexOf('P') > -1) {
-      parts[0] = parseInt(parts[0]) + 12
-    }
-  }
-  if (parts.length < 2) {
-    parts.push('00')
-  }
-  const hh24 = parts.join(':')
-  let suffix = ' AM'
-  if (!ampm) return hh24;
-  if (parseInt(parts[0]) > 12) {
-    suffix = ' PM'
-    parts[0] = parts[0] - 12;
-  } else if (parseInt(parts[0]) === 12) {
-    suffix = ' PM'
-  }
-  return parts.join(':') + suffix
 }
 
 CsvEventCalendar.sortByStartTime = events => {
-  const fmt = CsvEventCalendar.timeFormat
+  const fmt = CalendarEvent.timeFormat
   events.sort((event1, event2) => {
     const time1 = fmt(event1.start)
     const time2 = fmt(event2.start)
