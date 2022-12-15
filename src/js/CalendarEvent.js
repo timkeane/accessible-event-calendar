@@ -52,7 +52,7 @@ class CalendarEvent {
     const about = this.about
     if (sponsor) {
       if (about) {
-        return `Sposored by: ${this.sponsor}\\n\\n${about}`
+        return `Sposored by: ${this.sponsor} -\\n\\n${about}`
       }
     } else if (about) {
       return about
