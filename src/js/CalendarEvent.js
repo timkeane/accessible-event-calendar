@@ -72,26 +72,27 @@ class CalendarEvent {
   html() {
     const name = this.name
     const location = this.location
+    const sponsor = this.sponsor
+    const about = this.about
     const download = $('<a class="download" aria-label="Add event to my calendar">+</a>')
       .attr('download', `${name.replace(/ /g, '-')}.ics`)
       .attr('href', this.download())
     const time = $('<div class="time"></div>')
       .append('<strong>Start:</strong>')
       .append(`<span>${this.start}</span>`)
-    const about = $('<div class="about"></div>')
-      .append(this.about)
     if (this.end) {
       time.append('<strong>End:</strong>')
         .append(`<span>${this.end}</span>`)
     }
-    return $('<div class="event"></div>')
+   return $('<div class="event"></div>')
     .append(download)
     .append(`<div class="title">${name}</div>`)
       .append(`<h4>${name}</h4>`)
-      .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '')
+      .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '<br>')
+      .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
+      .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
       .append(time)
-      .append(about)
-  }
+    }
 
 }
 
