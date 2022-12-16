@@ -15,13 +15,14 @@ class CsvEventCalendar {
    */
   constructor(options) {
     this.firstView = true
-    this.eventsIndex = {ready: false, noData: false}
+    this.eventsIndex = {ready: false, noData: false, events: {}}
     this.container = $('<div class="calendar"></div>')
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventHtml = options.eventHtml || this.eventHtml
     this.viewChanged = options.viewChanged || this.viewChanged
     this.dateChanged = options.dateChanged || this.dateChanged
+    this.csvColumns = options.csvColumns || CalendarEvent.DEFAULT_PROPERTIES
     this.today = new Date()
     this.today.setHours(0, 0, 0, 0)
     this.search = null
@@ -140,7 +141,7 @@ class CsvEventCalendar {
       this.viewChanged({
         view: view,
         date: key,
-        events: this.eventsIndex[key] || []
+        events: this.eventsIndex.events[key] || []
       })
     }
     if (key !== beforeKey) {
@@ -148,7 +149,7 @@ class CsvEventCalendar {
       this.dateChanged({
         view: view,
         date: key,
-        events: this.eventsIndex[key] || []
+        events: this.eventsIndex.events[key] || []
       })
     }
   }
@@ -294,7 +295,7 @@ class CsvEventCalendar {
       .val(this.state.key())
       .on('change', () => {
         const key = me.dateInput.val()
-        if (me.eventsIndex[key]) {
+        if (me.eventsIndex.events[key]) {
           window.location.hash = `#${me.container.attr('id')}/day/${key}`
         } else {
           me.alert(key)
@@ -394,9 +395,9 @@ class CsvEventCalendar {
     const input = this.search.find('input')
     const out = this.search.find('.out')
     const filtered = this.search.find('.filtered')
-    Object.keys(this.eventsIndex).forEach(key => {
+    Object.keys(this.eventsIndex.events).forEach(key => {
       if (key !== 'noData' && key !== 'ready') {
-        const events = this.eventsIndex[key]
+        const events = this.eventsIndex.events[key]
         events.forEach(event => {
           const name = event.name
           const a = $('<a role="option"></a>')
@@ -639,7 +640,7 @@ class CsvEventCalendar {
   dayView() {
     const key = this.state.key()
     const dayNode = this.dayNode(key)
-    const eventCount = this.eventsIndex[key] && this.eventsIndex[key].length || 0
+    const eventCount = this.eventsIndex.events[key] && this.eventsIndex.events[key].length || 0
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
     this.viewDesc(CsvEventCalendar.VIEW_NAMES.day, key, eventCount)
@@ -653,7 +654,7 @@ class CsvEventCalendar {
     dayNodes.each((i, dayNode) => {
       const key = $(dayNode).attr('data-date-key')
       const title = me.title({key: key}).day.long
-      const events = me.eventsIndex[key]
+      const events = me.eventsIndex.events[key]
       const eventCount = events && events.length || 0
       const eventsNode = $(dayNode).find('.events')
       const a = $(dayNode).find('h3 a')
@@ -691,27 +692,25 @@ class CsvEventCalendar {
 
   indexData(response) {
     const calEvents = response.data
-    CsvEventCalendar.sortByDate(calEvents)
+    calEvents.forEach(calEvent => {
+      const key = calEvent[this.csvColumns.date]
+      if (key) { // papaparse parses blank lines aty the end of file
+        this.eventsIndex.events[key] = this.eventsIndex.events[key] || []
+        this.eventsIndex.events[key].push(new CalendarEvent({date: key, data: calEvent, properties: this.csvColumns}))
+        CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])  
+      }
+    })
+
+    const allDates = Object.keys(this.eventsIndex.events).sort()
     if (this.min === CsvEventCalendar.MIN_DEFAULT) {
-      this.min = calEvents[0].date
+      this.min = allDates[0]
       this.dateInput.attr('min', this.min)
     }
     if (this.max === CsvEventCalendar.MAX_DEFAULT) {
-      let max = calEvents[calEvents.length - 1].date
-      let i = 2
-      while (!max) { // papaparse parses blank lines aty the end of file
-        max = calEvents[calEvents.length - i].date
-        i = i + 1
-      }
-      this.max = max
+      this.max = allDates[allDates.length - 1]
       this.dateInput.attr('max', this.max)
     }
-    calEvents.forEach(calEvent => {
-      const key = calEvent.date
-      this.eventsIndex[key] = this.eventsIndex[key] || []
-      this.eventsIndex[key].push(new CalendarEvent({date: key, data: calEvent}))
-      CsvEventCalendar.sortByStartTime(this.eventsIndex[key])
-    })
+
     this.eventsIndex.ready = true
     this.autoComplete()
     this.hashChanged()
@@ -838,22 +837,6 @@ CsvEventCalendar.sortByStartTime = events => {
   })
 }
 
-CsvEventCalendar.sortByDate = events => {
-  events.sort((event1, event2) => {
-    const date1 = event1.date
-    const date2 = event2.date
-    if (date1 < date2) {
-      return -1
-    } else if (date1 < date2) {
-      return 1
-    }
-    return 0
-  });
-  while (!events[0].date) {
-    events.shift()
-  }
-}
-
 CsvEventCalendar.nextId = prefix => {
   CsvEventCalendar[prefix] = CsvEventCalendar[prefix] || {}
   CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id || 0
@@ -941,6 +924,7 @@ CsvEventCalendar.regexp = typed => {
  * @property {string} max The maximum date formatted as yyyy-mm-dd
  * @property {function} dateChanged Handler for date changed event
  * @property {function} viewChanged Handler for state changed event
+ * @property {Object} [csvColumns=CalendarEvent.DEFAULT_PROPERTIES] A map of CSV column names keyed to the necessary property names
  */
  CsvEventCalendar.Options
 

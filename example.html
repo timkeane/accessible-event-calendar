@@ -95,10 +95,17 @@
         });
         var calendar2 = new CsvEventCalendar({
           target: $('#calendar-2'), 
-          url: './calendar.csv',
+          url: './different-calendar.csv',
           eventHtml: eventHtml,
-          min: '2021-01-01',
-          max: '2021-12-31',
+          csvColumns: {
+            date: 'Date',
+            name: 'Event Name',
+            about: 'Description',
+            start: 'Start Time',
+            end: 'End Time',
+            location: 'Address',
+            sponsor: 'Sponsor'
+          },
           dateChanged: function(day) {
             console.log('calendar2 dateChanged', day);
           },

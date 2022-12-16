@@ -125,6 +125,7 @@ CalendarEvent.timeFormat = (time, ampm) => {
 }
 
 CalendarEvent.DEFAULT_PROPERTIES = {
+  date: 'date',
   name: 'name',
   about: 'about',
   start: 'start',
