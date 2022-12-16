@@ -20,10 +20,9 @@ class CalendarEvent {
     this.location = data[props.location] || ''
     this.date = options.date
     this.start = fmt(data[props.start], true)
-    this.end = fmt(data[props.end], true)
+    this.end = fmt(data[props.end], true) || ''
     this.sponsor = data[props.sponsor] || ''
     this.timezone = options.timezone || CalendarEvent.DEFAULT_TIMEZONE
-    console.error(this);
   }
 
   download() {
@@ -37,13 +36,12 @@ class CalendarEvent {
         `DESCRIPTION:${this.desc()}\n` +
         `ORGANIZER;CN=${this.sponsor}\n` +
         `DTSTART;TZID=${this.timezone}:${this.time(this.start)}\n` +
-        (this.end ? `DTEND;TZID=${this.timezone}:${this.time(this.end)}\n` : '') +
+        `DTEND;TZID=${this.timezone}:${this.time(this.end)}\n` +
         `LOCATION:${this.location}\n` +
         `SOURCE:${document.location}\n` +
         'END:VEVENT\n' +
         'END:VCALENDAR\n'
       )
-      console.warn({event: this,ics});
       return ics
   }
 
@@ -88,16 +86,15 @@ class CalendarEvent {
     .append(download)
     .append(`<div class="title">${name}</div>`)
       .append(`<h4>${name}</h4>`)
+      .append(time)
       .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '<br>')
       .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
       .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
-      .append(time)
     }
 
 }
 
 CalendarEvent.timeFormat = (time, ampm) => {
-  console.warn(time);
   if (time.trim().length === 0) return ''
   const parts = time.split(':')
   for (let i = 0; i < parts.length; i++) {

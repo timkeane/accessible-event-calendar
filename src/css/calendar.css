@@ -257,15 +257,12 @@
 .calendar .day .events .no-events {
   margin: 0 0 15px 10px;
 }
-.calendar .view .day h4 {
+.calendar .view .day h4,
+.calendar .view .day h5 {
   margin: 5px 0;
 }
 .calendar .view .day h5 {
   font-weight: bold;
-}
-.calendar .view .day h5,
-.calendar .view .day .location {
-  display: inline-block;
 }
 .calendar .view .day .event {
   padding: 10px;
@@ -276,15 +273,6 @@
     1px 1px 0 0 #0000ff,   /* Just to fix the corner */
     1px 0 0 0 #0000ff inset, 
     0 1px 0 0 #0000ff inset;
-}
-.calendar .view .day .event .download {
-  display: block;
-  float: right;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  text-align: center;
-  border: 1px solid black;
 }
 
 .calendar .view.month .day .event * {
@@ -447,7 +435,8 @@
 .calendar .controls button.back span.short,
 .calendar .controls button.next span.short,
 .calendar .controls button span.short,
-.calendar .view a.prev-view {
+.calendar .view a.prev-view,
+.calendar .view a.download {
   display: none;
   width: 33px;
   height: 33px;
@@ -455,12 +444,22 @@
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 14px 14px;
   border: none;
   opacity: 1;
 }
 .calendar .view .day a.prev-view {
   float: right;
+}
+.calendar .view .day a.prev-view {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214px%22%20height%3D%2214px%22%3E%3Cpolygon%20points%3D%2210.596%2C11.949%205.646%2C7%2010.596%2C2.05%208.475%2C-0.071%201.404%2C7%208.475%2C14.07%20%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E");
+}
+.calendar .view .day a.download {
+  display: block;
+  margin: -5px -10px 0 0;
+  float: right;
+  background-size: 20px 20px;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M24%2C13.08V10a3%2C3%2C0%2C0%2C0-3-3H20V6a1%2C1%2C0%2C0%2C0-2%2C0V7H8V6A1%2C1%2C0%2C0%2C0%2C6%2C6V7H5a3%2C3%2C0%2C0%2C0-3%2C3V24a3%2C3%2C0%2C0%2C0%2C3%2C3H23a7%2C7%2C0%2C0%2C0%2C1-13.92ZM5%2C9H6v1a1%2C1%2C0%2C0%2C0%2C2%2C0V9H18v1a1%2C1%2C0%2C0%2C0%2C2%2C0V9h1a1%2C1%2C0%2C0%2C1%2C1%2C1v3H4V10A1%2C1%2C0%2C0%2C1%2C5%2C9ZM5%2C25a1%2C1%2C0%2C0%2C1-1-1V15H18.11a7%2C7%2C0%2C0%2C0%2C0%2C10Zm18%2C0a5%2C5%2C0%2C0%2C1-1-9.9v4.48l-.29-.29a1%2C1%2C0%2C0%2C0-1.41%2C1.41l2%2C2a1%2C1%2C0%2C0%2C0%2C1.42%2C0l2-2a1%2C1%2C0%2C0%2C0-1.41-1.41l-.29.29V15.1A5%2C5%2C0%2C0%2C1%2C23%2C25Z%22%2F%3E%3C%2Fsvg%3E");
 }
 .calendar .controls button.back span.short,
 .calendar .view .day.today a.prev-view,
