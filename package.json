@@ -13,8 +13,8 @@
   "author": "Tim Keane <t.d.keane@gmail.com> (https://timkeane.github.io/)",
   "license": "Apache-2.0",
   "dependencies": {
-    "jquery": "3.5.0",
-    "papaparse": "^5.3.1"
+    "jquery": "^3.6.2",
+    "papaparse": "^5.3.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^10.2.0",
