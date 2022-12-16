@@ -70,7 +70,7 @@ class CalendarEvent {
     const location = this.location
     const sponsor = this.sponsor
     const about = this.about
-    const download = $('<a class="download" aria-label="Add event to my calendar">+</a>')
+    const download = $('<a class="download" aria-label="Add event to my calendar"></a>')
       .attr('download', `${name.replace(/ /g, '-')}.ics`)
       .attr('href', this.download())
     const time = $('<div class="time"></div>')
