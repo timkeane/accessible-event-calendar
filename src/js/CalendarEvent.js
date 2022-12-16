@@ -31,10 +31,8 @@ class CalendarEvent {
       encodeURIComponent('BEGIN:VCALENDAR\n' +
         'VERSION:2.0\n' +
         'BEGIN:VEVENT\n' +
-        `NAME:${this.name}\n` +
         `SUMMARY:${this.name}\n` +
         `DESCRIPTION:${this.desc()}\n` +
-        `ORGANIZER;CN=${this.sponsor}\n` +
         `DTSTART;TZID=${this.timezone}:${this.time(this.start)}\n` +
         `DTEND;TZID=${this.timezone}:${this.time(this.end)}\n` +
         `LOCATION:${this.location}\n` +
