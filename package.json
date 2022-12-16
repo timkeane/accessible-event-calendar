@@ -5,8 +5,6 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
-    "predbug-build": "npm run prebuild",
-    "debug-build": "webpack --mode development",
     "build": "webpack",
     "prepkg": "npm run clean && mkdir dist",
     "pkg": "cp ./package.json ./dist/ && cp ./src/js/CsvEventCalendar.js ./dist/index.js  && cp ./src/css/* ./dist/",

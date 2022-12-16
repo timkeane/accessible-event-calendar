@@ -5,7 +5,7 @@
 ### To build the deployable javascript and example implementation:
 
   * Run `npm install`
-  * Run `npm run build` (use `npm run debug-build` for to skip minification)
+  * Run `npm run build`
   * Deployable files will be located in the `dist` folder
 
 ## CSV Format Requirements
