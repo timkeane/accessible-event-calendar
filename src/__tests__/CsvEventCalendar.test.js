@@ -24,10 +24,10 @@ afterEach(() => {
   $('#test-cal').remove()
 })
 
-describe('constructor - standart csv', () => {
+describe('constructor', () => {
 
   test('constructor', () => {
-    expect.assertions(7)
+    expect.assertions(9)
 
     const ready = jest.fn()
     const dateChanged = jest.fn()
@@ -46,13 +46,12 @@ describe('constructor - standart csv', () => {
     expect(dateChanged).toHaveBeenCalledTimes(0)
     expect(viewChanged).toHaveBeenCalledTimes(0)
   
-    // const date = Object.keys(calendar.eventsIndex.events)[0]
+    const date = Object.keys(calendar.eventsIndex.events)[0]
     
-    // console.warn(date)
-    // console.warn(calendar.state)
-    // calendar.dateInput.val(date)
+    calendar.dateInput.val(date).trigger('change')
+    $(window).trigger('hashchange') //jsdom not dispatching this?
 
-    // expect(dateChanged).toHaveBeenCalledTimes(1)
-    // expect(viewChanged).toHaveBeenCalledTimes(1)
+    expect(dateChanged).toHaveBeenCalledTimes(1)
+    expect(viewChanged).toHaveBeenCalledTimes(1)
   })
 })

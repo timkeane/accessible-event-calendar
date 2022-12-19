@@ -28,6 +28,9 @@
     "webpack-cli": "^4.10.0"
   },
   "jest": {
+    "testEnvironmentOptions": {
+      "url": "http://localhost"
+    },
     "testEnvironment": "jsdom",
     "testMatch": ["**/__tests__/**/*.test.js"]
   }
