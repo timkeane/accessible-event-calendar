@@ -796,7 +796,7 @@ class CsvEventCalendar {
 }
 
 CsvEventCalendar.getLocale = () => {
-  return navigator.language
+  return window.navigator.language
 }
 
 CsvEventCalendar.IS_US = CsvEventCalendar.getLocale() === 'en-US'
