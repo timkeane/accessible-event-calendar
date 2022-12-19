@@ -20,6 +20,7 @@ class CsvEventCalendar {
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventHtml = options.eventHtml || this.eventHtml
+    this.ready = options.ready || this.ready
     this.viewChanged = options.viewChanged || this.viewChanged
     this.dateChanged = options.dateChanged || this.dateChanged
     this.csvColumns = options.csvColumns || CalendarEvent.DEFAULT_PROPERTIES
@@ -73,6 +74,7 @@ class CsvEventCalendar {
 
   dateChanged() {}
   viewChanged() {}
+  ready() {}
 
   esc(domEvent) {
     if (domEvent.key === 'Escape') {
@@ -420,43 +422,41 @@ class CsvEventCalendar {
     const out = this.search.find('.out')
     const filtered = this.search.find('.filtered')
     Object.keys(this.eventsIndex.events).forEach(key => {
-      if (key !== 'noData' && key !== 'ready') {
-        const events = this.eventsIndex.events[key]
-        events.forEach(event => {
-          const name = event.name
-          const a = $('<a role="option"></a>')
-            .html(name)
-            .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
-            .on('click', domEvent => {
-              me.state.foundEvent = name
-              me.navToPseudoHash(domEvent)
-            })
-          out.append(a)
-          this.search.on('keydown', domEvent => {
-            const keyName = domEvent.key
-            if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
-              const choices = filtered.find('a')
-              const index = choices.index(domEvent.target)
-              let next
-              if (keyName === 'ArrowUp') {
-                if (index <= 0) {
-                  next = input
-                } else {
-                  next = choices.get(index - 1)
-                }
-              } else if (keyName === 'ArrowDown') {
-                if (index < choices.length - 1) {
-                  next = choices.get(index + 1)
-                } else {
-                  next = choices.get(0)
-                }
-              }
-              domEvent.preventDefault()
-              $(next).trigger('focus')
-            }
+      const events = this.eventsIndex.events[key]
+      events.forEach(event => {
+        const name = event.name
+        const a = $('<a role="option"></a>')
+          .html(name)
+          .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
+          .on('click', domEvent => {
+            me.state.foundEvent = name
+            me.navToPseudoHash(domEvent)
           })
+        out.append(a)
+        this.search.on('keydown', domEvent => {
+          const keyName = domEvent.key
+          if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
+            const choices = filtered.find('a')
+            const index = choices.index(domEvent.target)
+            let next
+            if (keyName === 'ArrowUp') {
+              if (index <= 0) {
+                next = input
+              } else {
+                next = choices.get(index - 1)
+              }
+            } else if (keyName === 'ArrowDown') {
+              if (index < choices.length - 1) {
+                next = choices.get(index + 1)
+              } else {
+                next = choices.get(0)
+              }
+            }
+            domEvent.preventDefault()
+            $(next).trigger('focus')
+          }
         })
-      }
+      })
     })
   }
 
@@ -744,6 +744,7 @@ class CsvEventCalendar {
     this.eventsIndex.ready = true
     this.autoComplete()
     this.hashChanged()
+    this.ready(this)
   }
 
   alert(minMaxKey) {
