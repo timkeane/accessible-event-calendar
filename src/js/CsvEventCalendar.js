@@ -28,7 +28,9 @@ class CsvEventCalendar {
     this.search = null
     this.dateInput = null
     this.viewOptions = null
-
+    this.pseudoHash = ''
+    this.noHash = options.noHash
+    this.hashAttr = this.noHash ? 'data-pseudo-href' : 'href'
     $(options.target).append(this.container)
     this.state = {
       today: CsvEventCalendar.dateKey(this.today),
@@ -63,7 +65,9 @@ class CsvEventCalendar {
     }
     $(document).on('keyup', this.esc.bind(this))
     $(window).on('resize', this.resize.bind(this))
-    $(window).on('hashchange', this.hashChanged.bind(this))
+    if (!this.pseudoHash) {
+      $(window).on('hashchange', this.hashChanged.bind(this))
+    } 
     this.resize()
   }
 
@@ -72,12 +76,25 @@ class CsvEventCalendar {
 
   esc(domEvent) {
     if (domEvent.key === 'Escape') {
-      window.location.hash = `#${this.container.attr('id')}/${this.state.previousView}/${this.state.key()}`
+      this.updateHash(`#${this.container.attr('id')}/${this.state.previousView}/${this.state.key()}`)
     }
   }
 
+  updateHash(hash) {
+    if (this.noHash) {
+      this.pseudoHash = hash
+      this.hashChanged()
+    } else {
+      window.location.hash = hash
+    }
+  }
+
+  getHash() {
+    return this.noHash ? this.pseudoHash : window.location.hash
+  }
+
   hashChanged() {
-    const values = window.location.hash.substring(1).split('/')
+    const values = this.getHash().substring(1).split('/')
     if (values[0] === this.container.attr('id') && values.length === 3) {
       this.updateState({
         view: values[1],
@@ -240,7 +257,7 @@ class CsvEventCalendar {
       month = this.state.month + delta
     }
     this.updateState({month: month, year: year})
-    window.location.hash = `#${this.container.attr('id')}/month/${this.state.key()}`
+    this.updateHash(`#${this.container.attr('id')}/month/${this.state.key()}`)
   }
 
   weekNavigate(delta) {
@@ -255,7 +272,7 @@ class CsvEventCalendar {
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
     this.week()
-    window.location.hash = `#${this.container.attr('id')}/week/${this.state.key()}`
+    this.updateHash(`#${this.container.attr('id')}/week/${this.state.key()}`)
   }
 
   dayNavigate(delta) {
@@ -276,7 +293,7 @@ class CsvEventCalendar {
     }
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
-    window.location.hash = `#${this.container.attr('id')}/day/${this.state.key()}`
+    this.updateHash(`#${this.container.attr('id')}/day/${this.state.key()}`)
   }
 
   controls() {
@@ -296,7 +313,7 @@ class CsvEventCalendar {
       .on('change', () => {
         const key = me.dateInput.val()
         if (me.eventsIndex.events[key]) {
-          window.location.hash = `#${me.container.attr('id')}/day/${key}`
+          this.updateHash(`#${me.container.attr('id')}/day/${key}`)
         } else {
           me.alert(key)
         }
@@ -338,7 +355,7 @@ class CsvEventCalendar {
         viewOptions.removeClass('expanded')
         activeateBtn.attr('aria-expanded', false)
         activeateBtn.trigger('focus')
-        window.location.hash = `#${me.container.attr('id')}/${$(domEvent.target).val()}/${me.state.key()}`
+        this.updateHash(`#${me.container.attr('id')}/${$(domEvent.target).val()}/${me.state.key()}`)
       }
     })
     $(document).on('click', domEvent => {
@@ -390,6 +407,13 @@ class CsvEventCalendar {
     this.search.find('.out').append(this.search.find('.filtered a'))
   }
 
+  navToPseudoHash(a) {
+    const hash = a.attr(this.hashAttr)
+    if (hash) {
+      this.updateHash(hash)
+    }
+  }
+
   autoComplete() {
     const me = this
     const input = this.search.find('input')
@@ -402,9 +426,10 @@ class CsvEventCalendar {
           const name = event.name
           const a = $('<a role="option"></a>')
             .html(name)
-            .attr('href', `#${this.container.attr('id')}/day/${key}`)
-            .on('click', () => {
+            .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
+            .on('click', domEvent => {
               me.state.foundEvent = name
+              me.navToPseudoHash(domEvent)
             })
           out.append(a)
           this.search.on('keydown', domEvent => {
@@ -508,6 +533,7 @@ class CsvEventCalendar {
   }
 
   day(date, week, month) {
+    const me = this
     const key = date.key
     const title = this.title({key: key}).day
     const prevView = $('<a class="prev-view"></a>')
@@ -518,7 +544,7 @@ class CsvEventCalendar {
       .append(`<span class="medium">${title.medium}</span>`)
       .append(`<span class="abbr">${title.abbr}</span>`)
       .append(`<span class="short">${title.short}</span>`)
-      .attr('href',` #${this.container.attr('id')}/day/${key}`)
+      .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
     const day = $('<li class="day"></li>')
       .data(CsvEventCalendar.VIEW_NAMES.week, week)
       .addClass(date.monthClass + '-mo')
@@ -528,8 +554,10 @@ class CsvEventCalendar {
       .append(h3)
       .append('<div class="events"></div>')
       .on('click', () => {
-        if (day.hasClass('has-events'))
-          window.location.hash = day.find('a.name').attr('href')
+        if (day.hasClass('has-events')) {
+          me.navToPseudoHash(a)
+          me.updateHash(a.attr(me.hashAttr))
+        }
       })
       month.append(day)
       return day
@@ -669,13 +697,14 @@ class CsvEventCalendar {
             } else {
               const a = $('<a class="title"></a>')
                 .html(`+${events.length - 4} for ${me.title({key}).day.abbr.split(' ')[1]}`)
-                .attr('href', `#${me.container.attr('id')}/day/${key}`)
+                .attr(this.hashAttr, `#${me.container.attr('id')}/day/${key}`)
               eventsNode.append($('<div class="event more"></div>').append(a))            
               eventsNode.append(calEvent.html().addClass('overflow'))
             }
           })
-          a.attr('href', `#${me.container.attr('id')}/day/${key}`)
+          a.attr(this.hashAttr, `#${me.container.attr('id')}/day/${key}`)
             .attr('aria-label', `${title} (${eventCount} ${(eventCount === 1 ? ' event' : ' events')} scheduled`)
+            .on('click', () => me.navToPseudoHash(a))
         } else {
           $(dayNode).attr('aria-hidden', 'true')
             .find('a.prev-view').attr('aria-hidden', 'true')
