@@ -591,13 +591,14 @@ class CsvEventCalendar {
       $(btn).attr('aria-label', $(btn).attr('data-old-label'))
         .removeAttr('data-old-label')
     })
-    this.container.find('.day a.prev-view')
-      .attr({
+    const a = this.container.find('.day a.prev-view')
+      a.attr({
         'aria-label': `return to ${previousView} view`,
         title: `return to ${previousView} view`,
-        href: `#${this.container.attr('id')}/${previousView}/${key}`
+        [this.hashAttr]: `#${this.container.attr('id')}/${previousView}/${key}`
       })
-    this.container.find('.view .day a').removeAttr('tabindex')
+      .on('click', () => this.navToPseudoHash(a))
+      this.container.find('.view .day a').removeAttr('tabindex')
     this[`${view}View`]()
     this.container.find('.view .day[aria-hidden="true"] a.prev-view').attr('tabindex', -1)
     this.container.find(`.view .day[data-date-key="${this.state.today}"]`).addClass('today')
