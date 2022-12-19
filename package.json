@@ -1,7 +1,7 @@
 {
   "name": "accessible-event-calendar",
   "version": "1.1.0",
-  "description": Accessible event calendar backed by CSV data",
+  "description": "Accessible event calendar backed by CSV data",
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
