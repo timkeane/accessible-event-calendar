@@ -2,7 +2,17 @@ import $ from 'jquery'
 import CsvEventCalendar from '../js/CsvEventCalendar'
 import CalendarEvent from '../js/CalendarEvent'
 import Papa from 'papaparse'
-import { MOCK_CSV_RESPONSE } from './mockCsv'
+import { MOCK_CSV_RESPONSE, MOCK_DIFF_CSV_RESPONSE, MOCK_EVENTS, MOCK_DIFF_EVENTS } from './mockCsv'
+
+const csvColumns = {
+  date: 'Date',
+  name: 'Event Name',
+  about: 'Description',
+  start: 'Start Time',
+  end: 'End Time',
+  location: 'Address',
+  sponsor: 'Sponsor'
+}
 
 jest.mock('papaparse', () => {
   const papa = jest.requireActual('papaparse')
@@ -68,15 +78,6 @@ describe('constructor', () => {
   test('constructor - different csv', () => {
     expect.assertions(10)
 
-    const csvColumns = {
-        date: 'Date',
-        name: 'Event Name',
-        about: 'Description',
-        start: 'Start Time',
-        end: 'End Time',
-        location: 'Address',
-        sponsor: 'Sponsor'
-      }
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
       url: 'mock-url',
@@ -123,7 +124,6 @@ describe('loadCsv', () => {
   })
 })
 
-/*
 describe('indexData', () => {
 
   const controls = CsvEventCalendar.prototype.controls
@@ -151,7 +151,7 @@ describe('indexData', () => {
   })
 
   test('indexData - standard csv', () => {
-    expect.assertions(9)
+    expect.assertions(38)
 
     const ready = jest.fn()
 
@@ -162,6 +162,8 @@ describe('indexData', () => {
     })
 
     expect(calendar.firstView).toBe(true)
+    expect(calendar.csvColumns).toBe(CalendarEvent.DEFAULT_PROPERTIES)
+    expect(ready).toHaveBeenCalledTimes(0)
     expect(calendar.minMax).toHaveBeenCalledTimes(0)
     expect(calendar.controls).toHaveBeenCalledTimes(1)
     expect(calendar.resize).toHaveBeenCalledTimes(1)
@@ -171,13 +173,70 @@ describe('indexData', () => {
 
     calendar.indexData(MOCK_CSV_RESPONSE)
 
+    expect(ready).toHaveBeenCalledTimes(1)
+    expect(ready.mock.calls[0][0]).toBe(calendar)
     expect(calendar.minMax).toHaveBeenCalledTimes(1)
-    expect(calendar.eventsIndex).toEqual({
-      ready: true,
-      noData: false,
-      events: {}
+    expect(calendar.eventsIndex.ready).toBe(true)
+    expect(calendar.eventsIndex.noData).toBe(false)
+
+    Object.keys(MOCK_EVENTS).forEach(key => {
+      const expected = MOCK_EVENTS[key]
+      const received = calendar.eventsIndex.events[key]
+      expect(received.date).toBe(expected.date)
+      expect(received.name).toBe(expected.name)
+      expect(received.sponsor).toBe(expected.sponsor)
+      expect(received.about).toBe(expected.about)
+      expect(received.location).toBe(expected.location)
+      expect(received.start).toBe(expected.start)
+      expect(received.end).toBe(expected.end)
+      expect(received.timezone).toBe(expected.timezone)
     })
 
   })
+
+  test('indexData - different csv', () => {
+    expect.assertions(38)
+
+    const ready = jest.fn()
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      url: 'mock-url',
+      ready,
+      csvColumns
+    })
+
+    expect(calendar.firstView).toBe(true)
+    expect(calendar.csvColumns).toBe(csvColumns)
+    expect(ready).toHaveBeenCalledTimes(0)
+    expect(calendar.minMax).toHaveBeenCalledTimes(0)
+    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.resize).toHaveBeenCalledTimes(1)
+    expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
+    expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
+    expect(calendar.eventsIndex).toEqual({ready: false, noData: false, events: {}})
+
+    calendar.indexData(MOCK_DIFF_CSV_RESPONSE)
+
+    expect(ready).toHaveBeenCalledTimes(1)
+    expect(ready.mock.calls[0][0]).toBe(calendar)
+    expect(calendar.minMax).toHaveBeenCalledTimes(1)
+    expect(calendar.eventsIndex.ready).toBe(true)
+    expect(calendar.eventsIndex.noData).toBe(false)
+
+    Object.keys(MOCK_DIFF_EVENTS).forEach(key => {
+      const expected = MOCK_DIFF_EVENTS[key]
+      const received = calendar.eventsIndex.events[key]
+      expect(received.date).toBe(expected.date)
+      expect(received.name).toBe(expected.name)
+      expect(received.sponsor).toBe(expected.sponsor)
+      expect(received.about).toBe(expected.about)
+      expect(received.location).toBe(expected.location)
+      expect(received.start).toBe(expected.start)
+      expect(received.end).toBe(expected.end)
+      expect(received.timezone).toBe(expected.timezone)
+    })
+
+  })
+
 })
-*/

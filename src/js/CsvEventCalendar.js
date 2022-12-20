@@ -728,7 +728,7 @@ class CsvEventCalendar {
     const calEvents = response.data
     calEvents.forEach(calEvent => {
       const key = calEvent[this.csvColumns.date]
-      if (key) { // papaparse parses blank lines aty the end of file
+      if (key) { // papaparse parses blank lines at the end of file
         this.eventsIndex.events[key] = this.eventsIndex.events[key] || []
         this.eventsIndex.events[key].push(new CalendarEvent({date: key, data: calEvent, properties: this.csvColumns}))
         CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])  
