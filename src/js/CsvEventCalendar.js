@@ -432,9 +432,9 @@ class CsvEventCalendar {
         const a = $('<a role="option"></a>')
           .html(name)
           .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
-          .on('click', domEvent => {
+          .on('click', () => {
             me.state.foundEvent = name
-            me.navToPseudoHash(domEvent)
+            me.navToPseudoHash(a)
           })
         out.append(a)
         this.search.on('keydown', domEvent => {
