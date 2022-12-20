@@ -53,11 +53,7 @@ class CsvEventCalendar {
     this.container.attr('id', CsvEventCalendar.nextId('calendar'))
     this.controls()
     if (options.url) {
-      Papa.parse(options.url, {
-        download: true,
-        header: true,
-        complete: this.indexData.bind(this)
-      })
+      this.loadCsv(options.url)
     } else {
       this.eventsIndex.noData = true
       this.view(CsvEventCalendar.VIEW_NAMES.month)
@@ -70,6 +66,14 @@ class CsvEventCalendar {
       $(window).on('hashchange', this.hashChanged.bind(this))
     } 
     this.resize()
+  }
+
+  loadCsv(url) {
+    Papa.parse(url, {
+      download: true,
+      header: true,
+      complete: this.indexData.bind(this)
+    })
   }
 
   dateChanged() {}
@@ -731,20 +735,23 @@ class CsvEventCalendar {
       }
     })
 
-    const allDates = Object.keys(this.eventsIndex.events).sort()
-    if (this.min === CsvEventCalendar.MIN_DEFAULT) {
-      this.min = allDates[0]
-      this.dateInput.attr('min', this.min)
-    }
-    if (this.max === CsvEventCalendar.MAX_DEFAULT) {
-      this.max = allDates[allDates.length - 1]
-      this.dateInput.attr('max', this.max)
-    }
-
+    this.minMax(Object.keys(this.eventsIndex.events))
     this.eventsIndex.ready = true
     this.autoComplete()
     this.hashChanged()
     this.ready(this)
+  }
+
+  minMax(allDates) {
+    const sorted = allDates.sort()
+    if (this.min === CsvEventCalendar.MIN_DEFAULT) {
+      this.min = sorted[0]
+      this.dateInput.attr('min', this.min)
+    }
+    if (this.max === CsvEventCalendar.MAX_DEFAULT) {
+      this.max = sorted[sorted.length - 1]
+      this.dateInput.attr('max', this.max)
+    }
   }
 
   alert(minMaxKey) {

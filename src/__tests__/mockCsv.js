@@ -5,9 +5,9 @@ const data = [
   {}
 ]
 const differentData = [
-  {'Event name': 'event 1', 'Event description': 'about 1', 'Start time': '2pm', 'End time': '3pm', 'Event sponsor': 'sponsor 1', 'Event address': 'location 1'},
-  {'Event name': 'event 2', 'Event description': 'about 2', 'Start time': '11am', 'End time': '1pm', 'Event sponsor': 'sponsor 2', 'Event address': 'location 2'},
-  {'Event name': 'event 3', 'Event description': 'about 3', 'Start time': '12pm', 'End time': '1pm', 'Event sponsor': 'sponsor 3', 'Event address': 'location 3'},
+  {'Event Name': 'event 1', 'Description': 'about 1', 'Start Time': '2pm', 'End Time': '3pm', 'Sponsor': 'sponsor 1', 'SAddress': 'location 1'},
+  {'Event Name': 'event 2', 'Description': 'about 2', 'Start Time': '11am', 'End Time': '1pm', 'Sponsor': 'sponsor 2', 'SAddress': 'location 2'},
+  {'Event Name': 'event 3', 'Description': 'about 3', 'Start Time': '12pm', 'End Time': '1pm', 'Sponsor': 'sponsor 3', 'SAddress': 'location 3'},
   {}
 ]
 
