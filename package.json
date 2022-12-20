@@ -1,6 +1,6 @@
 {
   "name": "accessible-event-calendar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Accessible event calendar backed by CSV data",
   "scripts": {
     "test": "jest",
