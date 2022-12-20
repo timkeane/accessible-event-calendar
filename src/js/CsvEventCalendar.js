@@ -16,7 +16,7 @@ class CsvEventCalendar {
   constructor(options) {
     this.firstView = true
     this.eventsIndex = {ready: false, noData: false, events: {}}
-    this.container = $('<div class="calendar"></div>')
+    this.container = $(`<div id="${CsvEventCalendar.nextId('calendar')}" class="calendar"></div>`)
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventHtml = options.eventHtml || this.eventHtml
@@ -50,7 +50,6 @@ class CsvEventCalendar {
         return `${this.state.year}-${m}-${d}`
       }
     }
-    this.container.attr('id', CsvEventCalendar.nextId('calendar'))
     this.controls()
     if (options.url) {
       this.loadCsv(options.url)

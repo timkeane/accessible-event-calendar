@@ -138,6 +138,45 @@ describe('constructor', () => {
     expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
 
   })
+
+  test('constructor - no url', () => {
+    expect.assertions(23)
+    
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      ready: 'mock-ready',
+      dateChanged: 'mock-date-changed',
+      viewChanged: 'mock-view-changed'
+    })
+
+    expect(calendar instanceof CsvEventCalendar).toBe(true)
+    expect(calendar.today).toEqual(today)
+    expect(calendar.hashAttr).toBe('href')
+
+    expect(calendar.container.length).toBe(1)
+    expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
+    expect(calendar.container[0].id).toBe('calendar1')
+    
+    expect(calendar.firstView).toBe(true)
+    expect(calendar.ready).toBe('mock-ready')
+    expect(calendar.dateChanged).toBe('mock-date-changed')
+    expect(calendar.viewChanged).toBe('mock-view-changed')
+    expect(calendar.csvColumns).toEqual(CalendarEvent.DEFAULT_PROPERTIES)
+    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.resize).toHaveBeenCalledTimes(1)
+    expect(calendar.loadCsv).toHaveBeenCalledTimes(0)
+
+    expect(calendar.state.today).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.day).toBe(today.getDay())
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+    expect(calendar.state.foundEvent).toBeNull()
+    expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
+  })
+
 })
 
 describe('loadCsv', () => {
