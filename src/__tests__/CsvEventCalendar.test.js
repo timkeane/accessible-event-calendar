@@ -31,7 +31,7 @@ jest.mock('papaparse', () => {
 })
 
 beforeEach(() => {
-  CsvEventCalendar.ids.calendar = {}
+  window.location.hash = ''
   $('body').append($('<div id="test-cal"></div>'))
 })
 
@@ -74,7 +74,7 @@ describe('constructor', () => {
 
     expect(calendar.container.length).toBe(1)
     expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
-    expect(calendar.container[0].id).toBe('calendar1')
+    expect(calendar.container[0].id).toBe(`calendar${CsvEventCalendar.ids.calendar}`)
     
     expect(calendar.firstView).toBe(true)
     expect(calendar.ready).toBe('mock-ready')
@@ -117,7 +117,7 @@ describe('constructor', () => {
 
     expect(calendar.container.length).toBe(1)
     expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
-    expect(calendar.container[0].id).toBe('calendar1')
+    expect(calendar.container[0].id).toBe(`calendar${CsvEventCalendar.ids.calendar}`)
     
     expect(calendar.firstView).toBe(true)
     expect(calendar.ready).toBe('mock-ready')
@@ -143,7 +143,7 @@ describe('constructor', () => {
 
   test('constructor - no url', () => {
     expect.assertions(24)
-    
+
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
       ready: 'mock-ready',
@@ -158,7 +158,7 @@ describe('constructor', () => {
 
     expect(calendar.container.length).toBe(1)
     expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
-    expect(calendar.container[0].id).toBe('calendar1')
+    expect(calendar.container[0].id).toBe(`calendar${CsvEventCalendar.ids.calendar}`)
     
     expect(calendar.firstView).toBe(true)
     expect(calendar.ready).toBe('mock-ready')
@@ -324,6 +324,7 @@ describe('indexData', () => {
 })
 
 describe('updateHash', () => {
+
   const hashChanged = CsvEventCalendar.prototype.hashChanged
   beforeEach(() => {
     CsvEventCalendar.prototype.hashChanged = jest.fn()
@@ -333,7 +334,7 @@ describe('updateHash', () => {
     CsvEventCalendar.prototype.hashChanged = hashChanged
   })  
     
-  test.only('updateHash', () => {
+  test('updateHash', () => {
     expect.assertions(8)
 
     const calendar1 = new CsvEventCalendar({
@@ -359,3 +360,65 @@ describe('updateHash', () => {
 
   })
 })
+
+test('getHash', () => {
+  expect.assertions(4)
+
+  const calendar1 = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  const calendar2 = new CsvEventCalendar({
+    noHash: true,
+    target: $('#test-cal')
+  })
+
+  expect(calendar1.getHash()).toBe('')
+  window.location.hash = '#mock-hash'
+  expect(calendar1.getHash()).toBe('#mock-hash')
+
+  expect(calendar2.getHash()).toBe('')
+  calendar2.pseudoHash = '#pseudo-hash'
+  expect(calendar2.getHash()).toBe('#pseudo-hash')
+})
+
+describe('hashChanged', () => {
+
+  const updateState = CsvEventCalendar.prototype.updateState
+  const clearSearch = CsvEventCalendar.prototype.clearSearch
+  beforeEach(() => {
+    CsvEventCalendar.prototype.updateState = jest.fn()
+    CsvEventCalendar.prototype.clearSearch = jest.fn()
+ })
+
+  afterEach(() => {
+    CsvEventCalendar.prototype.updateState = updateState
+    CsvEventCalendar.prototype.clearSearch = clearSearch
+  })  
+
+  test('hashChanged - this calendar is the target', () => {
+    expect.assertions(9)
+
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      url: 'mock-url'
+    })
+
+    expect(window.location.hash).toBe('')
+
+    calendar.updateHash(`#${calendar.container[0].id}/day/2024-11-01`)
+    $(window).trigger('hashchange')
+  
+    expect(calendar.updateState).toHaveBeenCalled()
+    expect(calendar.updateState.mock.lastCall[0]).toEqual({
+      view: 'day',
+      key: '2024-11-01'
+    })
+    expect(calendar.clearSearch).toHaveBeenCalled()
+    expect(calendar.firstView).toBe(false)
+    expect(calendar.container.find('.view').hasClass('day')).toBe(true)
+  })
+
+})
+
