@@ -399,7 +399,6 @@ describe('hashChanged', () => {
   test('hashChanged - this calendar is the target', () => {
     expect.assertions(9)
 
-
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
       url: 'mock-url'
@@ -419,6 +418,27 @@ describe('hashChanged', () => {
     expect(calendar.firstView).toBe(false)
     expect(calendar.container.find('.view').hasClass('day')).toBe(true)
   })
+
+  test('hashChanged - this calendar is not the target', () => {
+    expect.assertions(9)
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      url: 'mock-url'
+    })
+
+    calendar.container.find('.view').removeClass('month').addClass('day')
+    expect(window.location.hash).toBe('')
+
+    calendar.updateHash('#not-the-target/day/2024-11-01')
+    $(window).trigger('hashchange')
+  
+    expect(calendar.updateState).toHaveBeenCalledTimes(0)
+    expect(calendar.clearSearch).toHaveBeenCalledTimes(0)
+    expect(calendar.firstView).toBe(false)
+    expect(calendar.container.find('.view').hasClass('day')).toBe(true)
+    expect(calendar.container.find('.view').hasClass('month')).toBe(false)
+  })  
 
 })
 
