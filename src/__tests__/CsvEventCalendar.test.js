@@ -57,7 +57,7 @@ describe('constructor', () => {
   })
 
   test('constructor - standard csv', () => {
-    expect.assertions(24)
+    expect.assertions(25)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -68,6 +68,7 @@ describe('constructor', () => {
     })
 
     expect(calendar instanceof CsvEventCalendar).toBe(true)
+    expect(calendar.eventsIndex.noData).toBe(false)
     expect(calendar.today).toEqual(today)
     expect(calendar.hashAttr).toBe('href')
 
@@ -98,7 +99,7 @@ describe('constructor', () => {
   })
 
   test('constructor - different csv', () => {
-    expect.assertions(24)
+    expect.assertions(25)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -110,6 +111,7 @@ describe('constructor', () => {
     })
 
     expect(calendar instanceof CsvEventCalendar).toBe(true)
+    expect(calendar.eventsIndex.noData).toBe(false)
     expect(calendar.today).toEqual(today)
     expect(calendar.hashAttr).toBe('href')
 
@@ -140,7 +142,7 @@ describe('constructor', () => {
   })
 
   test('constructor - no url', () => {
-    expect.assertions(23)
+    expect.assertions(24)
     
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -150,6 +152,7 @@ describe('constructor', () => {
     })
 
     expect(calendar instanceof CsvEventCalendar).toBe(true)
+    expect(calendar.eventsIndex.noData).toBe(true)
     expect(calendar.today).toEqual(today)
     expect(calendar.hashAttr).toBe('href')
 
