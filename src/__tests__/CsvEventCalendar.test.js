@@ -322,3 +322,40 @@ describe('indexData', () => {
   })
 
 })
+
+describe('updateHash', () => {
+  const hashChanged = CsvEventCalendar.prototype.hashChanged
+  beforeEach(() => {
+    CsvEventCalendar.prototype.hashChanged = jest.fn()
+ })
+
+  afterEach(() => {
+    CsvEventCalendar.prototype.hashChanged = hashChanged
+  })  
+    
+  test.only('updateHash', () => {
+    expect.assertions(8)
+
+    const calendar1 = new CsvEventCalendar({
+      target: $('#test-cal')
+    })
+
+    const calendar2 = new CsvEventCalendar({
+      noHash: true,
+      target: $('#test-cal')
+    })
+
+    expect(window.location.hash).toBe('')
+    expect(calendar1.pseudoHash).toBe('')
+    calendar1.updateHash('#mock-hash')
+    expect(window.location.hash).toBe('#mock-hash')
+    expect(calendar1.pseudoHash).toBe('')
+
+    expect(calendar2.pseudoHash).toBe('')
+    calendar2.updateHash('#mock-hash-oo')
+    expect(window.location.hash).toBe('#mock-hash')
+    expect(calendar2.pseudoHash).toBe('#mock-hash-oo')
+    expect(calendar2.hashChanged).toHaveBeenCalledTimes(1)
+
+  })
+})
