@@ -32,6 +32,10 @@
       "url": "http://localhost"
     },
     "testEnvironment": "jsdom",
-    "testMatch": ["**/__tests__/**/*.test.js"]
+    "testMatch": ["**/__tests__/**/*.test.js"],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/js/*.js"
+    ]
   }
 }
