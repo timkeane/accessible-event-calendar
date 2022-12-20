@@ -4,6 +4,9 @@ import CalendarEvent from '../js/CalendarEvent'
 import Papa from 'papaparse'
 import { MOCK_CSV_RESPONSE, MOCK_DIFF_CSV_RESPONSE, MOCK_EVENTS, MOCK_DIFF_EVENTS } from './mockCsv'
 
+const today = new Date()
+today.setHours(0, 0, 0, 0)
+
 const csvColumns = {
   date: 'Date',
   name: 'Event Name',
@@ -28,6 +31,7 @@ jest.mock('papaparse', () => {
 })
 
 beforeEach(() => {
+  CsvEventCalendar.ids.calendar = {}
   $('body').append($('<div id="test-cal"></div>'))
 })
 
@@ -53,7 +57,7 @@ describe('constructor', () => {
   })
 
   test('constructor - standard csv', () => {
-    expect.assertions(10)
+    expect.assertions(24)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -64,6 +68,13 @@ describe('constructor', () => {
     })
 
     expect(calendar instanceof CsvEventCalendar).toBe(true)
+    expect(calendar.today).toEqual(today)
+    expect(calendar.hashAttr).toBe('href')
+
+    expect(calendar.container.length).toBe(1)
+    expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
+    expect(calendar.container[0].id).toBe('calendar1')
+    
     expect(calendar.firstView).toBe(true)
     expect(calendar.ready).toBe('mock-ready')
     expect(calendar.dateChanged).toBe('mock-date-changed')
@@ -73,10 +84,21 @@ describe('constructor', () => {
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
+
+    expect(calendar.state.today).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.day).toBe(today.getDay())
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+    expect(calendar.state.foundEvent).toBeNull()
+    expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
+
   })
 
   test('constructor - different csv', () => {
-    expect.assertions(10)
+    expect.assertions(24)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -88,6 +110,13 @@ describe('constructor', () => {
     })
 
     expect(calendar instanceof CsvEventCalendar).toBe(true)
+    expect(calendar.today).toEqual(today)
+    expect(calendar.hashAttr).toBe('href')
+
+    expect(calendar.container.length).toBe(1)
+    expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
+    expect(calendar.container[0].id).toBe('calendar1')
+    
     expect(calendar.firstView).toBe(true)
     expect(calendar.ready).toBe('mock-ready')
     expect(calendar.dateChanged).toBe('mock-date-changed')
@@ -97,6 +126,17 @@ describe('constructor', () => {
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
+
+    expect(calendar.state.today).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.day).toBe(today.getDay())
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+    expect(calendar.state.foundEvent).toBeNull()
+    expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
+
   })
 })
 
@@ -240,3 +280,4 @@ describe('indexData', () => {
   })
 
 })
+

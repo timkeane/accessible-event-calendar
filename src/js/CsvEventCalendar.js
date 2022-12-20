@@ -875,11 +875,13 @@ CsvEventCalendar.sortByStartTime = events => {
   })
 }
 
+CsvEventCalendar.ids = {}
 CsvEventCalendar.nextId = prefix => {
-  CsvEventCalendar[prefix] = CsvEventCalendar[prefix] || {}
-  CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id || 0
-  CsvEventCalendar[prefix].id = CsvEventCalendar[prefix].id + 1
-  return prefix + CsvEventCalendar[prefix].id
+  const ids = CsvEventCalendar.ids
+  ids[prefix] = ids[prefix] || {}
+  ids[prefix].id = ids[prefix].id || 0
+  ids[prefix].id = ids[prefix].id + 1
+  return prefix + ids[prefix].id
 }
 
 /**
