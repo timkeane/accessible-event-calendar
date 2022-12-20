@@ -442,3 +442,58 @@ describe('hashChanged', () => {
 
 })
 
+describe('updateState', () => {
+
+  const populate = CsvEventCalendar.prototype.populate
+  const week = CsvEventCalendar.prototype.week
+  const dateChanged = CsvEventCalendar.prototype.dateChanged
+  const viewChanged = CsvEventCalendar.prototype.viewChanged
+  beforeEach(() => {
+    CsvEventCalendar.prototype.populate = jest.fn()
+    CsvEventCalendar.prototype.week = jest.fn()
+    CsvEventCalendar.prototype.dateChanged = jest.fn()
+    CsvEventCalendar.prototype.viewChanged = jest.fn()
+  })
+
+  afterEach(() => {
+    CsvEventCalendar.prototype.populate = populate
+    CsvEventCalendar.prototype.week = week
+    CsvEventCalendar.prototype.dateChanged = dateChanged
+    CsvEventCalendar.prototype.viewChanged = viewChanged
+  })
+
+  test('updateState - ', () => {
+    expect.assertions(15)
+    /*
+    options 
+        view
+        year
+        month
+        date
+        key
+    */
+    const isoToday = today.toISOString().split('T')[0]
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal')
+    })
+
+    expect(calendar.state.key()).toBe(isoToday)
+    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.day).toBe(today.getDay())
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+
+    expect(calendar.viewOptions.find('input[value="month"]').attr('aria-checked')).toBe('true')
+    expect(calendar.viewOptions.find('input[value="month"]').is(':checked')).toBe(true)
+    expect(calendar.viewOptions.find('.btn span').html()).toBe('View by month')
+
+    expect(calendar.populate).toHaveBeenCalled()
+    expect(calendar.week).toHaveBeenCalledTimes(0)
+    expect(calendar.dateChanged).toHaveBeenCalledTimes(0)
+    expect(calendar.viewChanged).toHaveBeenCalledTimes(0)
+  })
+
+})

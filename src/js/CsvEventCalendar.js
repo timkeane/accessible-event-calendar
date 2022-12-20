@@ -249,7 +249,6 @@ class CsvEventCalendar {
   }
 
   monthNavigate(delta) {
-    console.warn('monthNavigate');
     const before = this.state.month
     let month = this.state.month
     let year = this.state.year
@@ -267,7 +266,6 @@ class CsvEventCalendar {
   }
 
   weekNavigate(delta) {
-    console.warn('weekNavigate');
     const key = this.state.key()
     const date = CsvEventCalendar.dateFromKey(key)
     date.setDate(date.getDate() + (delta * 7))
@@ -283,7 +281,6 @@ class CsvEventCalendar {
   }
 
   dayNavigate(delta) {
-    console.warn('dayNavigate');
     const key = this.state.key()
     const date = CsvEventCalendar.dateFromKey(key)
     date.setDate(date.getDate() + delta)
