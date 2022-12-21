@@ -972,7 +972,7 @@ test('nextMonth', () => {
   ])
 })
 
-test.only('navigate', () => {
+test('navigate', () => {
   expect.assertions(14)
 
   const calendar = new CsvEventCalendar({
@@ -1012,5 +1012,4 @@ test.only('navigate', () => {
   expect(calendar.view).toHaveBeenCalledTimes(2)
   expect(calendar.view.mock.calls[1][0]).toBe('week')
   expect(next.is(':disabled')).toBe(false)
-
 })
