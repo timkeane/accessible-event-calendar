@@ -1104,5 +1104,60 @@ test('weekNavigate', () => {
   expect(calendar.updateHash).toHaveBeenCalledTimes(2)
   expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/week/2022-12-24`)
   expect(calendar.container.find('[data-date-key="2022-12-24"]').hasClass('selected')).toBe(true)
+})
 
+test.only('dayNavigate', () => {
+  expect.assertions(16)
+
+  const isoToday = today.toISOString().split('T')[0]
+  const yesterday = new Date(today)
+  const tomorrow = new Date(today)
+  yesterday.setDate(today.getDate() - 1)
+  tomorrow.setDate(today.getDate() + 1)
+  const isoYesterday = yesterday.toISOString().split('T')[0]
+  const isoTomorrow = tomorrow.toISOString().split('T')[0]
+
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal'),
+    url: 'mock-url'
+  })
+
+  // const id = calendar.container[0].id
+
+  // const dayWithEvents = $(calendar.container.find('li.day.has-events')[0])
+  // const dayWithoutEvents = $(calendar.container.find('li.day').not('.has-events')[0])
+
+  // calendar.monthView = jest.fn()
+  // calendar.updateHash = jest.fn()
+
+  // calendar.dayNavigate(-1)
+
+  // expect(calendar.state.key()).toBe(isoYesterday)
+  // expect(calendar.monthView).toHaveBeenCalledTimes(0)
+  // expect(calendar.updateHash).toHaveBeenCalledTimes(1)
+  // expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${isoYesterday}`)
+
+  // calendar.dayNavigate(1)
+
+  // expect(calendar.state.key()).toBe(isoToday)
+  // expect(calendar.monthView).toHaveBeenCalledTimes(0)
+  // expect(calendar.updateHash).toHaveBeenCalledTimes(2)
+  // expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoToday}`)
+
+  // calendar.dayNavigate(1)
+
+  // expect(calendar.state.key()).toBe(isoTomorrow)
+  // expect(calendar.monthView).toHaveBeenCalledTimes(0)
+  // expect(calendar.updateHash).toHaveBeenCalledTimes(3)
+  // expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${isoTomorrow}`)
+
+  // console.warn({key: '2022-12-31'});
+  calendar.updateState({key: '2022-12-31'})
+  // console.warn(calendar.state);
+  // expect(calendar.state.key()).toBe('2022-12-31')
+
+  // calendar.dayNavigate(1)
+
+  // expect(calendar.monthView).toHaveBeenCalledTimes(1)
 })

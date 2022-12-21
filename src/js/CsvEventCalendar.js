@@ -113,6 +113,7 @@ class CsvEventCalendar {
   }
 
   updateState(options) {
+    console.warn('updateState',options);
     const beforeKey = this.state.key()
     const beforeView = this.state.view
     if (options.view === CsvEventCalendar.VIEW_NAMES.week) {
@@ -131,6 +132,9 @@ class CsvEventCalendar {
       this.state.date = lastDayOfMonth
     }
     if (options.key) {
+      // console.warn(CsvEventCalendar.yearNumber(options.key));
+      // console.warn(CsvEventCalendar.monthNumber(options.key));
+      // console.warn(CsvEventCalendar.dateNumber(options.key));
       this.state.year = CsvEventCalendar.yearNumber(options.key)
       this.state.month = CsvEventCalendar.monthNumber(options.key) - 1
       this.state.date = CsvEventCalendar.dateNumber(options.key)
@@ -288,10 +292,12 @@ class CsvEventCalendar {
     this.updateState({key: nextKey})
   
     const dayNode = this.dayNode(this.state.key())
-    if (!dayNode.length) {
+    if (dayNode.length === 0) {
+      console.warn('monthView');
       this.monthView()
     }
     if (!dayNode.hasClass('has-events')) {
+      console.warn('dayNavigate');
       this.dayNavigate(delta)
       return
     }
