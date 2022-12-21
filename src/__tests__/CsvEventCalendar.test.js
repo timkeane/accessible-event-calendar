@@ -57,7 +57,7 @@ describe('constructor', () => {
   })
 
   test('constructor - standard csv', () => {
-    expect.assertions(24)
+    expect.assertions(23)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -70,7 +70,6 @@ describe('constructor', () => {
     expect(calendar instanceof CsvEventCalendar).toBe(true)
     expect(calendar.eventsIndex.noData).toBe(false)
     expect(calendar.today).toEqual(today)
-    expect(calendar.hashAttr).toBe('href')
 
     expect(calendar.container.length).toBe(1)
     expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
@@ -98,7 +97,7 @@ describe('constructor', () => {
   })
 
   test('constructor - different csv', () => {
-    expect.assertions(24)
+    expect.assertions(23)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -112,7 +111,6 @@ describe('constructor', () => {
     expect(calendar instanceof CsvEventCalendar).toBe(true)
     expect(calendar.eventsIndex.noData).toBe(false)
     expect(calendar.today).toEqual(today)
-    expect(calendar.hashAttr).toBe('href')
 
     expect(calendar.container.length).toBe(1)
     expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
@@ -140,7 +138,7 @@ describe('constructor', () => {
   })
 
   test('constructor - no url', () => {
-    expect.assertions(23)
+    expect.assertions(22)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -152,7 +150,6 @@ describe('constructor', () => {
     expect(calendar instanceof CsvEventCalendar).toBe(true)
     expect(calendar.eventsIndex.noData).toBe(true)
     expect(calendar.today).toEqual(today)
-    expect(calendar.hashAttr).toBe('href')
 
     expect(calendar.container.length).toBe(1)
     expect(calendar.container[0]).toBe($('#test-cal>div.calendar')[0])
@@ -332,14 +329,9 @@ describe('updateHash', () => {
   })  
     
   test('updateHash', () => {
-    expect.assertions(8)
+    expect.assertions(4)
 
     const calendar1 = new CsvEventCalendar({
-      target: $('#test-cal')
-    })
-
-    const calendar2 = new CsvEventCalendar({
-      noHash: true,
       target: $('#test-cal')
     })
 
@@ -348,35 +340,19 @@ describe('updateHash', () => {
     calendar1.updateHash('#mock-hash')
     expect(window.location.hash).toBe('#mock-hash')
     expect(calendar1.pseudoHash).toBe('')
-
-    expect(calendar2.pseudoHash).toBe('')
-    calendar2.updateHash('#mock-hash-oo')
-    expect(window.location.hash).toBe('#mock-hash')
-    expect(calendar2.pseudoHash).toBe('#mock-hash-oo')
-    expect(calendar2.hashChanged).toHaveBeenCalledTimes(1)
-
   })
 })
 
 test('getHash', () => {
-  expect.assertions(4)
+  expect.assertions(2)
 
   const calendar1 = new CsvEventCalendar({
-    target: $('#test-cal')
-  })
-
-  const calendar2 = new CsvEventCalendar({
-    noHash: true,
     target: $('#test-cal')
   })
 
   expect(calendar1.getHash()).toBe('')
   window.location.hash = '#mock-hash'
   expect(calendar1.getHash()).toBe('#mock-hash')
-
-  expect(calendar2.getHash()).toBe('')
-  calendar2.pseudoHash = '#pseudo-hash'
-  expect(calendar2.getHash()).toBe('#pseudo-hash')
 })
 
 describe('hashChanged', () => {
@@ -1106,7 +1082,7 @@ test('weekNavigate', () => {
   expect(calendar.container.find('[data-date-key="2022-12-24"]').hasClass('selected')).toBe(true)
 })
 
-test.only('dayNavigate', () => {
+test('dayNavigate', () => {
   expect.assertions(20)
 
   const isoToday = today.toISOString().split('T')[0]
@@ -1175,10 +1151,10 @@ test('controls', () => {
 
   calendar.controls()
 
-  expect(calendar.container.html()).toBe('<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete3"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete3"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view7" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view7" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view8" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view8" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view9" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view9" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div>')
+  expect(calendar.container.html()).toBe(`<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete${CsvEventCalendar.ids.autoComplete}"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete${CsvEventCalendar.ids.autoComplete}"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 2}" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 2}" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 1}" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 1}" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view}" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view}" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div>`)
 })
 
-test.only('clearSearch', () => {
+test('clearSearch', () => {
   expect.assertions(6)
 
   const calendar = new CsvEventCalendar({

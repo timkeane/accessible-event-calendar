@@ -30,8 +30,6 @@ class CsvEventCalendar {
     this.dateInput = null
     this.viewOptions = null
     this.pseudoHash = ''
-    this.noHash = options.noHash
-    this.hashAttr = this.noHash ? 'data-pseudo-href' : 'href'
     $(options.target).append(this.container)
     this.state = {
       today: CsvEventCalendar.dateKey(this.today),
@@ -85,16 +83,11 @@ class CsvEventCalendar {
   }
 
   updateHash(hash) {
-    if (this.noHash) {
-      this.pseudoHash = hash
-      this.hashChanged()
-    } else {
-      window.location.hash = hash
-    }
+    window.location.hash = hash
   }
 
   getHash() {
-    return this.noHash ? this.pseudoHash : window.location.hash
+    return window.location.hash
   }
 
   hashChanged() {
@@ -410,13 +403,6 @@ class CsvEventCalendar {
     this.search.find('.out').append(this.search.find('.filtered a'))
   }
 
-  navToPseudoHash(a) {
-    const hash = a.attr(this.hashAttr)
-    if (hash) {
-      this.updateHash(hash)
-    }
-  }
-
   autoComplete() {
     const me = this
     const input = this.search.find('input')
@@ -428,10 +414,9 @@ class CsvEventCalendar {
         const name = event.name
         const a = $('<a role="option"></a>')
           .html(name)
-          .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
+          .attr('href', `#${this.container.attr('id')}/day/${key}`)
           .on('click', () => {
             me.state.foundEvent = name
-            me.navToPseudoHash(a)
           })
         out.append(a)
         this.search.on('keydown', domEvent => {
@@ -545,7 +530,7 @@ class CsvEventCalendar {
       .append(`<span class="medium">${title.medium}</span>`)
       .append(`<span class="abbr">${title.abbr}</span>`)
       .append(`<span class="short">${title.short}</span>`)
-      .attr(this.hashAttr, `#${this.container.attr('id')}/day/${key}`)
+      .attr('href', `#${this.container.attr('id')}/day/${key}`)
     const day = $('<li class="day"></li>')
       .data(CsvEventCalendar.VIEW_NAMES.week, week)
       .addClass(date.monthClass + '-mo')
@@ -556,7 +541,6 @@ class CsvEventCalendar {
       .append('<div class="events"></div>')
       .on('click', () => {
         if (day.hasClass('has-events')) {
-          me.navToPseudoHash(a)
           me.updateHash(a.attr(me.hashAttr))
         }
       })
@@ -595,9 +579,8 @@ class CsvEventCalendar {
       a.attr({
         'aria-label': `return to ${previousView} view`,
         title: `return to ${previousView} view`,
-        [this.hashAttr]: `#${this.container.attr('id')}/${previousView}/${key}`
+        ['href']: `#${this.container.attr('id')}/${previousView}/${key}`
       })
-      .on('click', () => this.navToPseudoHash(a))
       this.container.find('.view .day a').removeAttr('tabindex')
     this[`${view}View`]()
     this.container.find('.view .day[aria-hidden="true"] a.prev-view').attr('tabindex', -1)
@@ -698,14 +681,13 @@ class CsvEventCalendar {
             } else {
               const a = $('<a class="title"></a>')
                 .html(`+${events.length - 4} for ${me.title({key}).day.abbr.split(' ')[1]}`)
-                .attr(this.hashAttr, `#${me.container.attr('id')}/day/${key}`)
+                .attr('href', `#${me.container.attr('id')}/day/${key}`)
               eventsNode.append($('<div class="event more"></div>').append(a))            
               eventsNode.append(calEvent.html().addClass('overflow'))
             }
           })
-          a.attr(this.hashAttr, `#${me.container.attr('id')}/day/${key}`)
+          a.attr('href', `#${me.container.attr('id')}/day/${key}`)
             .attr('aria-label', `${title} (${eventCount} ${(eventCount === 1 ? ' event' : ' events')} scheduled`)
-            .on('click', () => me.navToPseudoHash(a))
         } else {
           $(dayNode).attr('aria-hidden', 'true')
             .find('a.prev-view').attr('aria-hidden', 'true')
