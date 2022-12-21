@@ -1015,11 +1015,13 @@ test('navigate', () => {
 })
 
 test('monthNavigate', () => {
-  expect.assertions(12)
+  expect.assertions(20)
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
+
+  const id = calendar.container[0].id
 
   calendar.updateHash = jest.fn()
 
@@ -1030,6 +1032,8 @@ test('monthNavigate', () => {
 
   expect(calendar.state.month).toBe(9)
   expect(calendar.state.year).toBe(2022)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(1)
+  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/month/2022-10-01`)
 
   calendar.updateState({key: '2022-01-01'})
   expect(calendar.state.month).toBe(0)
@@ -1038,6 +1042,8 @@ test('monthNavigate', () => {
 
   expect(calendar.state.month).toBe(11)
   expect(calendar.state.year).toBe(2021)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(2)
+  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/month/2021-12-01`)
 
   calendar.updateState({key: '2022-11-01'})
   expect(calendar.state.month).toBe(10)
@@ -1046,6 +1052,8 @@ test('monthNavigate', () => {
 
   expect(calendar.state.month).toBe(11)
   expect(calendar.state.year).toBe(2022)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(3)
+  expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/month/2022-12-01`)
 
   calendar.updateState({key: '2022-12-01'})
   expect(calendar.state.month).toBe(11)
@@ -1054,4 +1062,6 @@ test('monthNavigate', () => {
 
   expect(calendar.state.month).toBe(0)
   expect(calendar.state.year).toBe(2023)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(4)
+  expect(calendar.updateHash.mock.calls[3][0]).toBe(`#${id}/month/2023-01-01`)
 })
