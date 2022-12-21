@@ -38,7 +38,6 @@ class CsvEventCalendar {
       year: this.today.getFullYear(),
       month: this.today.getMonth(),
       date: this.today.getDate(),
-      day: this.today.getDay(),
       view: CsvEventCalendar.VIEW_NAMES.month,
       previousView: CsvEventCalendar.VIEW_NAMES.month,
       foundEvent: null,

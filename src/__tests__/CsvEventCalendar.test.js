@@ -57,7 +57,7 @@ describe('constructor', () => {
   })
 
   test('constructor - standard csv', () => {
-    expect.assertions(25)
+    expect.assertions(24)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -90,7 +90,6 @@ describe('constructor', () => {
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
-    expect(calendar.state.day).toBe(today.getDay())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
     expect(calendar.state.foundEvent).toBeNull()
@@ -99,7 +98,7 @@ describe('constructor', () => {
   })
 
   test('constructor - different csv', () => {
-    expect.assertions(25)
+    expect.assertions(24)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -133,7 +132,6 @@ describe('constructor', () => {
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
-    expect(calendar.state.day).toBe(today.getDay())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
     expect(calendar.state.foundEvent).toBeNull()
@@ -142,7 +140,7 @@ describe('constructor', () => {
   })
 
   test('constructor - no url', () => {
-    expect.assertions(24)
+    expect.assertions(23)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -173,7 +171,6 @@ describe('constructor', () => {
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
-    expect(calendar.state.day).toBe(today.getDay())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
     expect(calendar.state.foundEvent).toBeNull()
@@ -462,8 +459,8 @@ describe('updateState', () => {
     CsvEventCalendar.prototype.viewChanged = viewChanged
   })
 
-  test('updateState - ', () => {
-    expect.assertions(15)
+  test('updateState - initial state', () => {
+    expect.assertions(14)
     /*
     options 
         view
@@ -473,8 +470,11 @@ describe('updateState', () => {
         key
     */
     const isoToday = today.toISOString().split('T')[0]
+    
     const calendar = new CsvEventCalendar({
-      target: $('#test-cal')
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
     })
 
     expect(calendar.state.key()).toBe(isoToday)
@@ -482,7 +482,6 @@ describe('updateState', () => {
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
-    expect(calendar.state.day).toBe(today.getDay())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
 
@@ -493,6 +492,213 @@ describe('updateState', () => {
     expect(calendar.populate).toHaveBeenCalled()
     expect(calendar.week).toHaveBeenCalledTimes(0)
     expect(calendar.dateChanged).toHaveBeenCalledTimes(0)
+    expect(calendar.viewChanged).toHaveBeenCalledTimes(0)
+  })
+
+  test('updateState - change view', () => {
+    expect.assertions(14)
+    /*
+    options 
+        view
+        year
+        month
+        date
+        key
+    */
+    const isoToday = today.toISOString().split('T')[0]
+    
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({view: 'day'})
+
+    expect(calendar.state.key()).toBe(isoToday)
+    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.view).toBe('day')
+    expect(calendar.state.previousView).toBe('month')
+
+    expect(calendar.viewOptions.find('input[value="day"]').attr('aria-checked')).toBe('true')
+    expect(calendar.viewOptions.find('input[value="day"]').is(':checked')).toBe(true)
+    expect(calendar.viewOptions.find('.btn span').html()).toBe('View by day')
+
+    expect(calendar.populate).toHaveBeenCalled()
+    expect(calendar.week).toHaveBeenCalledTimes(1)
+    expect(calendar.dateChanged).toHaveBeenCalledTimes(0)
+    expect(calendar.viewChanged).toHaveBeenCalledTimes(1)
+  })
+
+  test('updateState - year change', () => {
+    expect.assertions(14)
+    /*
+    options 
+        view
+        year
+        month
+        date
+        key
+    */
+    const isoToday = today.toISOString().split('T')[0]
+    const dateParts = isoToday.split('-')
+    
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({year: 2050})
+
+    expect(calendar.state.key()).toBe(`2050-${dateParts[1]}-${dateParts[2]}`)
+    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.year).toBe(2050)
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+
+    expect(calendar.viewOptions.find('input[value="month"]').attr('aria-checked')).toBe('true')
+    expect(calendar.viewOptions.find('input[value="month"]').is(':checked')).toBe(true)
+    expect(calendar.viewOptions.find('.btn span').html()).toBe('View by month')
+
+    expect(calendar.populate).toHaveBeenCalled()
+    expect(calendar.week).toHaveBeenCalledTimes(1)
+    expect(calendar.dateChanged).toHaveBeenCalledTimes(1)
+    expect(calendar.viewChanged).toHaveBeenCalledTimes(0)
+  })
+
+  test('updateState - month change', () => {
+    expect.assertions(14)
+    /*
+    options 
+        view
+        year
+        month
+        date
+        key
+    */
+    const isoToday = today.toISOString().split('T')[0]
+    const dateParts = isoToday.split('-')
+    
+    let month
+    if (dateParts[1] === '01') {
+      month = 12
+    } else {
+      month = dateParts[1] - 2
+    }
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({month})
+
+    expect(calendar.state.key()).toBe(`${today.getFullYear()}-${month + 1}-${dateParts[2]}`)
+    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(month)
+    expect(calendar.state.date).toBe(today.getDate())
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+
+    expect(calendar.viewOptions.find('input[value="month"]').attr('aria-checked')).toBe('true')
+    expect(calendar.viewOptions.find('input[value="month"]').is(':checked')).toBe(true)
+    expect(calendar.viewOptions.find('.btn span').html()).toBe('View by month')
+
+    expect(calendar.populate).toHaveBeenCalled()
+    expect(calendar.week).toHaveBeenCalledTimes(1)
+    expect(calendar.dateChanged).toHaveBeenCalledTimes(1)
+    expect(calendar.viewChanged).toHaveBeenCalledTimes(0)
+  })
+
+  test('updateState - date change', () => {
+    expect.assertions(14)
+    /*
+    options 
+        view
+        year
+        month
+        date
+        key
+    */
+    const isoToday = today.toISOString().split('T')[0]
+    const dateParts = isoToday.split('-')
+    
+    let date
+    if (dateParts[2] === '15') {
+      date = 10
+    } else {
+      date = 15
+    }
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({date})
+
+    expect(calendar.state.key()).toBe(`${today.getFullYear()}-${dateParts[1]}-${date}`)
+    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.year).toBe(today.getFullYear())
+    expect(calendar.state.month).toBe(today.getMonth())
+    expect(calendar.state.date).toBe(date)
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+
+    expect(calendar.viewOptions.find('input[value="month"]').attr('aria-checked')).toBe('true')
+    expect(calendar.viewOptions.find('input[value="month"]').is(':checked')).toBe(true)
+    expect(calendar.viewOptions.find('.btn span').html()).toBe('View by month')
+
+    expect(calendar.populate).toHaveBeenCalled()
+    expect(calendar.week).toHaveBeenCalledTimes(1)
+    expect(calendar.dateChanged).toHaveBeenCalledTimes(1)
+    expect(calendar.viewChanged).toHaveBeenCalledTimes(0)
+  })
+
+  test('updateState - key change', () => {
+    expect.assertions(14)
+    /*
+    options 
+        view
+        year
+        month
+        date
+        key
+    */
+    const isoToday = today.toISOString().split('T')[0]
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({key: '2050-01-01'})
+
+    expect(calendar.state.key()).toBe('2050-01-01')
+    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.year).toBe(2050)
+    expect(calendar.state.month).toBe(0)
+    expect(calendar.state.date).toBe(1)
+    expect(calendar.state.view).toBe('month')
+    expect(calendar.state.previousView).toBe('month')
+
+    expect(calendar.viewOptions.find('input[value="month"]').attr('aria-checked')).toBe('true')
+    expect(calendar.viewOptions.find('input[value="month"]').is(':checked')).toBe(true)
+    expect(calendar.viewOptions.find('.btn span').html()).toBe('View by month')
+
+    expect(calendar.populate).toHaveBeenCalled()
+    expect(calendar.week).toHaveBeenCalledTimes(1)
+    expect(calendar.dateChanged).toHaveBeenCalledTimes(1)
     expect(calendar.viewChanged).toHaveBeenCalledTimes(0)
   })
 
