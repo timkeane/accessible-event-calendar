@@ -971,3 +971,46 @@ test('nextMonth', () => {
     {key: '2023-02-11', date: 42, monthClass: 'next'}
   ])
 })
+
+test.only('navigate', () => {
+  expect.assertions(14)
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  calendar.monthNavigate = jest.fn()
+  calendar.weekNavigate = jest.fn()
+  calendar.view = jest.fn()
+
+  calendar.updateState({view: 'month'})
+  
+  const back = calendar.container.find('.btn.back').attr('disabled', true)
+  expect(back.is(':disabled')).toBe(true)
+
+  const next = calendar.container.find('.btn.next')
+  
+  next.trigger('click')
+
+  expect(calendar.monthNavigate).toHaveBeenCalledTimes(1)
+  expect(calendar.monthNavigate.mock.calls[0][0]).toBe(1)
+  expect(calendar.weekNavigate).toHaveBeenCalledTimes(0)
+  expect(calendar.view).toHaveBeenCalledTimes(1)
+  expect(calendar.view.mock.calls[0][0]).toBe('month')
+  expect(back.is(':disabled')).toBe(false)
+
+  calendar.updateState({view: 'week'})
+
+  next.attr('disabled', true)
+  expect(next.is(':disabled')).toBe(true)
+
+  back.trigger('click')
+
+  expect(calendar.monthNavigate).toHaveBeenCalledTimes(1)
+  expect(calendar.weekNavigate).toHaveBeenCalledTimes(1)
+  expect(calendar.weekNavigate.mock.calls[0][0]).toBe(-1)
+  expect(calendar.view).toHaveBeenCalledTimes(2)
+  expect(calendar.view.mock.calls[1][0]).toBe('week')
+  expect(next.is(':disabled')).toBe(false)
+
+})

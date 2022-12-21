@@ -755,7 +755,7 @@ class CsvEventCalendar {
     let msg
     if (['min', 'max'].indexOf(minMaxKey) > -1) {
       this.container.find(`.controls button.${(minMaxKey === 'min' ? 'back' : 'next')}`)
-        .attr('disabled', true);
+        .attr('disabled', true)
       msg = `No events scheduled ${(minMaxKey === 'min' ? 'before' : 'after')} ${this.title({key: this[minMaxKey]}).day.long}`
     } else {
       msg = `No events scheduled on ${this.title({key: minMaxKey}).day.long}`
