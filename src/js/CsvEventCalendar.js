@@ -290,8 +290,7 @@ class CsvEventCalendar {
     const dayNode = this.dayNode(this.state.key())
     if (dayNode.length === 0) {
       this.monthView()
-    }
-    if (!dayNode.hasClass('has-events')) {
+    } else if (!dayNode.hasClass('has-events')) {
       this.dayNavigate(delta)
       return
     }

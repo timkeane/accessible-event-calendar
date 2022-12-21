@@ -1107,7 +1107,7 @@ test('weekNavigate', () => {
 })
 
 test.only('dayNavigate', () => {
-  expect.assertions(16)
+  expect.assertions(20)
 
   const isoToday = today.toISOString().split('T')[0]
   const yesterday = new Date(today)
@@ -1121,8 +1121,8 @@ test.only('dayNavigate', () => {
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
     url: 'mock-url',
-    min: '1900-01-01',
-    max: '2100-01-01'
+    min: '1990-01-01',
+    max: '2090-01-01'
   })
 
   const id = calendar.container[0].id
@@ -1157,7 +1157,11 @@ test.only('dayNavigate', () => {
   calendar.updateState({key: '2022-12-31'})
   expect(calendar.state.key()).toBe('2022-12-31')
 
-  // calendar.dayNavigate(1)
+  calendar.dayNavigate(1)
 
-  // expect(calendar.monthView).toHaveBeenCalledTimes(1)
+  expect(calendar.state.key()).toBe('2023-01-01')
+  expect(calendar.monthView).toHaveBeenCalledTimes(1)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(4)
+  expect(calendar.updateHash.mock.calls[3][0]).toBe(`#${id}/day/2023-01-01`)
+
 })
