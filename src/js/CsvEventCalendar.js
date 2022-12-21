@@ -564,7 +564,6 @@ class CsvEventCalendar {
       month.append(day)
       return day
   }
-
   view(view) {
     const key = this.state.key()
     const dayNode = this.dayNode(key)

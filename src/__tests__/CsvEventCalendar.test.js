@@ -703,3 +703,87 @@ describe('updateState', () => {
   })
 
 })
+
+describe('title', () => {
+  
+  afterEach(() => {
+    CsvEventCalendar.IS_US = true
+  })
+
+  test('title - no key - is US', () => {
+    expect.assertions(11)
+
+    const isoToday = today.toISOString().split('T')[0]
+
+    const dateStr = CsvEventCalendar.dateFromKey(isoToday).toLocaleDateString(CsvEventCalendar.getLocale())
+    const year = CsvEventCalendar.yearNumber(isoToday)
+    const month = CsvEventCalendar.monthName(isoToday)
+    const mo = month.substring(0, 3)
+    const m = CsvEventCalendar.monthNumber(isoToday)
+    const date = CsvEventCalendar.dateNumber(isoToday)
+    const day = CsvEventCalendar.dayName(isoToday)
+    const d = day.substring(0, 3)
+
+    const node = $('<div><div class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></div></div>')
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal')
+    })
+
+    const title = calendar.title({node})
+
+    expect(title.month.long).toBe(`${month} ${year}`)
+    expect(title.month.medium).toBe(`${mo} ${year}`)
+    expect(title.month.abbr).toBe(`${m}/${year}`)
+
+    expect(title.day.long).toBe(`${day} ${month} ${date}, ${year}`)
+    expect(title.day.medium).toBe(`${d} ${mo} ${date}, ${year}`)
+    expect(title.day.short).toBe(date)
+    expect(title.day.abbr).toBe(`${d} ${dateStr}`)
+
+    expect(node.find('.month .long').html()).toBe(title.month.long)
+    expect(node.find('.month .short').html()).toBe(title.month.medium)
+    expect(node.find('.month .abbr').html()).toBe(title.month.abbr)
+    expect(node.attr('aria-label')).toBe(title.month.long)
+  })
+
+  test('title - no key - is not US', () => {
+    expect.assertions(11)
+
+    CsvEventCalendar.IS_US = false
+
+    const isoToday = today.toISOString().split('T')[0]
+
+    const dateStr = CsvEventCalendar.dateFromKey(isoToday).toLocaleDateString(CsvEventCalendar.getLocale())
+    const year = CsvEventCalendar.yearNumber(isoToday)
+    const month = CsvEventCalendar.monthName(isoToday)
+    const mo = month.substring(0, 3)
+    const m = CsvEventCalendar.monthNumber(isoToday)
+    const date = CsvEventCalendar.dateNumber(isoToday)
+    const day = CsvEventCalendar.dayName(isoToday)
+    const d = day.substring(0, 3)
+
+    const node = $('<div><div class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></div></div>')
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal')
+    })
+
+    const title = calendar.title({node})
+
+    expect(title.month.long).toBe(`${month} ${year}`)
+    expect(title.month.medium).toBe(`${mo} ${year}`)
+    expect(title.month.abbr).toBe(`${m}/${year}`)
+
+    expect(title.day.long).toBe(`${day} ${date} ${month} ${year}`)
+    expect(title.day.medium).toBe(`${d} ${date} ${mo} ${year}`)
+    expect(title.day.short).toBe(date)
+    expect(title.day.abbr).toBe(`${d} ${dateStr}`)
+
+    expect(node.find('.month .long').html()).toBe(title.month.long)
+    expect(node.find('.month .short').html()).toBe(title.month.medium)
+    expect(node.find('.month .abbr').html()).toBe(title.month.abbr)
+    expect(node.attr('aria-label')).toBe(title.month.long)
+  })
+
+})

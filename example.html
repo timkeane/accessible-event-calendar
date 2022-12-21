@@ -68,10 +68,7 @@
   <div id="calendar-2"></div>
   <div id="calendar-3"></div>
   <script>
-    if (!window.CsvEventCalendar) {
-      $('body *').hide();
-      $('#error, #error *').show();
-    } else {
+    try {
       var search = window.location.search.substring(1)
       var multi = search.split('=')[1] === 'true'
       function eventHtml(calEvent) {
@@ -128,8 +125,10 @@
           console.log('calendar3 viewChanged', view);
         }
       });
+    } catch (err) {
+      $('body *').hide();
+      $('#error, #error *').show();
     }
-
   </script>
 </body>
 </html>
