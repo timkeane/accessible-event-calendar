@@ -1164,7 +1164,7 @@ test.only('dayNavigate', () => {
   expect(calendar.updateHash.mock.calls[3][0]).toBe(`#${id}/day/2023-01-01`)
 })
 
-test.only('controls', () => {
+test('controls', () => {
   expect.assertions(1)
 
   const calendar = new CsvEventCalendar({
