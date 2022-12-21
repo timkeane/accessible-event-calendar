@@ -1120,42 +1120,42 @@ test.only('dayNavigate', () => {
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
-    url: 'mock-url'
+    url: 'mock-url',
+    min: '1900-01-01',
+    max: '2100-01-01'
   })
 
-  // const id = calendar.container[0].id
+  const id = calendar.container[0].id
 
-  // const dayWithEvents = $(calendar.container.find('li.day.has-events')[0])
-  // const dayWithoutEvents = $(calendar.container.find('li.day').not('.has-events')[0])
+  const dayWithEvents = $(calendar.container.find('li.day.has-events')[0])
+  const dayWithoutEvents = $(calendar.container.find('li.day').not('.has-events')[0])
 
-  // calendar.monthView = jest.fn()
-  // calendar.updateHash = jest.fn()
+  calendar.monthView = jest.fn()
+  calendar.updateHash = jest.fn()
 
-  // calendar.dayNavigate(-1)
+  calendar.dayNavigate(-1)
 
-  // expect(calendar.state.key()).toBe(isoYesterday)
-  // expect(calendar.monthView).toHaveBeenCalledTimes(0)
-  // expect(calendar.updateHash).toHaveBeenCalledTimes(1)
-  // expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${isoYesterday}`)
+  expect(calendar.state.key()).toBe(isoYesterday)
+  expect(calendar.monthView).toHaveBeenCalledTimes(0)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(1)
+  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${isoYesterday}`)
 
-  // calendar.dayNavigate(1)
+  calendar.dayNavigate(1)
 
-  // expect(calendar.state.key()).toBe(isoToday)
-  // expect(calendar.monthView).toHaveBeenCalledTimes(0)
-  // expect(calendar.updateHash).toHaveBeenCalledTimes(2)
-  // expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoToday}`)
+  expect(calendar.state.key()).toBe(isoToday)
+  expect(calendar.monthView).toHaveBeenCalledTimes(0)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(2)
+  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoToday}`)
 
-  // calendar.dayNavigate(1)
+  calendar.dayNavigate(1)
 
-  // expect(calendar.state.key()).toBe(isoTomorrow)
-  // expect(calendar.monthView).toHaveBeenCalledTimes(0)
-  // expect(calendar.updateHash).toHaveBeenCalledTimes(3)
-  // expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${isoTomorrow}`)
+  expect(calendar.state.key()).toBe(isoTomorrow)
+  expect(calendar.monthView).toHaveBeenCalledTimes(0)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(3)
+  expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${isoTomorrow}`)
 
-  // console.warn({key: '2022-12-31'});
   calendar.updateState({key: '2022-12-31'})
-  // console.warn(calendar.state);
-  // expect(calendar.state.key()).toBe('2022-12-31')
+  expect(calendar.state.key()).toBe('2022-12-31')
 
   // calendar.dayNavigate(1)
 
