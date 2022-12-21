@@ -1013,3 +1013,45 @@ test('navigate', () => {
   expect(calendar.view.mock.calls[1][0]).toBe('week')
   expect(next.is(':disabled')).toBe(false)
 })
+
+test('monthNavigate', () => {
+  expect.assertions(12)
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  calendar.updateHash = jest.fn()
+
+  calendar.updateState({key: '2022-11-01'})
+  expect(calendar.state.month).toBe(10)
+
+  calendar.monthNavigate(-1)
+
+  expect(calendar.state.month).toBe(9)
+  expect(calendar.state.year).toBe(2022)
+
+  calendar.updateState({key: '2022-01-01'})
+  expect(calendar.state.month).toBe(0)
+
+  calendar.monthNavigate(-1)
+
+  expect(calendar.state.month).toBe(11)
+  expect(calendar.state.year).toBe(2021)
+
+  calendar.updateState({key: '2022-11-01'})
+  expect(calendar.state.month).toBe(10)
+
+  calendar.monthNavigate(1)
+
+  expect(calendar.state.month).toBe(11)
+  expect(calendar.state.year).toBe(2022)
+
+  calendar.updateState({key: '2022-12-01'})
+  expect(calendar.state.month).toBe(11)
+
+  calendar.monthNavigate(1)
+
+  expect(calendar.state.month).toBe(0)
+  expect(calendar.state.year).toBe(2023)
+})
