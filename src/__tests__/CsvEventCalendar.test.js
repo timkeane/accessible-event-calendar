@@ -787,3 +787,187 @@ describe('title', () => {
   })
 
 })
+
+test('dayNode', () => {
+  expect.assertions(2)
+
+  const isoToday = today.toISOString().split('T')[0]
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  const node = calendar.dayNode(isoToday)
+
+  expect($(node)[0].tagName).toBe('LI')
+  expect($(node).attr('data-date-key')).toBe(isoToday)
+
+})
+
+describe('previousMonth', () => {
+
+  afterEach(() => {
+    CsvEventCalendar.IS_US = true
+  })
+
+  test('previousMonth - is US', () => {
+    expect.assertions(2)
+
+    const dates = []
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({key: '2023-01-01'})
+    calendar.previousMonth(dates)
+    expect(dates.length).toBe(0)
+
+    calendar.updateState({key: '2023-12-01'})
+    calendar.previousMonth(dates)
+    expect(dates).toEqual([
+      {key: '2023-11-26', date: 26, monthClass: 'prev'},
+      {key: '2023-11-27', date: 27, monthClass: 'prev'},
+      {key: '2023-11-28', date: 28, monthClass: 'prev'},
+      {key: '2023-11-29', date: 29, monthClass: 'prev'},
+      {key: '2023-11-30', date: 30, monthClass: 'prev'}
+    ])
+  })
+
+  test('previousMonth - is not US', () => {
+    expect.assertions(2)
+
+    CsvEventCalendar.IS_US = false
+
+    const dates = []
+
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
+
+    calendar.updateState({key: '2023-01-01'})
+    calendar.previousMonth(dates)
+    expect(dates.length).toBe(0)
+
+    calendar.updateState({key: '2023-12-01'})
+    calendar.previousMonth(dates)
+    expect(dates).toEqual( [
+      {key: '2023-11-27', date: 27, monthClass: 'prev'},
+      {key: '2023-11-28', date: 28, monthClass: 'prev'},
+      {key: '2023-11-29', date: 29, monthClass: 'prev'},
+      {key: '2023-11-30', date: 30, monthClass: 'prev'}
+    ])
+  })
+
+})
+
+test('currentMonth', () => {
+  expect.assertions(1)
+
+  const dates = []
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal'),
+    min: '1900-01-01',
+    max: '2100-01-01'
+  })
+
+  calendar.updateState({key: '2023-01-01'})
+  calendar.currentMonth(dates)
+  expect(dates).toEqual([
+    {key: '2023-01-01', date: 1, monthClass: 'current'},
+    {key: '2023-01-02', date: 2, monthClass: 'current'},
+    {key: '2023-01-03', date: 3, monthClass: 'current'},
+    {key: '2023-01-04', date: 4, monthClass: 'current'},
+    {key: '2023-01-05', date: 5, monthClass: 'current'},
+    {key: '2023-01-06', date: 6, monthClass: 'current'},
+    {key: '2023-01-07', date: 7, monthClass: 'current'},
+    {key: '2023-01-08', date: 8, monthClass: 'current'},
+    {key: '2023-01-09', date: 9, monthClass: 'current'},
+    {key: '2023-01-10', date: 10, monthClass: 'current'},
+    {key: '2023-01-11', date: 11, monthClass: 'current'},
+    {key: '2023-01-12', date: 12, monthClass: 'current'},
+    {key: '2023-01-13', date: 13, monthClass: 'current'},
+    {key: '2023-01-14', date: 14, monthClass: 'current'},
+    {key: '2023-01-15', date: 15, monthClass: 'current'},
+    {key: '2023-01-16', date: 16, monthClass: 'current'},
+    {key: '2023-01-17', date: 17, monthClass: 'current'},
+    {key: '2023-01-18', date: 18, monthClass: 'current'},
+    {key: '2023-01-19', date: 19, monthClass: 'current'},
+    {key: '2023-01-20', date: 20, monthClass: 'current'},
+    {key: '2023-01-21', date: 21, monthClass: 'current'},
+    {key: '2023-01-22', date: 22, monthClass: 'current'},
+    {key: '2023-01-23', date: 23, monthClass: 'current'},
+    {key: '2023-01-24', date: 24, monthClass: 'current'},
+    {key: '2023-01-25', date: 25, monthClass: 'current'},
+    {key: '2023-01-26', date: 26, monthClass: 'current'},
+    {key: '2023-01-27', date: 27, monthClass: 'current'},
+    {key: '2023-01-28', date: 28, monthClass: 'current'},
+    {key: '2023-01-29', date: 29, monthClass: 'current'},
+    {key: '2023-01-30', date: 30, monthClass: 'current'},
+    {key: '2023-01-31', date: 31, monthClass: 'current'}
+  ])
+})
+
+test('nextMonth', () => {
+  expect.assertions(1)
+
+  const dates = []
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal'),
+    min: '1900-01-01',
+    max: '2100-01-01'
+  })
+
+  calendar.updateState({key: '2022-12-01'})
+  calendar.nextMonth(dates)
+  expect(dates).toEqual([
+    {key: '2023-01-01', date: 1, monthClass: 'next'},
+    {key: '2023-01-02', date: 2, monthClass: 'next'},
+    {key: '2023-01-03', date: 3, monthClass: 'next'},
+    {key: '2023-01-04', date: 4, monthClass: 'next'},
+    {key: '2023-01-05', date: 5, monthClass: 'next'},
+    {key: '2023-01-06', date: 6, monthClass: 'next'},
+    {key: '2023-01-07', date: 7, monthClass: 'next'},
+    {key: '2023-01-08', date: 8, monthClass: 'next'},
+    {key: '2023-01-09', date: 9, monthClass: 'next'},
+    {key: '2023-01-10', date: 10, monthClass: 'next'},
+    {key: '2023-01-11', date: 11, monthClass: 'next'},
+    {key: '2023-01-12', date: 12, monthClass: 'next'},
+    {key: '2023-01-13', date: 13, monthClass: 'next'},
+    {key: '2023-01-14', date: 14, monthClass: 'next'},
+    {key: '2023-01-15', date: 15, monthClass: 'next'},
+    {key: '2023-01-16', date: 16, monthClass: 'next'},
+    {key: '2023-01-17', date: 17, monthClass: 'next'},
+    {key: '2023-01-18', date: 18, monthClass: 'next'},
+    {key: '2023-01-19', date: 19, monthClass: 'next'},
+    {key: '2023-01-20', date: 20, monthClass: 'next'},
+    {key: '2023-01-21', date: 21, monthClass: 'next'},
+    {key: '2023-01-22', date: 22, monthClass: 'next'},
+    {key: '2023-01-23', date: 23, monthClass: 'next'},
+    {key: '2023-01-24', date: 24, monthClass: 'next'},
+    {key: '2023-01-25', date: 25, monthClass: 'next'},
+    {key: '2023-01-26', date: 26, monthClass: 'next'},
+    {key: '2023-01-27', date: 27, monthClass: 'next'},
+    {key: '2023-01-28', date: 28, monthClass: 'next'},
+    {key: '2023-01-29', date: 29, monthClass: 'next'},
+    {key: '2023-01-30', date: 30, monthClass: 'next'},
+    {key: '2023-01-31', date: 31, monthClass: 'next'},
+    {key: '2023-02-01', date: 32, monthClass: 'next'},
+    {key: '2023-02-02', date: 33, monthClass: 'next'},
+    {key: '2023-02-03', date: 34, monthClass: 'next'},
+    {key: '2023-02-04', date: 35, monthClass: 'next'},
+    {key: '2023-02-05', date: 36, monthClass: 'next'},
+    {key: '2023-02-06', date: 37, monthClass: 'next'},
+    {key: '2023-02-07', date: 38, monthClass: 'next'},
+    {key: '2023-02-08', date: 39, monthClass: 'next'},
+    {key: '2023-02-09', date: 40, monthClass: 'next'},
+    {key: '2023-02-10', date: 41, monthClass: 'next'},
+    {key: '2023-02-11', date: 42, monthClass: 'next'}
+  ])
+})

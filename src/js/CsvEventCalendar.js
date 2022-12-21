@@ -271,7 +271,7 @@ class CsvEventCalendar {
     this.updateState({key: CsvEventCalendar.dateKey(date)})
     const dayNode = this.dayNode(this.state.key())
     if (!dayNode.length) {
-      this.monthView();
+      this.monthView()
     }
     this.container.find('li.day').removeClass('selected')
     dayNode.addClass('selected')
