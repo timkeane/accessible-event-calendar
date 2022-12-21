@@ -1065,3 +1065,44 @@ test('monthNavigate', () => {
   expect(calendar.updateHash).toHaveBeenCalledTimes(4)
   expect(calendar.updateHash.mock.calls[3][0]).toBe(`#${id}/month/2023-01-01`)
 })
+
+test('weekNavigate', () => {
+  expect.assertions(13)
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  const id = calendar.container[0].id
+
+  calendar.monthView = jest.fn()
+  calendar.week = jest.fn()
+  calendar.updateHash = jest.fn()
+
+  calendar.updateState({key: '2022-11-01'})
+  calendar.week.mockReset()
+
+  expect(calendar.week).toHaveBeenCalledTimes(0)
+  calendar.weekNavigate(-1)
+
+  expect(calendar.state.key()).toBe('2022-10-25')
+  expect(calendar.monthView).toHaveBeenCalledTimes(1)
+  expect(calendar.week).toHaveBeenCalledTimes(2)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(1)
+  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/week/2022-10-25`)
+
+  calendar.updateState({key: '2022-12-31'})
+  calendar.week.mockReset()
+
+  expect(calendar.container.find('[data-date-key="2022-12-24"]').hasClass('selected')).toBe(false)
+
+  calendar.weekNavigate(-1)
+
+  expect(calendar.state.key()).toBe('2022-12-24')
+  expect(calendar.monthView).toHaveBeenCalledTimes(1)
+  expect(calendar.week).toHaveBeenCalledTimes(2)
+  expect(calendar.updateHash).toHaveBeenCalledTimes(2)
+  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/week/2022-12-24`)
+  expect(calendar.container.find('[data-date-key="2022-12-24"]').hasClass('selected')).toBe(true)
+
+})

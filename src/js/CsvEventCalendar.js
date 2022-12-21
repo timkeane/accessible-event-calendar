@@ -270,7 +270,7 @@ class CsvEventCalendar {
     date.setDate(date.getDate() + (delta * 7))
     this.updateState({key: CsvEventCalendar.dateKey(date)})
     const dayNode = this.dayNode(this.state.key())
-    if (!dayNode.length) {
+    if (dayNode.length === 0) {
       this.monthView()
     }
     this.container.find('li.day').removeClass('selected')
