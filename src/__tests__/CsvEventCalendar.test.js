@@ -1177,3 +1177,23 @@ test('controls', () => {
 
   expect(calendar.container.html()).toBe('<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete3"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete3"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view7" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view7" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view8" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view8" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view9" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view9" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div>')
 })
+
+test.only('clearSearch', () => {
+  expect.assertions(6)
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal'),
+    url: 'mock-url'
+  })
+
+  calendar.search.find('.filtered').show()
+  calendar.search.find('.message').show()
+  calendar.search.find('input').attr('aria-expanded', true).val('mock-value')
+  $('body').append(calendar.search.find('.filtered a'))
+
+  calendar.clearSearch()
+
+  expect(calendar.search.find('.filtered').css('display')).toBe('none')
+  expect(calendar.search.find('.message').css('display')).toBe('none')
+  expect(calendar.search.find('input').attr('aria-expanded')).toBe('false')
+})
