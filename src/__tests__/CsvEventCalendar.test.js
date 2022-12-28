@@ -205,14 +205,14 @@ describe('indexData', () => {
   const controls = CsvEventCalendar.prototype.controls
   const resize = CsvEventCalendar.prototype.resize
   const loadCsv = CsvEventCalendar.prototype.loadCsv
-  const autoComplete = CsvEventCalendar.prototype.autoComplete
+  const autoCompleteOptions = CsvEventCalendar.prototype.autoCompleteOptions
   const hashChanged = CsvEventCalendar.prototype.hashChanged
   const minMax = CsvEventCalendar.prototype.minMax
   beforeEach(() => {
     CsvEventCalendar.prototype.controls = jest.fn()
     CsvEventCalendar.prototype.resize = jest.fn()
     CsvEventCalendar.prototype.loadCsv = jest.fn()
-    CsvEventCalendar.prototype.autoComplete = jest.fn()
+    CsvEventCalendar.prototype.autoCompleteOptions = jest.fn()
     CsvEventCalendar.prototype.hashChanged = jest.fn()
     CsvEventCalendar.prototype.minMax = jest.fn()
  })
@@ -221,7 +221,7 @@ describe('indexData', () => {
     CsvEventCalendar.prototype.controls = controls
     CsvEventCalendar.prototype.resize = resize
     CsvEventCalendar.prototype.loadCsv = loadCsv
-    CsvEventCalendar.prototype.autoComplete = autoComplete
+    CsvEventCalendar.prototype.autoCompleteOptions = autoCompleteOptions
     CsvEventCalendar.prototype.hashChanged = hashChanged
     CsvEventCalendar.prototype.minMax = minMax
   })
@@ -1151,11 +1151,10 @@ test('controls', () => {
 
   calendar.controls()
 
-  expect(calendar.container.html()).toBe(`<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete${CsvEventCalendar.ids.autoComplete}"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete${CsvEventCalendar.ids.autoComplete}"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 2}" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 2}" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 1}" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 1}" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view}" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view}" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div>`)
-})
+  expect(calendar.container.html()).toBe(`<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete${CsvEventCalendar.ids.autoComplete}"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete${CsvEventCalendar.ids.autoComplete}"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 2}" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 2}" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 1}" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 1}" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view}" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view}" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div>`)})
 
 test('clearSearch', () => {
-  expect.assertions(8)
+  expect.assertions(6)
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
@@ -1185,8 +1184,8 @@ describe('autoCompleteOptions', () => {
     CsvEventCalendar.prototype.searching = searching
   })
 
-  test.only('autoCompleteOptions', () => {
-    expect.assertions(9)
+  test('autoCompleteOptions', () => {
+    expect.assertions(12)
   
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -1200,6 +1199,8 @@ describe('autoCompleteOptions', () => {
       const key = $(a).attr('href').split('/')[2]
       const event = calendar.eventsIndex.events[key][0]
       expect($(a).html()).toBe(event.name)
+      $(a).trigger('click')
+      expect(calendar.state.foundEvent).toBe(event.name)
    })
 
    expect(calendar.searching).toHaveBeenCalledTimes(0)
@@ -1207,5 +1208,7 @@ describe('autoCompleteOptions', () => {
    calendar.search.trigger('keydown')
    
    expect(calendar.searching).toHaveBeenCalled()
+
+
   })
 })
