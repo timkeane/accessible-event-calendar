@@ -1479,3 +1479,40 @@ test('week', () => {
     expect($(li).hasClass('selected-week')).toBe(false)
   })
 })
+
+test('day', () => {
+  expect.assertions(9)
+
+  const isoToday = today.toISOString().split('T')[0]
+
+  const date = { key: isoToday, date: today.getDate(), monthClass: 'current' }
+  const month = $('<ol class="dates"></ol>')
+  const weekOfMonth = Math.round(today.getDate() / 7) - 1
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  calendar.title = jest.fn(options => {
+    expect(options.key).toBe(isoToday)
+    return {
+      day: {
+        long: 'long title',
+        medium: 'medium title',
+        short: 'short title',
+        abbr: 'abbr title'
+      }
+    }
+  })
+  
+  const day = calendar.day(date, weekOfMonth, month)
+
+  expect(month.children().length).toBe(1)
+  expect(month.children().get(0)).toBe(day.get(0))
+  expect(day[0].tagName).toBe('LI')
+  expect(day.hasClass('day')).toBe(true)
+  expect(day.hasClass('current-mo')).toBe(true)
+  expect(day.hasClass(`week-${weekOfMonth}`)).toBe(true)
+  expect(day.attr('data-date-key')).toBe(date.key)
+  expect(day.html()).toBe(`<a class="prev-view"></a><h3><a class="name" href="#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}"><span class="long">long title</span><span class="medium">medium title</span><span class="abbr">abbr title</span><span class="short">short title</span></a></h3><div class="events"></div>`)
+})
