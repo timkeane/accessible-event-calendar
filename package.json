@@ -1,12 +1,15 @@
 {
   "name": "accessible-event-calendar",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Accessible event calendar backed by CSV data",
   "scripts": {
     "test": "jest",
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
-    "build": "webpack",
+    "build": "webpack --config ./webpack.mini.config.js",
+    "prerelease": "npm run clean",
+    "release": "webpack --config ./webpack.mini.config.js",
+    "postrelease": "webpack --config ./webpack.dev.config.js",
     "prepkg": "npm run clean && mkdir dist",
     "pkg": "cp ./package.json ./dist/ && cp ./src/js/CsvEventCalendar.js ./dist/index.js  && cp ./src/css/* ./dist/",
     "postpkg": "cd dist && npm pack"
@@ -32,7 +35,9 @@
       "url": "http://localhost"
     },
     "testEnvironment": "jsdom",
-    "testMatch": ["**/__tests__/**/*.test.js"],
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/js/*.js"
