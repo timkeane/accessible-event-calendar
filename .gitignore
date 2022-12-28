@@ -3,4 +3,5 @@ dist/
 .env
 .DS_Store
 *.tgz
+*.zip
 coverage/
