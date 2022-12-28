@@ -1155,7 +1155,7 @@ test('controls', () => {
 })
 
 test('clearSearch', () => {
-  expect.assertions(6)
+  expect.assertions(8)
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
@@ -1172,4 +1172,40 @@ test('clearSearch', () => {
   expect(calendar.search.find('.filtered').css('display')).toBe('none')
   expect(calendar.search.find('.message').css('display')).toBe('none')
   expect(calendar.search.find('input').attr('aria-expanded')).toBe('false')
+})
+
+describe('autoCompleteOptions', () => {
+
+  const searching = CsvEventCalendar.prototype.searching
+  beforeEach(() => {
+    CsvEventCalendar.prototype.searching = jest.fn()
+  })
+
+  afterEach(() => {
+    CsvEventCalendar.prototype.searching = searching
+  })
+
+  test.only('autoCompleteOptions', () => {
+    expect.assertions(9)
+  
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      url: 'mock-url'
+    })
+  
+    const out = calendar.search.find('.out')
+  
+    expect(out.children().length).toBe(Object.keys(calendar.eventsIndex.events).length)
+    out.children().each((i, a) => {
+      const key = $(a).attr('href').split('/')[2]
+      const event = calendar.eventsIndex.events[key][0]
+      expect($(a).html()).toBe(event.name)
+   })
+
+   expect(calendar.searching).toHaveBeenCalledTimes(0)
+  
+   calendar.search.trigger('keydown')
+   
+   expect(calendar.searching).toHaveBeenCalled()
+  })
 })

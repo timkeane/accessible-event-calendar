@@ -199,7 +199,7 @@ class CsvEventCalendar {
   }
 
   dayNode(key) {
-    return this.container.find(`[data-date-key="${key}"]`)
+    return this.container.find(`.day[data-date-key="${key}"]`)
   }
 
   previousMonth(dates) {
@@ -299,8 +299,8 @@ class CsvEventCalendar {
     const next = $('<button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button>')
       .data('delta', 1)
       .on('click', this.navigate.bind(this))
-    const autoCompleteId = CsvEventCalendar.nextId('autoComplete')
-    this.search = $('<div class="search"><input  role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results"><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
+    const autoCompleteId = CsvEventCalendar.nextId('autoCompleteOptions')
+    this.search = $('<div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results"><div class="out"></div><div class="filtered" role="listbox"></div><p class="screenreader message" aria-live="polite"></p></div>')
     this.search.find('input').attr('aria-owns', autoCompleteId)
     this.search.find('.filtered').attr('id', autoCompleteId)
     this.dateInput = $('<input type="date">')
@@ -402,7 +402,7 @@ class CsvEventCalendar {
     this.search.find('.out').append(this.search.find('.filtered a'))
   }
 
-  autoComplete() {
+  autoCompleteOptions() {
     const input = this.search.find('input')
     const out = this.search.find('.out')
     const filtered = this.search.find('.filtered')
@@ -417,31 +417,33 @@ class CsvEventCalendar {
             this.state.foundEvent = name
           })
         out.append(a)
-        this.search.on('keydown', domEvent => {
-          const keyName = domEvent.key
-          if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
-            const choices = filtered.find('a')
-            const index = choices.index(domEvent.target)
-            let next
-            if (keyName === 'ArrowUp') {
-              if (index <= 0) {
-                next = input
-              } else {
-                next = choices.get(index - 1)
-              }
-            } else if (keyName === 'ArrowDown') {
-              if (index < choices.length - 1) {
-                next = choices.get(index + 1)
-              } else {
-                next = choices.get(0)
-              }
-            }
-            domEvent.preventDefault()
-            $(next).trigger('focus')
-          }
-        })
+        this.search.on('keydown', this.searching.bind(this))
       })
     })
+  }
+
+  searching(domEvent) {
+    const keyName = domEvent.key
+    if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
+      const choices = filtered.find('a')
+      const index = choices.index(domEvent.target)
+      let next
+      if (keyName === 'ArrowUp') {
+        if (index <= 0) {
+          next = input
+        } else {
+          next = choices.get(index - 1)
+        }
+      } else if (keyName === 'ArrowDown') {
+        if (index < choices.length - 1) {
+          next = choices.get(index + 1)
+        } else {
+          next = choices.get(0)
+        }
+      }
+      domEvent.preventDefault()
+      $(next).trigger('focus')
+    }
   }
 
   filterAutoComplete(domEvent) {
@@ -711,7 +713,7 @@ class CsvEventCalendar {
 
     this.minMax(Object.keys(this.eventsIndex.events))
     this.eventsIndex.ready = true
-    this.autoComplete()
+    this.autoCompleteOptions()
     this.hashChanged()
     this.ready(this)
   }
