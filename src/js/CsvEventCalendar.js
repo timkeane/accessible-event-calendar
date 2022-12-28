@@ -532,8 +532,9 @@ class CsvEventCalendar {
       .append(prevView)
       .append(h3)
       .append('<div class="events"></div>')
-      .on('click', () => {
-        if (day.hasClass('has-events')) {
+      .on('click', domEvent => {
+        if (day.hasClass('has-events') && this.state.view == 'month') {
+          domEvent.preventDefault()
           this.updateHash(a.attr('href'))
         }
       })
