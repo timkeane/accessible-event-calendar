@@ -1208,7 +1208,67 @@ describe('autoCompleteOptions', () => {
    calendar.search.trigger('keydown')
    
    expect(calendar.searching).toHaveBeenCalled()
-
-
   })
+})
+
+test('searching', () => {
+  expect.assertions(18)
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal'),
+    url: 'mock-url'
+  })
+
+  const search = calendar.search
+  const filtered = search.find('.filtered')
+  const preventDefault = jest.fn()
+
+  search.find('.out a').each((i, a) => {
+    filtered.append(a)
+  })
+
+  $(search.find('.filtered').find('a').get(0)).trigger('focus')
+
+  expect(search.find('input').is(':focus')).toBe(false)
+
+  calendar.searching({target: 'not-found', key: 'ArrowUp', preventDefault})
+
+  expect(search.find('input').is(':focus')).toBe(true)
+  expect(preventDefault).toHaveBeenCalledTimes(1)
+
+  $(filtered.find('a').get(1)).trigger('focus')
+
+  expect($(filtered.find('a').get(0)).is(':focus')).toBe(false)
+
+  calendar.searching({target: filtered.find('a').get(1), key: 'ArrowUp', preventDefault})
+
+  expect($(filtered.find('a').get(0)).is(':focus')).toBe(true)
+  expect(preventDefault).toHaveBeenCalledTimes(2)
+
+  $(filtered.find('a').get(0)).trigger('focus')
+
+  expect($(filtered.find('a').get(1)).is(':focus')).toBe(false)
+
+  calendar.searching({target: filtered.find('a').get(0), key: 'ArrowDown', preventDefault})
+
+  expect($(filtered.find('a').get(1)).is(':focus')).toBe(true)
+  expect(preventDefault).toHaveBeenCalledTimes(3)
+
+  $(filtered.find('a').get(2)).trigger('focus')
+
+  expect($(filtered.find('a').get(0)).is(':focus')).toBe(false)
+
+  calendar.searching({target: filtered.find('a').get(2), key: 'ArrowDown', preventDefault})
+
+  expect($(filtered.find('a').get(0)).is(':focus')).toBe(true)
+  expect(preventDefault).toHaveBeenCalledTimes(4)
+
+  $(filtered.find('a').get(2)).trigger('focus')
+
+  expect($(filtered.find('a').get(2)).is(':focus')).toBe(true)
+
+  calendar.searching({target: filtered.find('a').get(2), key: 'SomethingOtherThanUpOrDown', preventDefault})
+
+  expect($(filtered.find('a').get(2)).is(':focus')).toBe(true)
+  expect(preventDefault).toHaveBeenCalledTimes(4)
 })

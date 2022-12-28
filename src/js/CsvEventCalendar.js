@@ -403,9 +403,7 @@ class CsvEventCalendar {
   }
 
   autoCompleteOptions() {
-    const input = this.search.find('input')
     const out = this.search.find('.out')
-    const filtered = this.search.find('.filtered')
     Object.keys(this.eventsIndex.events).forEach(key => {
       const events = this.eventsIndex.events[key]
       events.forEach(event => {
@@ -425,12 +423,12 @@ class CsvEventCalendar {
   searching(domEvent) {
     const keyName = domEvent.key
     if (keyName === 'ArrowUp' || keyName === 'ArrowDown') {
-      const choices = filtered.find('a')
+      const choices = this.search.find('.filtered').find('a')
       const index = choices.index(domEvent.target)
       let next
       if (keyName === 'ArrowUp') {
         if (index <= 0) {
-          next = input
+          next = this.search.find('input')
         } else {
           next = choices.get(index - 1)
         }
