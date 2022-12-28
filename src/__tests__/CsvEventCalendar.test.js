@@ -329,17 +329,15 @@ describe('updateHash', () => {
   })  
     
   test('updateHash', () => {
-    expect.assertions(4)
+    expect.assertions(2)
 
     const calendar1 = new CsvEventCalendar({
       target: $('#test-cal')
     })
 
     expect(window.location.hash).toBe('')
-    expect(calendar1.pseudoHash).toBe('')
     calendar1.updateHash('#mock-hash')
     expect(window.location.hash).toBe('#mock-hash')
-    expect(calendar1.pseudoHash).toBe('')
   })
 })
 
@@ -1273,8 +1271,8 @@ test('searching', () => {
   expect(preventDefault).toHaveBeenCalledTimes(4)
 })
 
-test.only('filterAutoComplete', () => {
-  expect.assertions(6)
+test('filterAutoComplete', () => {
+  expect.assertions(29)
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
@@ -1285,21 +1283,57 @@ test.only('filterAutoComplete', () => {
   const out = search.find('.out')
   const filtered = search.find('.filtered')
   const input = search.find('input')
+  const message = search.find('.message')
 
-  input.val('E')
+  filtered.hide()
+  input.val('1')
 
   expect(input.attr('aria-expanded')).toBe('false')
+  expect(filtered.css('display')).toBe('none')
 
   calendar.filterAutoComplete({key: 'NotArrowDown'})
 
+  expect(filtered.find('a').first().is(':focus')).toBe(false)
   expect(input.attr('aria-expanded')).toBe('true')
+  expect(filtered.css('display')).toBe('block') 
+  expect(message.html()).toBe('found 1 events matching "1"')
+  expect(message.attr('aria-label')).toBe('found 1 events matching "1"')
 
-  out.find('a').each((i, a) => {
-    filtered.append(a)
-  })
+  filtered.hide()
+  input.val('E').attr('aria-expanded', false)
+  message.html('').attr('aria-label', '')
+
+  expect(input.attr('aria-expanded')).toBe('false')
+  expect(filtered.css('display')).toBe('none')
+
+  calendar.filterAutoComplete({key: 'NotArrowDown'})
+
+  expect(filtered.find('a').first().is(':focus')).toBe(false)
+  expect(input.attr('aria-expanded')).toBe('true')
+  expect(filtered.css('display')).toBe('block')
+  expect(message.html()).toBe('')
+  expect(message.attr('aria-label')).toBe('')
+  
+  filtered.show()
+  input.val('')
+  message.show()
+
+  calendar.filterAutoComplete({key: 'NotArrowDown'})
+
+  expect(filtered.find('a').first().is(':focus')).toBe(false)
+  expect(input.attr('aria-expanded')).toBe('false')
+  expect(filtered.css('display')).toBe('none')
+  expect(message.css('display')).toBe('none')
+  expect(message.html()).toBe('')
+  expect(message.attr('aria-label')).toBe('')
 
   calendar.filterAutoComplete({key: 'ArrowDown'})
 
   expect(filtered.find('a').first().is(':focus')).toBe(true)
+  expect(input.attr('aria-expanded')).toBe('false')
+  expect(filtered.css('display')).toBe('none')
+  expect(message.css('display')).toBe('none')
+  expect(message.html()).toBe('')
+  expect(message.attr('aria-label')).toBe('')
 
 })

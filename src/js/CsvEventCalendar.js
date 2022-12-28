@@ -29,7 +29,6 @@ class CsvEventCalendar {
     this.search = null
     this.dateInput = null
     this.viewOptions = null
-    this.pseudoHash = ''
     $(options.target).append(this.container)
     this.state = {
       today: CsvEventCalendar.dateKey(this.today),
@@ -58,9 +57,7 @@ class CsvEventCalendar {
     }
     $(document).on('keyup', this.esc.bind(this))
     $(window).on('resize', this.resize.bind(this))
-    if (!this.pseudoHash) {
-      $(window).on('hashchange', this.hashChanged.bind(this))
-    } 
+      .on('hashchange', this.hashChanged.bind(this))
     this.resize()
   }
 
@@ -455,7 +452,6 @@ class CsvEventCalendar {
       if (text) {
         search.find('input').attr('aria-expanded', true)
         CsvEventCalendar.filter(out, filtered, text)
-        clearTimeout(filtered.data('message-timeout'))
         const count = filtered.children().length
         const msg = `found ${count} events matching "${text}"`
         if (out.children().length > 0) {
