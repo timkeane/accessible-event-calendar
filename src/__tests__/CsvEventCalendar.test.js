@@ -443,7 +443,7 @@ describe('updateState', () => {
         date
         key
     */
-    const isoToday = today.toISOString().split('T')[0]
+    const isoWeekMid = today.toISOString().split('T')[0]
     
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -451,8 +451,8 @@ describe('updateState', () => {
       max: '2100-01-01'
     })
 
-    expect(calendar.state.key()).toBe(isoToday)
-    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.key()).toBe(isoWeekMid)
+    expect(calendar.state.today).toBe(isoWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
@@ -479,7 +479,7 @@ describe('updateState', () => {
         date
         key
     */
-    const isoToday = today.toISOString().split('T')[0]
+    const isoWeekMid = today.toISOString().split('T')[0]
     
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -489,8 +489,8 @@ describe('updateState', () => {
 
     calendar.updateState({view: 'day'})
 
-    expect(calendar.state.key()).toBe(isoToday)
-    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.key()).toBe(isoWeekMid)
+    expect(calendar.state.today).toBe(isoWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
@@ -517,8 +517,8 @@ describe('updateState', () => {
         date
         key
     */
-    const isoToday = today.toISOString().split('T')[0]
-    const dateParts = isoToday.split('-')
+    const isoWeekMid = today.toISOString().split('T')[0]
+    const dateParts = isoWeekMid.split('-')
     
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -529,7 +529,7 @@ describe('updateState', () => {
     calendar.updateState({year: 2050})
 
     expect(calendar.state.key()).toBe(`2050-${dateParts[1]}-${dateParts[2]}`)
-    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.today).toBe(isoWeekMid)
     expect(calendar.state.year).toBe(2050)
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
@@ -556,8 +556,8 @@ describe('updateState', () => {
         date
         key
     */
-    const isoToday = today.toISOString().split('T')[0]
-    const dateParts = isoToday.split('-')
+    const isoWeekMid = today.toISOString().split('T')[0]
+    const dateParts = isoWeekMid.split('-')
     
     let month
     if (dateParts[1] === '01') {
@@ -575,7 +575,7 @@ describe('updateState', () => {
     calendar.updateState({month})
 
     expect(calendar.state.key()).toBe(`${today.getFullYear()}-${month + 1}-${dateParts[2]}`)
-    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.today).toBe(isoWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(month)
     expect(calendar.state.date).toBe(today.getDate())
@@ -602,8 +602,8 @@ describe('updateState', () => {
         date
         key
     */
-    const isoToday = today.toISOString().split('T')[0]
-    const dateParts = isoToday.split('-')
+    const isoWeekMid = today.toISOString().split('T')[0]
+    const dateParts = isoWeekMid.split('-')
     
     let date
     if (dateParts[2] === '15') {
@@ -621,7 +621,7 @@ describe('updateState', () => {
     calendar.updateState({date})
 
     expect(calendar.state.key()).toBe(`${today.getFullYear()}-${dateParts[1]}-${date}`)
-    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.today).toBe(isoWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(date)
@@ -648,7 +648,7 @@ describe('updateState', () => {
         date
         key
     */
-    const isoToday = today.toISOString().split('T')[0]
+    const isoWeekMid = today.toISOString().split('T')[0]
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -659,7 +659,7 @@ describe('updateState', () => {
     calendar.updateState({key: '2050-01-01'})
 
     expect(calendar.state.key()).toBe('2050-01-01')
-    expect(calendar.state.today).toBe(isoToday)
+    expect(calendar.state.today).toBe(isoWeekMid)
     expect(calendar.state.year).toBe(2050)
     expect(calendar.state.month).toBe(0)
     expect(calendar.state.date).toBe(1)
@@ -687,15 +687,15 @@ describe('title', () => {
   test('title - no key - is US', () => {
     expect.assertions(11)
 
-    const isoToday = today.toISOString().split('T')[0]
+    const isoWeekMid = today.toISOString().split('T')[0]
 
-    const dateStr = CsvEventCalendar.dateFromKey(isoToday).toLocaleDateString(CsvEventCalendar.getLocale())
-    const year = CsvEventCalendar.yearNumber(isoToday)
-    const month = CsvEventCalendar.monthName(isoToday)
+    const dateStr = CsvEventCalendar.dateFromKey(isoWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
+    const year = CsvEventCalendar.yearNumber(isoWeekMid)
+    const month = CsvEventCalendar.monthName(isoWeekMid)
     const mo = month.substring(0, 3)
-    const m = CsvEventCalendar.monthNumber(isoToday)
-    const date = CsvEventCalendar.dateNumber(isoToday)
-    const day = CsvEventCalendar.dayName(isoToday)
+    const m = CsvEventCalendar.monthNumber(isoWeekMid)
+    const date = CsvEventCalendar.dateNumber(isoWeekMid)
+    const day = CsvEventCalendar.dayName(isoWeekMid)
     const d = day.substring(0, 3)
 
     const node = $('<div><div class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></div></div>')
@@ -726,15 +726,15 @@ describe('title', () => {
 
     CsvEventCalendar.IS_US = false
 
-    const isoToday = today.toISOString().split('T')[0]
+    const isoWeekMid = today.toISOString().split('T')[0]
 
-    const dateStr = CsvEventCalendar.dateFromKey(isoToday).toLocaleDateString(CsvEventCalendar.getLocale())
-    const year = CsvEventCalendar.yearNumber(isoToday)
-    const month = CsvEventCalendar.monthName(isoToday)
+    const dateStr = CsvEventCalendar.dateFromKey(isoWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
+    const year = CsvEventCalendar.yearNumber(isoWeekMid)
+    const month = CsvEventCalendar.monthName(isoWeekMid)
     const mo = month.substring(0, 3)
-    const m = CsvEventCalendar.monthNumber(isoToday)
-    const date = CsvEventCalendar.dateNumber(isoToday)
-    const day = CsvEventCalendar.dayName(isoToday)
+    const m = CsvEventCalendar.monthNumber(isoWeekMid)
+    const date = CsvEventCalendar.dateNumber(isoWeekMid)
+    const day = CsvEventCalendar.dayName(isoWeekMid)
     const d = day.substring(0, 3)
 
     const node = $('<div><div class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></div></div>')
@@ -765,16 +765,16 @@ describe('title', () => {
 test('dayNode', () => {
   expect.assertions(2)
 
-  const isoToday = today.toISOString().split('T')[0]
+  const isoWeekMid = today.toISOString().split('T')[0]
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
 
-  const node = calendar.dayNode(isoToday)
+  const node = calendar.dayNode(isoWeekMid)
 
   expect($(node)[0].tagName).toBe('LI')
-  expect($(node).attr('data-date-key')).toBe(isoToday)
+  expect($(node).attr('data-date-key')).toBe(isoWeekMid)
 
 })
 
@@ -1083,7 +1083,7 @@ test('weekNavigate', () => {
 test('dayNavigate', () => {
   expect.assertions(20)
 
-  const isoToday = today.toISOString().split('T')[0]
+  const isoWeekMid = today.toISOString().split('T')[0]
   const yesterday = new Date(today)
   const tomorrow = new Date(today)
   yesterday.setDate(today.getDate() - 1)
@@ -1115,10 +1115,10 @@ test('dayNavigate', () => {
 
   calendar.dayNavigate(1)
 
-  expect(calendar.state.key()).toBe(isoToday)
+  expect(calendar.state.key()).toBe(isoWeekMid)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(2)
-  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoToday}`)
+  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoWeekMid}`)
 
   calendar.dayNavigate(1)
 
@@ -1407,4 +1407,75 @@ test('calendar', () => {
       weekOfMonth = weekOfMonth + 1
     }
   }
+})
+
+test('week', () => {
+  expect.assertions(93)
+
+  const isoWeekBefore = '2022-12-07'
+  const isoWeekMid = '2022-12-14'
+  const isoWeekAfter = '2022-12-21'
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+
+  calendar.updateState({key: isoWeekMid})
+
+  const midWeekNo = calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).data('week')
+  const beforeWeekNo = calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).data('week')
+  const afterWeekNo = calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).data('week')
+  
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).hasClass('selected-week')).toBe(true)
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).hasClass('selected-week')).toBe(false)
+  calendar.container.find(`.week-${midWeekNo}`).each((i, li) => {
+    expect($(li).hasClass('start-of-week')).toBe(i === 0)
+    expect($(li).hasClass('selected-week')).toBe(true)
+  })
+
+  calendar.container.find(`.week-${beforeWeekNo}`).each(li => {
+    expect($(li).hasClass('selected-week')).toBe(false)
+  })
+  calendar.container.find(`.week-${afterWeekNo}`).each(li => {
+    expect($(li).hasClass('selected-week')).toBe(false)
+  })
+
+  calendar.updateState({key: isoWeekBefore})
+
+  calendar.week()
+
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).hasClass('selected-week')).toBe(true)
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).hasClass('selected-week')).toBe(false)
+  calendar.container.find(`.week-${beforeWeekNo}`).each((i, li) => {
+    expect($(li).hasClass('start-of-week')).toBe(i === 0)
+    expect($(li).hasClass('selected-week')).toBe(true)
+  })
+
+  calendar.container.find(`.week-${midWeekNo}`).each(li => {
+    expect($(li).hasClass('selected-week')).toBe(false)
+  })
+  calendar.container.find(`.week-${afterWeekNo}`).each(li => {
+    expect($(li).hasClass('selected-week')).toBe(false)
+  })
+
+  calendar.updateState({key: isoWeekAfter})
+
+  calendar.week()
+
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).hasClass('selected-week')).toBe(true)
+  calendar.container.find(`.week-${afterWeekNo}`).each((i, li) => {
+    expect($(li).hasClass('start-of-week')).toBe(i === 0)
+    expect($(li).hasClass('selected-week')).toBe(true)
+  })
+
+  calendar.container.find(`.week-${midWeekNo}`).each(li => {
+    expect($(li).hasClass('selected-week')).toBe(false)
+  })
+  calendar.container.find(`.week-${beforeWeekNo}`).each(li => {
+    expect($(li).hasClass('selected-week')).toBe(false)
+  })
 })
