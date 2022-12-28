@@ -1272,3 +1272,34 @@ test('searching', () => {
   expect($(filtered.find('a').get(2)).is(':focus')).toBe(true)
   expect(preventDefault).toHaveBeenCalledTimes(4)
 })
+
+test.only('filterAutoComplete', () => {
+  expect.assertions(6)
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal'),
+    url: 'mock-url'
+  })
+
+  const search = calendar.search
+  const out = search.find('.out')
+  const filtered = search.find('.filtered')
+  const input = search.find('input')
+
+  input.val('E')
+
+  expect(input.attr('aria-expanded')).toBe('false')
+
+  calendar.filterAutoComplete({key: 'NotArrowDown'})
+
+  expect(input.attr('aria-expanded')).toBe('true')
+
+  out.find('a').each((i, a) => {
+    filtered.append(a)
+  })
+
+  calendar.filterAutoComplete({key: 'ArrowDown'})
+
+  expect(filtered.find('a').first().is(':focus')).toBe(true)
+
+})
