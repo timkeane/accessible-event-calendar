@@ -1337,3 +1337,74 @@ test('filterAutoComplete', () => {
   expect(message.attr('aria-label')).toBe('')
 
 })
+
+test('calendar', () => {
+  expect.assertions(141)
+
+  const dates = [
+    { key: '2022-11-27', date: 27, monthClass: 'prev' },
+    { key: '2022-11-28', date: 28, monthClass: 'prev' },
+    { key: '2022-11-29', date: 29, monthClass: 'prev' },
+    { key: '2022-11-30', date: 30, monthClass: 'prev' },
+    { key: '2022-12-01', date: 1, monthClass: 'current' },
+    { key: '2022-12-02', date: 2, monthClass: 'current' },
+    { key: '2022-12-03', date: 3, monthClass: 'current' },
+    { key: '2022-12-04', date: 4, monthClass: 'current' },
+    { key: '2022-12-05', date: 5, monthClass: 'current' },
+    { key: '2022-12-06', date: 6, monthClass: 'current' },
+    { key: '2022-12-07', date: 7, monthClass: 'current' },
+    { key: '2022-12-08', date: 8, monthClass: 'current' },
+    { key: '2022-12-09', date: 9, monthClass: 'current' },
+    { key: '2022-12-10', date: 10, monthClass: 'current' },
+    { key: '2022-12-11', date: 11, monthClass: 'current' },
+    { key: '2022-12-12', date: 12, monthClass: 'current' },
+    { key: '2022-12-13', date: 13, monthClass: 'current' },
+    { key: '2022-12-14', date: 14, monthClass: 'current' },
+    { key: '2022-12-15', date: 15, monthClass: 'current' },
+    { key: '2022-12-16', date: 16, monthClass: 'current' },
+    { key: '2022-12-17', date: 17, monthClass: 'current' },
+    { key: '2022-12-18', date: 18, monthClass: 'current' },
+    { key: '2022-12-19', date: 19, monthClass: 'current' },
+    { key: '2022-12-20', date: 20, monthClass: 'current' },
+    { key: '2022-12-21', date: 21, monthClass: 'current' },
+    { key: '2022-12-22', date: 22, monthClass: 'current' },
+    { key: '2022-12-23', date: 23, monthClass: 'current' },
+    { key: '2022-12-24', date: 24, monthClass: 'current' },
+    { key: '2022-12-25', date: 25, monthClass: 'current' },
+    { key: '2022-12-26', date: 26, monthClass: 'current' },
+    { key: '2022-12-27', date: 27, monthClass: 'current' },
+    { key: '2022-12-28', date: 28, monthClass: 'current' },
+    { key: '2022-12-29', date: 29, monthClass: 'current' },
+    { key: '2022-12-30', date: 30, monthClass: 'current' },
+    { key: '2022-12-31', date: 31, monthClass: 'current' },
+    { key: '2023-01-01', date: 1, monthClass: 'next' },
+    { key: '2023-01-02', date: 2, monthClass: 'next' },
+    { key: '2023-01-03', date: 3, monthClass: 'next' },
+    { key: '2023-01-04', date: 4, monthClass: 'next' },
+    { key: '2023-01-05', date: 5, monthClass: 'next' },
+    { key: '2023-01-06', date: 6, monthClass: 'next' },
+    { key: '2023-01-07', date: 7, monthClass: 'next' }
+  ]
+
+  const calendar = new CsvEventCalendar({
+    target: $('#test-cal')
+  })
+  
+  calendar.day = jest.fn()
+
+  calendar.updateState({key: '2022-12-26'})
+  calendar.calendar(dates)
+
+  expect(calendar.day).toHaveBeenCalledTimes(35)
+
+  let weekOfMonth = 0
+  for (let dateIdx = 0; dateIdx < 35; dateIdx = dateIdx + 1) {
+    expect(calendar.day.mock.calls[dateIdx][0]).toEqual(dates[dateIdx])
+    expect(calendar.day.mock.calls[dateIdx][1]).toBe(weekOfMonth)
+    expect(calendar.day.mock.calls[dateIdx][2][0].className).toBe('dates')
+    expect(calendar.day.mock.calls[dateIdx][2][0].tagName).toEqual('OL')
+      if ((dateIdx + 1) % 7 === 0) {
+      weekOfMonth = weekOfMonth + 1
+    }
+  }
+})
