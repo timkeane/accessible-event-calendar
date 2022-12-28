@@ -1481,7 +1481,7 @@ test('week', () => {
 })
 
 test('day', () => {
-  expect.assertions(9)
+  expect.assertions(12)
 
   const isoToday = today.toISOString().split('T')[0]
 
@@ -1492,6 +1492,8 @@ test('day', () => {
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
+
+  calendar.updateHash = jest.fn()
 
   calendar.title = jest.fn(options => {
     expect(options.key).toBe(isoToday)
@@ -1504,7 +1506,7 @@ test('day', () => {
       }
     }
   })
-  
+
   const day = calendar.day(date, weekOfMonth, month)
 
   expect(month.children().length).toBe(1)
@@ -1515,4 +1517,14 @@ test('day', () => {
   expect(day.hasClass(`week-${weekOfMonth}`)).toBe(true)
   expect(day.attr('data-date-key')).toBe(date.key)
   expect(day.html()).toBe(`<a class="prev-view"></a><h3><a class="name" href="#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}"><span class="long">long title</span><span class="medium">medium title</span><span class="abbr">abbr title</span><span class="short">short title</span></a></h3><div class="events"></div>`)
+
+  day.trigger('click')
+
+  expect(calendar.updateHash).toHaveBeenCalledTimes(0)
+
+  day.addClass('has-events').trigger('click')
+
+  expect(calendar.updateHash).toHaveBeenCalledTimes(1)
+  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}`)
+
 })
