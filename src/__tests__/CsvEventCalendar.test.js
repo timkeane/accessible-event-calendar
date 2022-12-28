@@ -1526,5 +1526,4 @@ test('day', () => {
 
   expect(calendar.updateHash).toHaveBeenCalledTimes(1)
   expect(calendar.updateHash.mock.calls[0][0]).toBe(`#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}`)
-
 })
