@@ -1703,7 +1703,7 @@ describe('view', () => {
     const month = CsvEventCalendar.monthName(isoToday)
     const mm = month.substring(0, 3)
   
-    calendar.view('week')
+    calendar.view('day')
 
     expect(calendar.state.view).toBe('day')
     expect(view.hasClass('month')).toBe(false)
