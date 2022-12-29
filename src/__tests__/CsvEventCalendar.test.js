@@ -1539,3 +1539,21 @@ test('day', () => {
   expect(domEvent.preventDefault).toHaveBeenCalledTimes(1)
 })
 
+// test.only('view', () => {
+//   expect.assertions(4)
+
+//   const calendar = new CsvEventCalendar({
+//     target: '#test-cal'
+//   })
+
+//   calendar.monthView = jest.fn()
+
+//   const view = calendar.container.find('.view')
+//   console.warn(calendar.container.html());
+//   expect(calendar.state.view).toBe('month')
+//   expect(view).hasClass('month').toBe(true)
+//   expect(view).hasClass('week').toBe(false)
+//   expect(view).hasClass('day').toBe(false)
+
+//   calendar.view('week')
+// })
