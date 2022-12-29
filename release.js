@@ -23,8 +23,11 @@ const htmlBanner = `<title>accessible-event-calendar</title>
   -->`
 
 const data = fs.readdirSync('./dist/').forEach(fileName => {
-  if (/.js$/.test(fileName)) {
+  if (/.min.js$/.test(fileName)) {
     const js = fs.readFileSync(`./dist/${fileName}`, {encoding:'utf8'})
+    fs.writeFileSync(`./dist/${fileName}`, `${js}\n${banner}`)
+  } else if (/.js$/.test(fileName)) {
+      const js = fs.readFileSync(`./dist/${fileName}`, {encoding:'utf8'})
     fs.writeFileSync(`./dist/${fileName}`, `${banner}${js}`)
   } else if (/.css$/.test(fileName)) {
     const css = fs.readFileSync(`./dist/${fileName}`, {encoding:'utf8'})
