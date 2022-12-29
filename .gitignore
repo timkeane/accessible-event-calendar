@@ -4,4 +4,6 @@ dist/
 .DS_Store
 *.tgz
 *.zip
+*.code_workspace
 coverage/
+.vscode/
