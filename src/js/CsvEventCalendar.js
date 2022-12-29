@@ -579,6 +579,7 @@ class CsvEventCalendar {
     this[`${view}View`]()
     this.container.find('.view .day[aria-hidden="true"] a.prev-view').attr('tabindex', -1)
     this.container.find(`.view .day[data-date-key="${this.state.today}"]`).addClass('today')
+    this.updateState({view})
     this.focus()
   }
 
