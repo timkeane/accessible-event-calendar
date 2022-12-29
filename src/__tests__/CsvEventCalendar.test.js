@@ -1746,4 +1746,69 @@ describe('view', () => {
     expect(focusSpy).toHaveBeenCalledTimes(2)
   })
 
+  test('view - change to month', () => {
+    expect.assertions(227)
+  
+    const isoToday = today.toISOString().split('T')[0]
+  
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+  
+    const container = calendar.container
+    const view = container.find('.view')
+    const title = container.find('.controls h2')
+    const next = container.find('.controls .next')
+    const back = container.find('.controls .back')
+  
+    const yyyy = CsvEventCalendar.yearNumber(isoToday)
+    const m = CsvEventCalendar.monthNumber(isoToday)
+    const month = CsvEventCalendar.monthName(isoToday)
+    const mm = month.substring(0, 3)
+  
+    calendar.view('day')
+    calendar.view('month')
+
+    expect(calendar.state.view).toBe('month')
+    expect(view.hasClass('month')).toBe(true)
+    expect(view.hasClass('week')).toBe(false)
+    expect(view.hasClass('day')).toBe(false)
+    expect(title.html()).toBe(`<span class="month"><span class="long">${month} ${yyyy}</span><span class="short">${mm} ${yyyy}</span><span class="abbr">${m}/${yyyy}</span></span>`)
+    expect(next.attr('aria-label')).toBe('next month')
+    expect(next.attr('title')).toBe('next month')
+    expect(back.attr('aria-label')).toBe('previous month')
+    expect(back.attr('title')).toBe('previous month')
+    expect(view.attr('aria-label')).toBeUndefined()
+  
+    container.find('.day a.name').each((i, a) => {
+      expect($(a).attr('aria-live')).toBeUndefined()
+    })
+  
+    expect(container.find('.day a[data-old-label]').length).toBe(0)
+  
+    container.find('.day a.prev-view').each((i, a) => {
+      expect($(a).attr('aria-label')).toBeUndefined()
+      expect($(a).attr('title')).toBeUndefined()
+      expect($(a).attr('href')).toBeUndefined()
+    })
+
+    container.find('.view .day[aria-hidden="true"] a.prev-view').each((i, a) => {
+      expect($(a).attr('tabindex')).toBe('-1')
+    })
+
+    container.find('.view .day a').each((i, a) => {
+      const aria = $(a).attr('aria-hidden')
+      const download = $(a).attr('download')
+      if (aria !== 'true' && !download) {
+        expect($(a).attr('tabindex')).toBeUndefined()
+      }
+    })
+
+    expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
+
+    expect(monthViewSpy).toHaveBeenCalledTimes(2)
+    expect(focusSpy).toHaveBeenCalledTimes(1)
+  })
+
 })
