@@ -1618,7 +1618,7 @@ describe('view', () => {
     expect(focusSpy).toHaveBeenCalledTimes(1)
   })
 
-  test.only('view - change to week', () => {
+  test('view - change to week', () => {
     expect.assertions(227)
   
     const isoToday = today.toISOString().split('T')[0]
@@ -1650,6 +1650,70 @@ describe('view', () => {
     expect(next.attr('title')).toBe('next week')
     expect(back.attr('aria-label')).toBe('previous week')
     expect(back.attr('title')).toBe('previous week')
+    expect(view.attr('aria-label')).toBeUndefined()
+  
+    container.find('.day a.name').each((i, a) => {
+      expect($(a).attr('aria-live')).toBeUndefined()
+    })
+  
+    expect(container.find('.day a[data-old-label]').length).toBe(0)
+  
+    container.find('.day a.prev-view').each((i, a) => {
+      expect($(a).attr('aria-label')).toBe('return to month view')
+      expect($(a).attr('title')).toBe('return to month view')
+      expect($(a).attr('href')).toBe(`#calendar${CsvEventCalendar.ids.calendar}/month/${isoToday}`)
+    })
+
+    container.find('.view .day[aria-hidden="true"] a.prev-view').each((i, a) => {
+      expect($(a).attr('tabindex')).toBe('-1')
+    })
+
+    container.find('.view .day a').each((i, a) => {
+      const aria = $(a).attr('aria-hidden')
+      const download = $(a).attr('download')
+      if (aria !== 'true' && !download) {
+        expect($(a).attr('tabindex')).toBeUndefined()
+      }
+    })
+
+    expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
+
+    expect(monthViewSpy).toHaveBeenCalledTimes(2)
+    expect(focusSpy).toHaveBeenCalledTimes(2)
+  })
+
+  test.only('view - change to day', () => {
+    expect.assertions(227)
+  
+    const isoToday = today.toISOString().split('T')[0]
+  
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+  
+    const container = calendar.container
+    const view = container.find('.view')
+    const title = container.find('.controls h2')
+    const next = container.find('.controls .next')
+    const back = container.find('.controls .back')
+  
+    const yyyy = CsvEventCalendar.yearNumber(isoToday)
+    const m = CsvEventCalendar.monthNumber(isoToday)
+    const month = CsvEventCalendar.monthName(isoToday)
+    const mm = month.substring(0, 3)
+  
+    calendar.view('week')
+
+    expect(calendar.state.view).toBe('day')
+    expect(view.hasClass('month')).toBe(false)
+    expect(view.hasClass('week')).toBe(false)
+    expect(view.hasClass('day')).toBe(true)
+    expect(title.html()).toBe(`<span class="month"><span class="long">${month} ${yyyy}</span><span class="short">${mm} ${yyyy}</span><span class="abbr">${m}/${yyyy}</span></span>`)
+    expect(next.attr('aria-label')).toBe('next day')
+    expect(next.attr('title')).toBe('next day')
+    expect(back.attr('aria-label')).toBe('previous day')
+    expect(back.attr('title')).toBe('previous day')
     expect(view.attr('aria-label')).toBeUndefined()
   
     container.find('.day a.name').each((i, a) => {
