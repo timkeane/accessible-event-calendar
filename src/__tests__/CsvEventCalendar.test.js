@@ -41,17 +41,17 @@ afterEach(() => {
 
 describe('constructor', () => {
 
-  const controls = CsvEventCalendar.prototype.controls
+  let controlsSpy
   const resize = CsvEventCalendar.prototype.resize
   const loadCsv = CsvEventCalendar.prototype.loadCsv
   beforeEach(() => {
-    CsvEventCalendar.prototype.controls = jest.fn()
+    controlsSpy = jest.spyOn(CsvEventCalendar.prototype, 'controls')
     CsvEventCalendar.prototype.resize = jest.fn()
     CsvEventCalendar.prototype.loadCsv = jest.fn()
   })
 
   afterEach(() => {
-    CsvEventCalendar.prototype.controls = controls
+    jest.restoreAllMocks()
     CsvEventCalendar.prototype.resize = resize
     CsvEventCalendar.prototype.loadCsv = loadCsv
   })
@@ -368,7 +368,7 @@ describe('hashChanged', () => {
   })  
 
   test('hashChanged - this calendar is the target', () => {
-    expect.assertions(9)
+    expect.assertions(10)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -381,9 +381,14 @@ describe('hashChanged', () => {
     $(window).trigger('hashchange')
   
     expect(calendar.updateState).toHaveBeenCalled()
-    expect(calendar.updateState.mock.lastCall[0]).toEqual({
+
+    const callCount = calendar.updateState.mock.calls.length
+    expect(calendar.updateState.mock.calls[callCount - 2][0]).toEqual({
       view: 'day',
       key: '2024-11-01'
+    })
+    expect(calendar.updateState.mock.calls[callCount - 1][0]).toEqual({
+      view: 'day'
     })
     expect(calendar.clearSearch).toHaveBeenCalled()
     expect(calendar.firstView).toBe(false)
@@ -404,7 +409,7 @@ describe('hashChanged', () => {
     calendar.updateHash('#not-the-target/day/2024-11-01')
     $(window).trigger('hashchange')
   
-    expect(calendar.updateState).toHaveBeenCalledTimes(0)
+    expect(calendar.updateState).toHaveBeenCalledTimes(1)
     expect(calendar.clearSearch).toHaveBeenCalledTimes(0)
     expect(calendar.firstView).toBe(false)
     expect(calendar.container.find('.view').hasClass('day')).toBe(true)
@@ -1682,7 +1687,7 @@ describe('view', () => {
     expect(focusSpy).toHaveBeenCalledTimes(2)
   })
 
-  test.only('view - change to day', () => {
+  test('view - change to day', () => {
     expect.assertions(227)
   
     const isoToday = today.toISOString().split('T')[0]
@@ -1807,8 +1812,8 @@ describe('view', () => {
 
     expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
 
-    expect(monthViewSpy).toHaveBeenCalledTimes(2)
-    expect(focusSpy).toHaveBeenCalledTimes(1)
+    expect(monthViewSpy).toHaveBeenCalledTimes(3)
+    expect(focusSpy).toHaveBeenCalledTimes(3)
   })
 
 })
