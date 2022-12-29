@@ -1481,7 +1481,7 @@ test('week', () => {
 })
 
 test('day', () => {
-  expect.assertions(12)
+  expect.assertions(16)
 
   const isoToday = today.toISOString().split('T')[0]
 
@@ -1492,6 +1492,9 @@ test('day', () => {
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
+
+  const domEvent = $.Event('click')
+  domEvent.preventDefault = jest.fn()
 
   calendar.updateHash = jest.fn()
 
@@ -1518,12 +1521,21 @@ test('day', () => {
   expect(day.attr('data-date-key')).toBe(date.key)
   expect(day.html()).toBe(`<a class="prev-view"></a><h3><a class="name" href="#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}"><span class="long">long title</span><span class="medium">medium title</span><span class="abbr">abbr title</span><span class="short">short title</span></a></h3><div class="events"></div>`)
 
-  day.trigger('click')
+  day.trigger(domEvent)
 
   expect(calendar.updateHash).toHaveBeenCalledTimes(0)
+  expect(domEvent.preventDefault).toHaveBeenCalledTimes(0)
 
-  day.addClass('has-events').trigger('click')
+  day.addClass('has-events').trigger(domEvent)
 
   expect(calendar.updateHash).toHaveBeenCalledTimes(1)
   expect(calendar.updateHash.mock.calls[0][0]).toBe(`#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}`)
+  expect(domEvent.preventDefault).toHaveBeenCalledTimes(1)
+
+  calendar.updateState({view: 'week'})
+  day.trigger(domEvent)
+
+  expect(calendar.updateHash).toHaveBeenCalledTimes(1)
+  expect(domEvent.preventDefault).toHaveBeenCalledTimes(1)
 })
+
