@@ -2209,3 +2209,31 @@ describe('monthView', () => {
   })
 
 })
+
+describe('weekView', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test.only('monthView', () => {
+    expect.assertions(7)
+
+    testToday = '2023-10-20'
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+  
+    const viewDescSpy = jest.spyOn(calendar, 'viewDesc')
+
+    calendar.weekView()
+
+    expect(viewDescSpy).toHaveBeenCalledTimes(1)
+  
+    expect(viewDescSpy.mock.calls[0][0]).toBe('week')
+    expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-15')
+    expect(viewDescSpy.mock.calls[0][2]).toBe(3)
+})
+
+})
