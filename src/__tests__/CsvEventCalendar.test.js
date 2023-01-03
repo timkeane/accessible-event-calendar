@@ -2215,7 +2215,7 @@ describe('weekView', () => {
     jest.restoreAllMocks()
   })
 
-  test.only('monthView', () => {
+  test('monthView', () => {
     expect.assertions(7)
 
     testToday = '2023-10-20'
