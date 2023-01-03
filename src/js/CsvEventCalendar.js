@@ -24,8 +24,7 @@ class CsvEventCalendar {
     this.viewChanged = options.viewChanged || this.viewChanged
     this.dateChanged = options.dateChanged || this.dateChanged
     this.csvColumns = options.csvColumns || CalendarEvent.DEFAULT_PROPERTIES
-    this.today = new Date()
-    this.today.setHours(0, 0, 0, 0)
+    this.today = CsvEventCalendar.getToday()
     this.search = null
     this.dateInput = null
     this.viewOptions = null
@@ -922,6 +921,18 @@ CsvEventCalendar.regexp = typed => {
     exact: new RegExp(`(${exactMatch})`, 'i'),
     possible: new RegExp(possible, 'i')
   }
+}
+
+/**
+ * @private
+ * @static
+ * @method
+ * @return {Date} Today at midnight
+ */
+CsvEventCalendar.getToday = () => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return today
 }
 
 /**

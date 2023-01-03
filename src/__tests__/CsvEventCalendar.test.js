@@ -2,10 +2,10 @@ import $ from 'jquery'
 import CsvEventCalendar from '../js/CsvEventCalendar'
 import CalendarEvent from '../js/CalendarEvent'
 import Papa from 'papaparse'
-import { MOCK_CSV_RESPONSE, MOCK_DIFF_CSV_RESPONSE, MOCK_EVENTS, MOCK_DIFF_EVENTS } from './mockCsv'
+import getMockData from './getMockData'
 
-const today = new Date()
-today.setHours(0, 0, 0, 0)
+let testToday
+let mockData
 
 const csvColumns = {
   date: 'Date',
@@ -17,26 +17,35 @@ const csvColumns = {
   sponsor: 'Sponsor'
 }
 
-jest.mock('papaparse', () => {
-  const papa = jest.requireActual('papaparse')
-  return {
-    ...papa,
-    parse: (url, options) => {
-      expect(url).toBe('mock-url')
-      expect(options.download).toBe(true)
-      expect(options.header).toBe(true)
-      options.complete(MOCK_CSV_RESPONSE)
-    }
-  }
-})
+const getToday = CsvEventCalendar.getToday
+const parse = Papa.parse
+
+const mockParse = (url, options) => {
+  expect(url).toBe('mock-url')
+  expect(options.download).toBe(true)
+  expect(options.header).toBe(true)
+  const today = CsvEventCalendar.getToday()
+  mockData = getMockData(today)
+  options.complete(mockData.csvResponse)
+  return parse(url, options)
+}
 
 beforeEach(() => {
+  Papa.parse = mockParse
+  testToday = CsvEventCalendar.getToday().toISOString().split('T')[0]
+  CsvEventCalendar.getToday = () => {
+    const today = new Date(testToday)
+    today.setHours(0, 0, 0, 0)
+    return today
+  }
   window.location.hash = ''
   $('body').append($('<div id="test-cal"></div>'))
 })
 
 afterEach(() => {
+  Papa.parse = parse
   $('#test-cal').remove()
+  CsvEventCalendar.getToday = getToday
 })
 
 describe('constructor', () => {
@@ -58,6 +67,8 @@ describe('constructor', () => {
 
   test('constructor - standard csv', () => {
     expect.assertions(23)
+
+    const today = CsvEventCalendar.getToday()
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -99,6 +110,8 @@ describe('constructor', () => {
   test('constructor - different csv', () => {
     expect.assertions(23)
 
+    const today = CsvEventCalendar.getToday()
+
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
       url: 'mock-url',
@@ -139,6 +152,8 @@ describe('constructor', () => {
 
   test('constructor - no url', () => {
     expect.assertions(22)
+
+    const today = CsvEventCalendar.getToday()
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -190,13 +205,16 @@ describe('loadCsv', () => {
   test('loadCsv', () => {
     expect.assertions(5)
 
+    const today = CsvEventCalendar.getToday()
+    mockData = getMockData(today)
+
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
       url: 'mock-url'
     })
 
     expect(calendar.indexData).toHaveBeenCalledTimes(1)
-    expect(calendar.indexData.mock.calls[0][0]).toEqual(MOCK_CSV_RESPONSE)
+    expect(calendar.indexData.mock.calls[0][0]).toEqual(mockData.csvResponse)
   })
 })
 
@@ -229,6 +247,9 @@ describe('indexData', () => {
   test('indexData - standard csv', () => {
     expect.assertions(38)
 
+    const today = CsvEventCalendar.getToday()
+    mockData = getMockData(today)
+
     const ready = jest.fn()
 
     const calendar = new CsvEventCalendar({
@@ -247,7 +268,7 @@ describe('indexData', () => {
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
     expect(calendar.eventsIndex).toEqual({ready: false, noData: false, events: {}})
 
-    calendar.indexData(MOCK_CSV_RESPONSE)
+    calendar.indexData(mockData.csvResponse)
 
     expect(ready).toHaveBeenCalledTimes(1)
     expect(ready.mock.calls[0][0]).toBe(calendar)
@@ -255,8 +276,8 @@ describe('indexData', () => {
     expect(calendar.eventsIndex.ready).toBe(true)
     expect(calendar.eventsIndex.noData).toBe(false)
 
-    Object.keys(MOCK_EVENTS).forEach(key => {
-      const expected = MOCK_EVENTS[key]
+    Object.keys(mockData.events).forEach(key => {
+      const expected = mockData.events[key]
       const received = calendar.eventsIndex.events[key]
       expect(received.date).toBe(expected.date)
       expect(received.name).toBe(expected.name)
@@ -272,6 +293,9 @@ describe('indexData', () => {
 
   test('indexData - different csv', () => {
     expect.assertions(38)
+
+    const today = CsvEventCalendar.getToday()
+    mockData = getMockData(today)
 
     const ready = jest.fn()
 
@@ -292,7 +316,7 @@ describe('indexData', () => {
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
     expect(calendar.eventsIndex).toEqual({ready: false, noData: false, events: {}})
 
-    calendar.indexData(MOCK_DIFF_CSV_RESPONSE)
+    calendar.indexData(mockData.differentCsvResponse)
 
     expect(ready).toHaveBeenCalledTimes(1)
     expect(ready.mock.calls[0][0]).toBe(calendar)
@@ -300,8 +324,8 @@ describe('indexData', () => {
     expect(calendar.eventsIndex.ready).toBe(true)
     expect(calendar.eventsIndex.noData).toBe(false)
 
-    Object.keys(MOCK_DIFF_EVENTS).forEach(key => {
-      const expected = MOCK_DIFF_EVENTS[key]
+    Object.keys(mockData.differentEvents).forEach(key => {
+      const expected = mockData.differentEvents[key]
       const received = calendar.eventsIndex.events[key]
       expect(received.date).toBe(expected.date)
       expect(received.name).toBe(expected.name)
@@ -440,14 +464,8 @@ describe('updateState', () => {
 
   test('updateState - initial state', () => {
     expect.assertions(14)
-    /*
-    options 
-        view
-        year
-        month
-        date
-        key
-    */
+
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
     
     const calendar = new CsvEventCalendar({
@@ -476,14 +494,8 @@ describe('updateState', () => {
 
   test('updateState - change view', () => {
     expect.assertions(14)
-    /*
-    options 
-        view
-        year
-        month
-        date
-        key
-    */
+
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
     
     const calendar = new CsvEventCalendar({
@@ -514,17 +526,11 @@ describe('updateState', () => {
 
   test('updateState - year change', () => {
     expect.assertions(14)
-    /*
-    options 
-        view
-        year
-        month
-        date
-        key
-    */
+
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
     const dateParts = isoWeekMid.split('-')
-    
+
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
       min: '1900-01-01',
@@ -553,14 +559,8 @@ describe('updateState', () => {
 
   test('updateState - month change', () => {
     expect.assertions(14)
-    /*
-    options 
-        view
-        year
-        month
-        date
-        key
-    */
+
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
     const dateParts = isoWeekMid.split('-')
     
@@ -599,14 +599,8 @@ describe('updateState', () => {
 
   test('updateState - date change', () => {
     expect.assertions(14)
-    /*
-    options 
-        view
-        year
-        month
-        date
-        key
-    */
+
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
     const dateParts = isoWeekMid.split('-')
     
@@ -645,14 +639,8 @@ describe('updateState', () => {
 
   test('updateState - key change', () => {
     expect.assertions(14)
-    /*
-    options 
-        view
-        year
-        month
-        date
-        key
-    */
+
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
 
     const calendar = new CsvEventCalendar({
@@ -692,6 +680,7 @@ describe('title', () => {
   test('title - no key - is US', () => {
     expect.assertions(11)
 
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
 
     const dateStr = CsvEventCalendar.dateFromKey(isoWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
@@ -731,6 +720,7 @@ describe('title', () => {
 
     CsvEventCalendar.IS_US = false
 
+    const today = CsvEventCalendar.getToday()
     const isoWeekMid = today.toISOString().split('T')[0]
 
     const dateStr = CsvEventCalendar.dateFromKey(isoWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
@@ -770,6 +760,7 @@ describe('title', () => {
 test('dayNode', () => {
   expect.assertions(2)
 
+  const today = CsvEventCalendar.getToday()
   const isoWeekMid = today.toISOString().split('T')[0]
 
   const calendar = new CsvEventCalendar({
@@ -1048,6 +1039,8 @@ test('monthNavigate', () => {
 test('weekNavigate', () => {
   expect.assertions(13)
 
+  testToday = '2022-12-14'
+
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
@@ -1088,6 +1081,9 @@ test('weekNavigate', () => {
 test('dayNavigate', () => {
   expect.assertions(20)
 
+  testToday = '2022-12-14'
+
+  const today = CsvEventCalendar.getToday()
   const isoWeekMid = today.toISOString().split('T')[0]
   const yesterday = new Date(today)
   const tomorrow = new Date(today)
@@ -1417,6 +1413,8 @@ test('calendar', () => {
 test('week', () => {
   expect.assertions(93)
 
+  testToday = '2022-12-14'
+  
   const isoWeekBefore = '2022-12-07'
   const isoWeekMid = '2022-12-14'
   const isoWeekAfter = '2022-12-21'
@@ -1488,6 +1486,7 @@ test('week', () => {
 test('day', () => {
   expect.assertions(16)
 
+  const today = CsvEventCalendar.getToday()
   const isoToday = today.toISOString().split('T')[0]
 
   const date = { key: isoToday, date: today.getDate(), monthClass: 'current' }
@@ -1564,6 +1563,7 @@ describe('view', () => {
   test('view - called from constructor', () => {
     expect.assertions(227)
   
+    const today = CsvEventCalendar.getToday()
     const isoToday = today.toISOString().split('T')[0]
   
     const calendar = new CsvEventCalendar({
@@ -1626,6 +1626,7 @@ describe('view', () => {
   test('view - change to week', () => {
     expect.assertions(227)
   
+    const today = CsvEventCalendar.getToday()
     const isoToday = today.toISOString().split('T')[0]
   
     const calendar = new CsvEventCalendar({
@@ -1690,6 +1691,7 @@ describe('view', () => {
   test('view - change to day', () => {
     expect.assertions(227)
   
+    const today = CsvEventCalendar.getToday()
     const isoToday = today.toISOString().split('T')[0]
   
     const calendar = new CsvEventCalendar({
@@ -1754,6 +1756,7 @@ describe('view', () => {
   test('view - change to month', () => {
     expect.assertions(227)
   
+    const today = CsvEventCalendar.getToday()
     const isoToday = today.toISOString().split('T')[0]
   
     const calendar = new CsvEventCalendar({
