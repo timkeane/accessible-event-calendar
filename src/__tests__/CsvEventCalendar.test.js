@@ -27,7 +27,6 @@ const mockParse = (url, options) => {
   const today = CsvEventCalendar.getToday()
   mockData = getMockData(today)
   options.complete(mockData.csvResponse)
-  return parse(url, options)
 }
 
 beforeEach(() => {
@@ -2114,5 +2113,99 @@ describe('viewDesc', () => {
     expect(desc.attr('aria-label')).toBe(`Showing details for "mock-event-name", and 1 other scheduled events on ${title.day.long}`)
   })
 
+})
+
+describe('monthView', () => {
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('monthView', () => {
+    expect.assertions(19)
+
+    testToday = '2023-10-20'
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+
+    const previousMonthSpy = jest.spyOn(calendar, 'previousMonth')
+    const currentMonthSpy = jest.spyOn(calendar, 'currentMonth')
+    const nextMonthSpy = jest.spyOn(calendar, 'nextMonth')
+    const calendarSpy = jest.spyOn(calendar, 'calendar')
+    const populateSpy = jest.spyOn(calendar, 'populate')
+    const viewDescSpy = jest.spyOn(calendar, 'viewDesc')
+
+    const expectedDates = [
+      {date: 1,  key: '2023-10-01',  monthClass: 'current'},
+      {date: 2,  key: '2023-10-02',  monthClass: 'current'},
+      {date: 3,  key: '2023-10-03',  monthClass: 'current'},
+      {date: 4,  key: '2023-10-04',  monthClass: 'current'},
+      {date: 5,  key: '2023-10-05',  monthClass: 'current'},
+      {date: 6,  key: '2023-10-06',  monthClass: 'current'},
+      {date: 7,  key: '2023-10-07',  monthClass: 'current'},
+      {date: 8,  key: '2023-10-08',  monthClass: 'current'},
+      {date: 9,  key: '2023-10-09',  monthClass: 'current'},
+      {date: 10,  key: '2023-10-10',  monthClass: 'current'},
+      {date: 11,  key: '2023-10-11',  monthClass: 'current'},
+      {date: 12,  key: '2023-10-12',  monthClass: 'current'},
+      {date: 13,  key: '2023-10-13',  monthClass: 'current'},
+      {date: 14,  key: '2023-10-14',  monthClass: 'current'},
+      {date: 15,  key: '2023-10-15',  monthClass: 'current'},
+      {date: 16,  key: '2023-10-16',  monthClass: 'current'},
+      {date: 17,  key: '2023-10-17',  monthClass: 'current'},
+      {date: 18,  key: '2023-10-18',  monthClass: 'current'},
+      {date: 19,  key: '2023-10-19',  monthClass: 'current'},
+      {date: 20,  key: '2023-10-20',  monthClass: 'current'},
+      {date: 21,  key: '2023-10-21',  monthClass: 'current'},
+      {date: 22,  key: '2023-10-22',  monthClass: 'current'},
+      {date: 23,  key: '2023-10-23',  monthClass: 'current'},
+      {date: 24,  key: '2023-10-24',  monthClass: 'current'},
+      {date: 25,  key: '2023-10-25',  monthClass: 'current'},
+      {date: 26,  key: '2023-10-26',  monthClass: 'current'},
+      {date: 27,  key: '2023-10-27',  monthClass: 'current'},
+      {date: 28,  key: '2023-10-28',  monthClass: 'current'},
+      {date: 29,  key: '2023-10-29',  monthClass: 'current'},
+      {date: 30,  key: '2023-10-30',  monthClass: 'current'},
+      {date: 31,  key: '2023-10-31',  monthClass: 'current'},
+      {date: 1,  key: '2023-11-01',  monthClass: 'next'},
+      {date: 2,  key: '2023-11-02',  monthClass: 'next'},
+      {date: 3,  key: '2023-11-03',  monthClass: 'next'},
+      {date: 4,  key: '2023-11-04',  monthClass: 'next'},
+      {date: 5,  key: '2023-11-05',  monthClass: 'next'},
+      {date: 6,  key: '2023-11-06',  monthClass: 'next'},
+      {date: 7,  key: '2023-11-07',  monthClass: 'next'},
+      {date: 8,  key: '2023-11-08',  monthClass: 'next'},
+      {date: 9,  key: '2023-11-09',  monthClass: 'next'},
+      {date: 10,  key: '2023-11-10',  monthClass: 'next'},
+      {date: 11,  key: '2023-11-11',  monthClass: 'next'}
+    ]
+
+    calendar.monthView()
+
+    const receivedDates = calendarSpy.mock.calls[0][0]
+
+    expect(previousMonthSpy).toHaveBeenCalledTimes(1)
+    expect(currentMonthSpy).toHaveBeenCalledTimes(1)
+    expect(nextMonthSpy).toHaveBeenCalledTimes(1)
+    expect(calendarSpy).toHaveBeenCalledTimes(1)
+    expect(populateSpy).toHaveBeenCalledTimes(1)
+    expect(viewDescSpy).toHaveBeenCalledTimes(1)
+
+    expect(previousMonthSpy.mock.calls[0][0]).toBe(receivedDates)
+    expect(currentMonthSpy.mock.calls[0][0]).toBe(receivedDates)
+    expect(nextMonthSpy.mock.calls[0][0]).toBe(receivedDates)
+    expect(calendarSpy.mock.calls[0][0]).toBe(receivedDates)
+    expect(calendarSpy.mock.calls[0][0]).toBe(receivedDates)
+    expect(receivedDates).toEqual(expectedDates)
+
+    expect(calendar.container.find('.view .event a').attr('tabindex')).toBe('-1')
+
+    expect(viewDescSpy.mock.calls[0][0]).toBe('month')
+    expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-19')
+    expect(viewDescSpy.mock.calls[0][2]).toBe(3)
+  })
 
 })
