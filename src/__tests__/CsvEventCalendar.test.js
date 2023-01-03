@@ -1820,3 +1820,207 @@ describe('view', () => {
   })
 
 })
+
+describe('viewDesc', () => {
+
+  const today = CsvEventCalendar.getToday()
+  const isoToday = today.toISOString().split('T')[0]
+
+  test('viewDesc - month - 0 event - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('month', isoToday, 0)
+
+    expect(long.html()).toBe('Showing 0 scheduled events')
+    expect(medium.html()).toBe('Showing 0 scheduled events')
+    expect(abbr.html()).toBe('Showing 0 events')
+    expect(desc.attr('aria-label')).toBe('Showing 0 scheduled events')
+  })
+
+  test('viewDesc - month - 1 event - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('month', isoToday, 1)
+
+    expect(long.html()).toBe('Showing 1 scheduled event')
+    expect(medium.html()).toBe('Showing 1 scheduled event')
+    expect(abbr.html()).toBe('Showing 1 event')
+    expect(desc.attr('aria-label')).toBe('Showing 1 scheduled event')
+  })
+
+  test('viewDesc - month - 2 events - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('month', isoToday, 2)
+
+    expect(long.html()).toBe('Showing 2 scheduled events')
+    expect(medium.html()).toBe('Showing 2 scheduled events')
+    expect(abbr.html()).toBe('Showing 2 events')
+    expect(desc.attr('aria-label')).toBe('Showing 2 scheduled events')
+  })
+
+  test('viewDesc - week - 0 events - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const title = calendar.title({key: isoToday})
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('week', isoToday, 0)
+
+    expect(long.html()).toBe(`Showing 0 scheduled events for week of ${title.day.long}`)
+    expect(medium.html()).toBe(`Showing 0 events for week of ${title.day.medium}`)
+    expect(abbr.html()).toBe(`0 events for week of ${title.day.abbr.substring(4)}`)
+    expect(desc.attr('aria-label')).toBe(`Showing 0 scheduled events for week of ${title.day.long}`)
+  })
+
+  test('viewDesc - week - 1 event - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const title = calendar.title({key: isoToday})
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('week', isoToday, 1)
+
+    expect(long.html()).toBe(`Showing 1 scheduled event for week of ${title.day.long}`)
+    expect(medium.html()).toBe(`Showing 1 event for week of ${title.day.medium}`)
+    expect(abbr.html()).toBe(`1 event for week of ${title.day.abbr.substring(4)}`)
+    expect(desc.attr('aria-label')).toBe(`Showing 1 scheduled event for week of ${title.day.long}`)
+  })
+
+  test('viewDesc - week - 2 events - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const title = calendar.title({key: isoToday})
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('week', isoToday, 2)
+
+    expect(long.html()).toBe(`Showing 2 scheduled events for week of ${title.day.long}`)
+    expect(medium.html()).toBe(`Showing 2 events for week of ${title.day.medium}`)
+    expect(abbr.html()).toBe(`2 events for week of ${title.day.abbr.substring(4)}`)
+    expect(desc.attr('aria-label')).toBe(`Showing 2 scheduled events for week of ${title.day.long}`)
+  })
+
+  test('viewDesc - day - 0 events - no foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    const title = calendar.title({key: isoToday})
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('day', isoToday, 0)
+
+    expect(long.html()).toBe(`There no scheduled events on ${title.day.long}`)
+    expect(medium.html()).toBe(`No scheduled events on ${title.day.medium}`)
+    expect(abbr.html()).toBe(`No events on ${title.day.abbr}`)
+    expect(desc.attr('aria-label')).toBe(`There no scheduled events on ${title.day.long}`)
+  })
+
+  test('viewDesc - day - 1 event - has foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    calendar.state.foundEvent = 'mock-event-name'
+
+    const title = calendar.title({key: isoToday})
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('day', isoToday, 1)
+
+    expect(long.html()).toBe(`Showing 1 scheduled event on ${title.day.long}`)
+    expect(medium.html()).toBe(`Showing 1 event on ${title.day.medium}`)
+    expect(abbr.html()).toBe(`1 event on ${title.day.abbr}`)
+    expect(desc.attr('aria-label')).toBe(`Showing details for "mock-event-name" scheduled on ${title.day.long}`)
+  })
+
+  test('viewDesc - day - 2 events - has foundEvent', () => {
+    expect.assertions(4)
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal'
+    })
+
+    calendar.state.foundEvent = 'mock-event-name'
+
+    const title = calendar.title({key: isoToday})
+
+    const desc = calendar.container.find('.view-desc a')
+    const long = desc.find('.long')
+    const medium = desc.find('.medium')
+    const abbr = desc.find('.abbr')
+
+    calendar.viewDesc('day', isoToday, 2)
+
+    expect(long.html()).toBe(`Showing 2 scheduled events on ${title.day.long}`)
+    expect(medium.html()).toBe(`Showing 2 events on ${title.day.medium}`)
+    expect(abbr.html()).toBe(`2 events on ${title.day.abbr}`)
+    expect(desc.attr('aria-label')).toBe(`Showing details for "mock-event-name", and 1 other scheduled events on ${title.day.long}`)
+  })
+
+
+})
