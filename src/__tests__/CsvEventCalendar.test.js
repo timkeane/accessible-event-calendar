@@ -2291,3 +2291,68 @@ describe('dayView', () => {
   })
 
 })
+
+describe('populate', () => {
+
+  const populate = CsvEventCalendar.prototype.populate
+  const week = CsvEventCalendar.prototype.week
+  beforeEach(() => {
+    CsvEventCalendar.prototype.populate = jest.fn()
+    CsvEventCalendar.prototype.week = jest.fn()
+  })
+
+  afterEach(() => {
+    CsvEventCalendar.prototype.populate = populate
+    CsvEventCalendar.prototype.week = week
+  })
+
+  test('populate - eventsIndex is ready - no mulit-event days', () => {
+    expect.assertions(216)
+
+    testToday = '2027-01-01'
+    
+    const isoBefore = '2026-12-30'
+    const isoAfter = '2027-01-03'
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+
+    const container = calendar.container
+    const dayNodes = calendar.container.find('.view li.day')
+    const selectedNode = container.find(`[data-date-key="${testToday}"]`)
+
+    expect(calendar.populate).toHaveBeenCalledTimes(2)
+    expect(calendar.week).toHaveBeenCalledTimes(0)
+
+    calendar.populate = populate
+
+    calendar.populate()
+
+    expect(calendar.week).toHaveBeenCalledTimes(1)
+
+    dayNodes.each((i, dayNode) => {
+      const a = $(dayNode).find('h3 a')
+      const key = $(dayNode).attr('data-date-key')
+      const title = calendar.title({key: key}).day.long
+      const events = calendar.eventsIndex.events[key]
+      const eventCount = events && events.length || 0
+      const hasEvents = eventCount > 0
+      const eventsNode = $(dayNode).find('.events')
+      const eventHtml = hasEvents ? `<div class="event">${events[0].html().html()}</div>` : '<div class="no-events">no events scheduled</div>'
+      
+      expect(eventsNode.parent()[0]).toBe(dayNode)
+      expect(container.find(`[data-date-key="${key}"]`).hasClass('has-events')).toBe(hasEvents)
+      expect(eventsNode.html()).toBe(eventHtml)
+      expect($(dayNode).hasClass('selected')).toBe(key === testToday)
+      
+      if (hasEvents) {
+        expect(a.attr('href')).toBe(`#${container.attr('id')}/day/${key}`)
+      } else {
+        expect(a.attr('href')).toBeUndefined()
+      }
+    })
+
+  })
+})
