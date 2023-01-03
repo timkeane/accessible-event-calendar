@@ -33,8 +33,8 @@ beforeEach(() => {
   Papa.parse = mockParse
   testToday = CsvEventCalendar.getToday().toISOString().split('T')[0]
   CsvEventCalendar.getToday = () => {
-    const today = new Date(testToday)
-    today.setHours(0, 0, 0, 0)
+    const today = new Date(`${testToday}T12:00:00.000Z`)
+    today.setHours(12, 0, 0, 0)
     return today
   }
   window.location.hash = ''
@@ -1078,18 +1078,18 @@ test('weekNavigate', () => {
 })
 
 test('dayNavigate', () => {
-  expect.assertions(20)
+  expect.assertions(21)
 
   testToday = '2022-12-14'
 
   const today = CsvEventCalendar.getToday()
-  const isoWeekMid = today.toISOString().split('T')[0]
-  const yesterday = new Date(today)
-  const tomorrow = new Date(today)
-  yesterday.setDate(today.getDate() - 1)
-  tomorrow.setDate(today.getDate() + 1)
-  const isoYesterday = yesterday.toISOString().split('T')[0]
-  const isoTomorrow = tomorrow.toISOString().split('T')[0]
+  const isoToday = today.toISOString().split('T')[0]
+  const before = new Date(today)
+  const after = new Date(today)
+  before.setDate(today.getDate() - 2)
+  after.setDate(today.getDate() + 2)
+  const isoBefore = before.toISOString().split('T')[0]
+  const isoAfter = after.toISOString().split('T')[0]
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
@@ -1100,32 +1100,31 @@ test('dayNavigate', () => {
 
   const id = calendar.container[0].id
 
-  const dayWithEvents = $(calendar.container.find('li.day.has-events')[0])
-  const dayWithoutEvents = $(calendar.container.find('li.day').not('.has-events')[0])
-
   calendar.monthView = jest.fn()
   calendar.updateHash = jest.fn()
 
+  expect(calendar.state.key()).toBe(isoToday)
+
   calendar.dayNavigate(-1)
 
-  expect(calendar.state.key()).toBe(isoYesterday)
+  expect(calendar.state.key()).toBe(isoBefore)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(1)
-  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${isoYesterday}`)
+  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${isoBefore}`)
 
   calendar.dayNavigate(1)
 
-  expect(calendar.state.key()).toBe(isoWeekMid)
+  expect(calendar.state.key()).toBe(isoToday)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(2)
-  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoWeekMid}`)
+  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoToday}`)
 
   calendar.dayNavigate(1)
 
-  expect(calendar.state.key()).toBe(isoTomorrow)
+  expect(calendar.state.key()).toBe(isoAfter)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(3)
-  expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${isoTomorrow}`)
+  expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${isoAfter}`)
 
   calendar.updateState({key: '2022-12-31'})
   expect(calendar.state.key()).toBe('2022-12-31')
@@ -1487,7 +1486,6 @@ test('day', () => {
 
   const today = CsvEventCalendar.getToday()
   const isoToday = today.toISOString().split('T')[0]
-
   const date = { key: isoToday, date: today.getDate(), monthClass: 'current' }
   const month = $('<ol class="dates"></ol>')
   const weekOfMonth = Math.round(today.getDate() / 7) - 1
@@ -2204,7 +2202,7 @@ describe('monthView', () => {
     expect(calendar.container.find('.view .event a').attr('tabindex')).toBe('-1')
 
     expect(viewDescSpy.mock.calls[0][0]).toBe('month')
-    expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-19')
+    expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-20')
     expect(viewDescSpy.mock.calls[0][2]).toBe(3)
   })
 
@@ -2233,7 +2231,63 @@ describe('weekView', () => {
   
     expect(viewDescSpy.mock.calls[0][0]).toBe('week')
     expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-15')
-    expect(viewDescSpy.mock.calls[0][2]).toBe(3)
+    expect(viewDescSpy.mock.calls[0][2]).toBe(2)
 })
+
+})
+
+describe('dayView', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('dayView - eventCount = 1', () => {
+    expect.assertions(9)
+
+    testToday = '2023-10-20'
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+  
+    calendar.state.foundEvent = 'mock-event-name'
+
+    const viewDescSpy = jest.spyOn(calendar, 'viewDesc')
+
+    calendar.dayView()
+
+    expect(viewDescSpy).toHaveBeenCalledTimes(1)
+    expect(viewDescSpy.mock.calls[0][0]).toBe('day')
+    expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-20')
+    expect(viewDescSpy.mock.calls[0][2]).toBe(1)
+    expect(calendar.container.find('.day[data-date-key="2023-10-20"]').hasClass('selected')).toBe(true)
+    expect(calendar.state.foundEvent).toBeNull()
+  })
+
+  test('dayView - eventCount = 0', () => {
+    expect.assertions(9)
+
+    testToday = '2023-10-20'
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      url: 'mock-url'
+    })
+  
+    calendar.state.foundEvent = 'mock-event-name'
+
+    const viewDescSpy = jest.spyOn(calendar, 'viewDesc')
+
+    calendar.updateState({key: '2023-10-19'})
+    calendar.dayView()
+
+    expect(viewDescSpy).toHaveBeenCalledTimes(1)
+    expect(viewDescSpy.mock.calls[0][0]).toBe('day')
+    expect(viewDescSpy.mock.calls[0][1]).toBe('2023-10-19')
+    expect(viewDescSpy.mock.calls[0][2]).toBe(0)
+    expect(calendar.container.find('.day[data-date-key="2023-10-19"]').hasClass('selected')).toBe(true)
+    expect(calendar.state.foundEvent).toBeNull()
+  })
 
 })

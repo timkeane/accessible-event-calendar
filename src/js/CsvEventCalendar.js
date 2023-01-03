@@ -792,7 +792,7 @@ CsvEventCalendar.localeDayNames = () => {
 
 CsvEventCalendar.dateKey = date => {
   const dt = new Date(date.getTime())
-  dt.setHours(0, 0, 0, 0)
+  dt.setHours(12, 0, 0, 0)
   return dt.toISOString().split('T')[0]
 }
 
@@ -931,7 +931,7 @@ CsvEventCalendar.regexp = typed => {
  */
 CsvEventCalendar.getToday = () => {
   const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  today.setHours(12, 0, 0, 0)
   return today
 }
 

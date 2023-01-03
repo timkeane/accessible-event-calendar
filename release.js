@@ -2,7 +2,7 @@ const fs = require('fs')
 const zipdir = require('zip-a-folder').zip
 const pkg = require('./package.json')
 const today = new Date()
-today.setHours(0, 0, 0, 0)
+today.setHours(12, 0, 0, 0)
 const isoToday = today.toISOString().split('T')[0]
 
 const banner = `/*!
