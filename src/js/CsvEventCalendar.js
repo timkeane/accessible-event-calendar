@@ -17,6 +17,7 @@ class CsvEventCalendar {
     this.firstView = true
     this.eventsIndex = {ready: false, noData: false, events: {}}
     this.container = $(`<div id="${CsvEventCalendar.nextId('calendar')}" class="calendar"></div>`)
+    this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventHtml = options.eventHtml || this.eventHtml
@@ -199,8 +200,7 @@ class CsvEventCalendar {
   }
 
   previousMonth(dates) {
-    const day = new Date(this.state.year, this.state.month).getDay()
-    const firstDay = CsvEventCalendar.IS_US ? day : (day - 1)
+    const firstDay = new Date(this.state.year, this.state.month).getDay()
     const totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate()
     for (let i = 1; i <= firstDay; i++) {
       const prevMonthDate = totalDaysInPrevMonth - firstDay + i
@@ -701,7 +701,12 @@ class CsvEventCalendar {
       const key = calEvent[this.csvColumns.date]
       if (key) { // papaparse parses blank lines at the end of file
         this.eventsIndex.events[key] = this.eventsIndex.events[key] || []
-        this.eventsIndex.events[key].push(new CalendarEvent({date: key, data: calEvent, properties: this.csvColumns}))
+        this.eventsIndex.events[key].push(new CalendarEvent({
+          timeZone: this.timeZone,
+          date: key,
+          data: calEvent,
+          properties: this.csvColumns
+        }))
         CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])  
       }
     })
@@ -787,7 +792,8 @@ CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
 CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
 
 CsvEventCalendar.localeDayNames = () => {
-  return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
+  // return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
+  return CsvEventCalendar.DAY_NAMES_US
 }
 
 CsvEventCalendar.dateKey = date => {
@@ -941,6 +947,7 @@ CsvEventCalendar.getToday = () => {
  * @typedef {Object}
  * @property {jQuery|Element|string} target The target DOM node for creating the calendar
  * @property {string} url The URL to the CSV event data
+ * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] The calendar time zone
  * @property {string} min The minimum date formatted as yyyy-mm-dd
  * @property {string} max The maximum date formatted as yyyy-mm-dd
  * @property {function} dateChanged Handler for date changed event

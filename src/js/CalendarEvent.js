@@ -22,7 +22,7 @@ class CalendarEvent {
     this.start = fmt(data[props.start], true)
     this.end = fmt(data[props.end], true) || ''
     this.sponsor = data[props.sponsor] || ''
-    this.timezone = options.timezone || CalendarEvent.DEFAULT_TIMEZONE
+    this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
   }
 
   download() {
@@ -33,8 +33,8 @@ class CalendarEvent {
         'BEGIN:VEVENT\n' +
         `SUMMARY:${this.name}\n` +
         `DESCRIPTION:${this.desc()}\n` +
-        `DTSTART;TZID=${this.timezone}:${this.time(this.start)}\n` +
-        `DTEND;TZID=${this.timezone}:${this.time(this.end)}\n` +
+        `DTSTART;TZID=${this.timeZone}:${this.time(this.start)}\n` +
+        `DTEND;TZID=${this.timeZone}:${this.time(this.end)}\n` +
         `LOCATION:${this.location}\n` +
         `SOURCE:${document.location}\n` +
         'END:VEVENT\n' +
@@ -134,7 +134,7 @@ CalendarEvent.DEFAULT_PROPERTIES = {
   sponsor: 'sponsor'
 }
 
-CalendarEvent.DEFAULT_TIMEZONE = 'America/New_York'
+CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'
 
 /**
  * @desc Constructor options for {@link module:CalendarEvent}
@@ -142,7 +142,7 @@ CalendarEvent.DEFAULT_TIMEZONE = 'America/New_York'
  * @typedef {Object}
  * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {string} date Event date (yyyy-mm-dd)
- * @property {string} [timezone=CalendarEvent.DEFAULT_TIMEZONE] Event date (yyyy-mm-dd)
+ * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] Event date (yyyy-mm-dd)
  * @property {Object} data The event data
  */
  CalendarEvent.Options
