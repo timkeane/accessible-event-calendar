@@ -20,30 +20,30 @@ const getMockData = (today) => {
   let date = today
 
   date.setDate(date.getDate() - 2)
-  const d0 = date.toISOString().split('T')[0]
+  const d0 = CsvEventCalendar.dateKey(date)
   dates.push(d0)
   data[0].date = d0
   date.setDate(date.getDate() + 2)
-  const d1 = date.toISOString().split('T')[0]
+  const d1 = CsvEventCalendar.dateKey(date)
   dates.push(d1)
   data[1].date = d1
   date.setDate(date.getDate() + 2)
-  const d2 = date.toISOString().split('T')[0]
+  const d2 = CsvEventCalendar.dateKey(date)
   dates.push(d2)
   data[2].date = d2
 
   date = today
 
   date.setDate(date.getDate() - 2)
-  const dd0 = date.toISOString().split('T')[0]
+  const dd0 = CsvEventCalendar.dateKey(date)
   differentDates.push(dd0)
   differentData[0].Date = dd0
   date.setDate(date.getDate() + 2)
-  const dd1 = date.toISOString().split('T')[0]
+  const dd1 = CsvEventCalendar.dateKey(date)
   differentDates.push(dd1)
   differentData[1].Date = dd1
   date.setDate(date.getDate() + 2)
-  const dd2 = date.toISOString().split('T')[0]
+  const dd2 = CsvEventCalendar.dateKey(date)
   differentDates.push(dd2)
   differentData[2].Date = dd2
 

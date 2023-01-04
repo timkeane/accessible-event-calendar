@@ -39,11 +39,9 @@ class CsvEventCalendar {
       previousView: CsvEventCalendar.VIEW_NAMES.month,
       foundEvent: null,
       key: () => {
-        let m = this.state.month + 1
-        let d = this.state.date
-        if (m < 10) m = `0${m}`
-        if (d < 10) d = `0${d}`
-        return `${this.state.year}-${m}-${d}`
+        let mm = CsvEventCalendar.pad(this.state.month + 1)
+        let dd =  CsvEventCalendar.pad(this.state.date)
+        return `${this.state.year}-${mm}-${dd}`
       }
     }
     this.controls()
@@ -796,10 +794,20 @@ CsvEventCalendar.localeDayNames = () => {
   return CsvEventCalendar.DAY_NAMES_US
 }
 
+CsvEventCalendar.pad = n => {
+  if (isNaN(n) || n * 1 > 9) {
+    return n
+  }
+  return `0${n}`
+}
+
 CsvEventCalendar.dateKey = date => {
-  const dt = new Date(date.getTime())
-  dt.setHours(12, 0, 0, 0)
-  return dt.toISOString().split('T')[0]
+  const format = new Intl.DateTimeFormat()
+  const parts = {}
+  format.formatToParts(date).forEach(part => {
+    parts[part.type] = CsvEventCalendar.pad(part.value)
+  })
+  return `${parts.year}-${parts.month}-${parts.day}`
 }
 
 CsvEventCalendar.dateFromKey = key => {

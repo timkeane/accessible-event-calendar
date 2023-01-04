@@ -31,9 +31,11 @@ const mockParse = (url, options) => {
 
 beforeEach(() => {
   Papa.parse = mockParse
-  testToday = CsvEventCalendar.getToday().toISOString().split('T')[0]
+  const today = CsvEventCalendar.getToday()
+  testToday = CsvEventCalendar.dateKey(today)
   CsvEventCalendar.getToday = () => {
-    const today = new Date(`${testToday}T12:00:00.000Z`)
+    const parts = testToday.split('-')
+    const today = new Date(parts[0] * 1, parts[1] * 1 - 1, parts[2] * 1)
     today.setHours(12, 0, 0, 0)
     return today
   }
@@ -95,14 +97,14 @@ describe('constructor', () => {
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
 
-    expect(calendar.state.today).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.today).toBe(CsvEventCalendar.dateKey(today))
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
     expect(calendar.state.foundEvent).toBeNull()
-    expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.key()).toBe(CsvEventCalendar.dateKey(today))
 
   })
 
@@ -138,14 +140,14 @@ describe('constructor', () => {
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
 
-    expect(calendar.state.today).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.today).toBe(CsvEventCalendar.dateKey(today))
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
     expect(calendar.state.foundEvent).toBeNull()
-    expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.key()).toBe(CsvEventCalendar.dateKey(today))
 
   })
 
@@ -178,14 +180,14 @@ describe('constructor', () => {
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(0)
 
-    expect(calendar.state.today).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.today).toBe(CsvEventCalendar.dateKey(today))
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
     expect(calendar.state.view).toBe('month')
     expect(calendar.state.previousView).toBe('month')
     expect(calendar.state.foundEvent).toBeNull()
-    expect(calendar.state.key()).toBe(today.toISOString().split('T')[0])
+    expect(calendar.state.key()).toBe(CsvEventCalendar.dateKey(today))
   })
 
 })
@@ -465,7 +467,7 @@ describe('updateState', () => {
     expect.assertions(14)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
     
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -473,8 +475,8 @@ describe('updateState', () => {
       max: '2100-01-01'
     })
 
-    expect(calendar.state.key()).toBe(isoWeekMid)
-    expect(calendar.state.today).toBe(isoWeekMid)
+    expect(calendar.state.key()).toBe(keyWeekMid)
+    expect(calendar.state.today).toBe(keyWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
@@ -495,7 +497,7 @@ describe('updateState', () => {
     expect.assertions(14)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
     
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -505,8 +507,8 @@ describe('updateState', () => {
 
     calendar.updateState({view: 'day'})
 
-    expect(calendar.state.key()).toBe(isoWeekMid)
-    expect(calendar.state.today).toBe(isoWeekMid)
+    expect(calendar.state.key()).toBe(keyWeekMid)
+    expect(calendar.state.today).toBe(keyWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
@@ -527,8 +529,8 @@ describe('updateState', () => {
     expect.assertions(14)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
-    const dateParts = isoWeekMid.split('-')
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
+    const dateParts = keyWeekMid.split('-')
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -539,7 +541,7 @@ describe('updateState', () => {
     calendar.updateState({year: 2050})
 
     expect(calendar.state.key()).toBe(`2050-${dateParts[1]}-${dateParts[2]}`)
-    expect(calendar.state.today).toBe(isoWeekMid)
+    expect(calendar.state.today).toBe(keyWeekMid)
     expect(calendar.state.year).toBe(2050)
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(today.getDate())
@@ -560,8 +562,8 @@ describe('updateState', () => {
     expect.assertions(14)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
-    const dateParts = isoWeekMid.split('-')
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
+    const dateParts = keyWeekMid.split('-')
     
     let month
     if (dateParts[1] === '01') {
@@ -579,7 +581,7 @@ describe('updateState', () => {
     calendar.updateState({month})
 
     expect(calendar.state.key()).toBe(`${today.getFullYear()}-${month + 1}-${dateParts[2]}`)
-    expect(calendar.state.today).toBe(isoWeekMid)
+    expect(calendar.state.today).toBe(keyWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(month)
     expect(calendar.state.date).toBe(today.getDate())
@@ -600,8 +602,8 @@ describe('updateState', () => {
     expect.assertions(14)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
-    const dateParts = isoWeekMid.split('-')
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
+    const dateParts = keyWeekMid.split('-')
     
     let date
     if (dateParts[2] === '15') {
@@ -619,7 +621,7 @@ describe('updateState', () => {
     calendar.updateState({date})
 
     expect(calendar.state.key()).toBe(`${today.getFullYear()}-${dateParts[1]}-${date}`)
-    expect(calendar.state.today).toBe(isoWeekMid)
+    expect(calendar.state.today).toBe(keyWeekMid)
     expect(calendar.state.year).toBe(today.getFullYear())
     expect(calendar.state.month).toBe(today.getMonth())
     expect(calendar.state.date).toBe(date)
@@ -640,7 +642,7 @@ describe('updateState', () => {
     expect.assertions(14)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
 
     const calendar = new CsvEventCalendar({
       target: $('#test-cal'),
@@ -651,7 +653,7 @@ describe('updateState', () => {
     calendar.updateState({key: '2050-01-01'})
 
     expect(calendar.state.key()).toBe('2050-01-01')
-    expect(calendar.state.today).toBe(isoWeekMid)
+    expect(calendar.state.today).toBe(keyWeekMid)
     expect(calendar.state.year).toBe(2050)
     expect(calendar.state.month).toBe(0)
     expect(calendar.state.date).toBe(1)
@@ -680,15 +682,15 @@ describe('title', () => {
     expect.assertions(11)
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
 
-    const dateStr = CsvEventCalendar.dateFromKey(isoWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
-    const year = CsvEventCalendar.yearNumber(isoWeekMid)
-    const month = CsvEventCalendar.monthName(isoWeekMid)
+    const dateStr = CsvEventCalendar.dateFromKey(keyWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
+    const year = CsvEventCalendar.yearNumber(keyWeekMid)
+    const month = CsvEventCalendar.monthName(keyWeekMid)
     const mo = month.substring(0, 3)
-    const m = CsvEventCalendar.monthNumber(isoWeekMid)
-    const date = CsvEventCalendar.dateNumber(isoWeekMid)
-    const day = CsvEventCalendar.dayName(isoWeekMid)
+    const m = CsvEventCalendar.monthNumber(keyWeekMid)
+    const date = CsvEventCalendar.dateNumber(keyWeekMid)
+    const day = CsvEventCalendar.dayName(keyWeekMid)
     const d = day.substring(0, 3)
 
     const node = $('<div><div class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></div></div>')
@@ -720,15 +722,15 @@ describe('title', () => {
     CsvEventCalendar.IS_US = false
 
     const today = CsvEventCalendar.getToday()
-    const isoWeekMid = today.toISOString().split('T')[0]
+    const keyWeekMid = CsvEventCalendar.dateKey(today)
 
-    const dateStr = CsvEventCalendar.dateFromKey(isoWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
-    const year = CsvEventCalendar.yearNumber(isoWeekMid)
-    const month = CsvEventCalendar.monthName(isoWeekMid)
+    const dateStr = CsvEventCalendar.dateFromKey(keyWeekMid).toLocaleDateString(CsvEventCalendar.getLocale())
+    const year = CsvEventCalendar.yearNumber(keyWeekMid)
+    const month = CsvEventCalendar.monthName(keyWeekMid)
     const mo = month.substring(0, 3)
-    const m = CsvEventCalendar.monthNumber(isoWeekMid)
-    const date = CsvEventCalendar.dateNumber(isoWeekMid)
-    const day = CsvEventCalendar.dayName(isoWeekMid)
+    const m = CsvEventCalendar.monthNumber(keyWeekMid)
+    const date = CsvEventCalendar.dateNumber(keyWeekMid)
+    const day = CsvEventCalendar.dayName(keyWeekMid)
     const d = day.substring(0, 3)
 
     const node = $('<div><div class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></div></div>')
@@ -760,16 +762,16 @@ test('dayNode', () => {
   expect.assertions(2)
 
   const today = CsvEventCalendar.getToday()
-  const isoWeekMid = today.toISOString().split('T')[0]
+  const keyWeekMid = CsvEventCalendar.dateKey(today)
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
 
-  const node = calendar.dayNode(isoWeekMid)
+  const node = calendar.dayNode(keyWeekMid)
 
   expect($(node)[0].tagName).toBe('LI')
-  expect($(node).attr('data-date-key')).toBe(isoWeekMid)
+  expect($(node).attr('data-date-key')).toBe(keyWeekMid)
 
 })
 
@@ -1085,13 +1087,14 @@ test('dayNavigate', () => {
   testToday = '2022-12-14'
 
   const today = CsvEventCalendar.getToday()
-  const isoToday = today.toISOString().split('T')[0]
+  const keyToday = CsvEventCalendar.dateKey(today)
+
   const before = new Date(today)
   const after = new Date(today)
   before.setDate(today.getDate() - 2)
   after.setDate(today.getDate() + 2)
-  const isoBefore = before.toISOString().split('T')[0]
-  const isoAfter = after.toISOString().split('T')[0]
+  const keyBefore = CsvEventCalendar.dateKey(before)
+  const keyAfter = CsvEventCalendar.dateKey(after)
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
@@ -1105,28 +1108,28 @@ test('dayNavigate', () => {
   calendar.monthView = jest.fn()
   calendar.updateHash = jest.fn()
 
-  expect(calendar.state.key()).toBe(isoToday)
+  expect(calendar.state.key()).toBe(keyToday)
 
   calendar.dayNavigate(-1)
 
-  expect(calendar.state.key()).toBe(isoBefore)
+  expect(calendar.state.key()).toBe(keyBefore)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(1)
-  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${isoBefore}`)
+  expect(calendar.updateHash.mock.calls[0][0]).toBe(`#${id}/day/${keyBefore}`)
 
   calendar.dayNavigate(1)
 
-  expect(calendar.state.key()).toBe(isoToday)
+  expect(calendar.state.key()).toBe(keyToday)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(2)
-  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${isoToday}`)
+  expect(calendar.updateHash.mock.calls[1][0]).toBe(`#${id}/day/${keyToday}`)
 
   calendar.dayNavigate(1)
 
-  expect(calendar.state.key()).toBe(isoAfter)
+  expect(calendar.state.key()).toBe(keyAfter)
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(3)
-  expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${isoAfter}`)
+  expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${keyAfter}`)
 
   calendar.updateState({key: '2022-12-31'})
   expect(calendar.state.key()).toBe('2022-12-31')
@@ -1415,23 +1418,23 @@ test('week', () => {
 
   testToday = '2022-12-14'
   
-  const isoWeekBefore = '2022-12-07'
-  const isoWeekMid = '2022-12-14'
-  const isoWeekAfter = '2022-12-21'
+  const keyWeekBefore = '2022-12-07'
+  const keyWeekMid = '2022-12-14'
+  const keyWeekAfter = '2022-12-21'
 
   const calendar = new CsvEventCalendar({
     target: $('#test-cal')
   })
 
-  calendar.updateState({key: isoWeekMid})
+  calendar.updateState({key: keyWeekMid})
 
-  const midWeekNo = calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).data('week')
-  const beforeWeekNo = calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).data('week')
-  const afterWeekNo = calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).data('week')
+  const midWeekNo = calendar.container.find(`li.day[data-date-key="${keyWeekMid}"]`).data('week')
+  const beforeWeekNo = calendar.container.find(`li.day[data-date-key="${keyWeekBefore}"]`).data('week')
+  const afterWeekNo = calendar.container.find(`li.day[data-date-key="${keyWeekAfter}"]`).data('week')
   
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).hasClass('selected-week')).toBe(true)
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).hasClass('selected-week')).toBe(false)
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekMid}"]`).hasClass('selected-week')).toBe(true)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekBefore}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekAfter}"]`).hasClass('selected-week')).toBe(false)
   calendar.container.find(`.week-${midWeekNo}`).each((i, li) => {
     expect($(li).hasClass('start-of-week')).toBe(i === 0)
     expect($(li).hasClass('selected-week')).toBe(true)
@@ -1444,13 +1447,13 @@ test('week', () => {
     expect($(li).hasClass('selected-week')).toBe(false)
   })
 
-  calendar.updateState({key: isoWeekBefore})
+  calendar.updateState({key: keyWeekBefore})
 
   calendar.week()
 
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).hasClass('selected-week')).toBe(false)
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).hasClass('selected-week')).toBe(true)
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekMid}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekBefore}"]`).hasClass('selected-week')).toBe(true)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekAfter}"]`).hasClass('selected-week')).toBe(false)
   calendar.container.find(`.week-${beforeWeekNo}`).each((i, li) => {
     expect($(li).hasClass('start-of-week')).toBe(i === 0)
     expect($(li).hasClass('selected-week')).toBe(true)
@@ -1463,13 +1466,13 @@ test('week', () => {
     expect($(li).hasClass('selected-week')).toBe(false)
   })
 
-  calendar.updateState({key: isoWeekAfter})
+  calendar.updateState({key: keyWeekAfter})
 
   calendar.week()
 
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekMid}"]`).hasClass('selected-week')).toBe(false)
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekBefore}"]`).hasClass('selected-week')).toBe(false)
-  expect(calendar.container.find(`li.day[data-date-key="${isoWeekAfter}"]`).hasClass('selected-week')).toBe(true)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekMid}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekBefore}"]`).hasClass('selected-week')).toBe(false)
+  expect(calendar.container.find(`li.day[data-date-key="${keyWeekAfter}"]`).hasClass('selected-week')).toBe(true)
   calendar.container.find(`.week-${afterWeekNo}`).each((i, li) => {
     expect($(li).hasClass('start-of-week')).toBe(i === 0)
     expect($(li).hasClass('selected-week')).toBe(true)
@@ -1487,8 +1490,8 @@ test('day', () => {
   expect.assertions(16)
 
   const today = CsvEventCalendar.getToday()
-  const isoToday = today.toISOString().split('T')[0]
-  const date = { key: isoToday, date: today.getDate(), monthClass: 'current' }
+  const keyToday = CsvEventCalendar.dateKey(today)
+  const date = { key: keyToday, date: today.getDate(), monthClass: 'current' }
   const month = $('<ol class="dates"></ol>')
   const weekOfMonth = Math.round(today.getDate() / 7) - 1
 
@@ -1502,7 +1505,7 @@ test('day', () => {
   calendar.updateHash = jest.fn()
 
   calendar.title = jest.fn(options => {
-    expect(options.key).toBe(isoToday)
+    expect(options.key).toBe(keyToday)
     return {
       day: {
         long: 'long title',
@@ -1563,7 +1566,7 @@ describe('view', () => {
     expect.assertions(227)
   
     const today = CsvEventCalendar.getToday()
-    const isoToday = today.toISOString().split('T')[0]
+    const keyToday = CsvEventCalendar.dateKey(today)
   
     const calendar = new CsvEventCalendar({
       target: '#test-cal',
@@ -1576,9 +1579,9 @@ describe('view', () => {
     const next = container.find('.controls .next')
     const back = container.find('.controls .back')
   
-    const yyyy = CsvEventCalendar.yearNumber(isoToday)
-    const m = CsvEventCalendar.monthNumber(isoToday)
-    const month = CsvEventCalendar.monthName(isoToday)
+    const yyyy = CsvEventCalendar.yearNumber(keyToday)
+    const m = CsvEventCalendar.monthNumber(keyToday)
+    const month = CsvEventCalendar.monthName(keyToday)
     const mm = month.substring(0, 3)
   
     expect(calendar.state.view).toBe('month')
@@ -1616,7 +1619,7 @@ describe('view', () => {
       }
     })
 
-    expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
+    expect(container.find(`.view .day[data-date-key="${keyToday}"]`).hasClass('today')).toBe(true)
 
     expect(monthViewSpy).toHaveBeenCalledTimes(2)
     expect(focusSpy).toHaveBeenCalledTimes(1)
@@ -1626,7 +1629,7 @@ describe('view', () => {
     expect.assertions(227)
   
     const today = CsvEventCalendar.getToday()
-    const isoToday = today.toISOString().split('T')[0]
+    const keyToday = CsvEventCalendar.dateKey(today)
   
     const calendar = new CsvEventCalendar({
       target: '#test-cal',
@@ -1639,9 +1642,9 @@ describe('view', () => {
     const next = container.find('.controls .next')
     const back = container.find('.controls .back')
   
-    const yyyy = CsvEventCalendar.yearNumber(isoToday)
-    const m = CsvEventCalendar.monthNumber(isoToday)
-    const month = CsvEventCalendar.monthName(isoToday)
+    const yyyy = CsvEventCalendar.yearNumber(keyToday)
+    const m = CsvEventCalendar.monthNumber(keyToday)
+    const month = CsvEventCalendar.monthName(keyToday)
     const mm = month.substring(0, 3)
   
     calendar.view('week')
@@ -1666,7 +1669,7 @@ describe('view', () => {
     container.find('.day a.prev-view').each((i, a) => {
       expect($(a).attr('aria-label')).toBe('return to month view')
       expect($(a).attr('title')).toBe('return to month view')
-      expect($(a).attr('href')).toBe(`#calendar${CsvEventCalendar.ids.calendar}/month/${isoToday}`)
+      expect($(a).attr('href')).toBe(`#calendar${CsvEventCalendar.ids.calendar}/month/${keyToday}`)
     })
 
     container.find('.view .day[aria-hidden="true"] a.prev-view').each((i, a) => {
@@ -1681,7 +1684,7 @@ describe('view', () => {
       }
     })
 
-    expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
+    expect(container.find(`.view .day[data-date-key="${keyToday}"]`).hasClass('today')).toBe(true)
 
     expect(monthViewSpy).toHaveBeenCalledTimes(2)
     expect(focusSpy).toHaveBeenCalledTimes(2)
@@ -1691,7 +1694,7 @@ describe('view', () => {
     expect.assertions(227)
   
     const today = CsvEventCalendar.getToday()
-    const isoToday = today.toISOString().split('T')[0]
+    const keyToday = CsvEventCalendar.dateKey(today)
   
     const calendar = new CsvEventCalendar({
       target: '#test-cal',
@@ -1704,9 +1707,9 @@ describe('view', () => {
     const next = container.find('.controls .next')
     const back = container.find('.controls .back')
   
-    const yyyy = CsvEventCalendar.yearNumber(isoToday)
-    const m = CsvEventCalendar.monthNumber(isoToday)
-    const month = CsvEventCalendar.monthName(isoToday)
+    const yyyy = CsvEventCalendar.yearNumber(keyToday)
+    const m = CsvEventCalendar.monthNumber(keyToday)
+    const month = CsvEventCalendar.monthName(keyToday)
     const mm = month.substring(0, 3)
   
     calendar.view('day')
@@ -1731,7 +1734,7 @@ describe('view', () => {
     container.find('.day a.prev-view').each((i, a) => {
       expect($(a).attr('aria-label')).toBe('return to month view')
       expect($(a).attr('title')).toBe('return to month view')
-      expect($(a).attr('href')).toBe(`#calendar${CsvEventCalendar.ids.calendar}/month/${isoToday}`)
+      expect($(a).attr('href')).toBe(`#calendar${CsvEventCalendar.ids.calendar}/month/${keyToday}`)
     })
 
     container.find('.view .day[aria-hidden="true"] a.prev-view').each((i, a) => {
@@ -1746,7 +1749,7 @@ describe('view', () => {
       }
     })
 
-    expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
+    expect(container.find(`.view .day[data-date-key="${keyToday}"]`).hasClass('today')).toBe(true)
 
     expect(monthViewSpy).toHaveBeenCalledTimes(2)
     expect(focusSpy).toHaveBeenCalledTimes(2)
@@ -1756,7 +1759,7 @@ describe('view', () => {
     expect.assertions(227)
   
     const today = CsvEventCalendar.getToday()
-    const isoToday = today.toISOString().split('T')[0]
+    const keyToday = CsvEventCalendar.dateKey(today)
   
     const calendar = new CsvEventCalendar({
       target: '#test-cal',
@@ -1769,9 +1772,9 @@ describe('view', () => {
     const next = container.find('.controls .next')
     const back = container.find('.controls .back')
   
-    const yyyy = CsvEventCalendar.yearNumber(isoToday)
-    const m = CsvEventCalendar.monthNumber(isoToday)
-    const month = CsvEventCalendar.monthName(isoToday)
+    const yyyy = CsvEventCalendar.yearNumber(keyToday)
+    const m = CsvEventCalendar.monthNumber(keyToday)
+    const month = CsvEventCalendar.monthName(keyToday)
     const mm = month.substring(0, 3)
   
     calendar.view('day')
@@ -1812,7 +1815,7 @@ describe('view', () => {
       }
     })
 
-    expect(container.find(`.view .day[data-date-key="${isoToday}"]`).hasClass('today')).toBe(true)
+    expect(container.find(`.view .day[data-date-key="${keyToday}"]`).hasClass('today')).toBe(true)
 
     expect(monthViewSpy).toHaveBeenCalledTimes(3)
     expect(focusSpy).toHaveBeenCalledTimes(3)
@@ -1823,7 +1826,7 @@ describe('view', () => {
 describe('viewDesc', () => {
 
   const today = CsvEventCalendar.getToday()
-  const isoToday = today.toISOString().split('T')[0]
+  const keyToday = CsvEventCalendar.dateKey(today)
 
   test('viewDesc - month - 0 event - no foundEvent', () => {
     expect.assertions(4)
@@ -1837,7 +1840,7 @@ describe('viewDesc', () => {
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('month', isoToday, 0)
+    calendar.viewDesc('month', keyToday, 0)
 
     expect(long.html()).toBe('Showing 0 scheduled events')
     expect(medium.html()).toBe('Showing 0 scheduled events')
@@ -1857,7 +1860,7 @@ describe('viewDesc', () => {
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('month', isoToday, 1)
+    calendar.viewDesc('month', keyToday, 1)
 
     expect(long.html()).toBe('Showing 1 scheduled event')
     expect(medium.html()).toBe('Showing 1 scheduled event')
@@ -1879,7 +1882,7 @@ describe('viewDesc', () => {
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('month', isoToday, 1)
+    calendar.viewDesc('month', keyToday, 1)
 
     expect(long.html()).toBe('Showing 1 scheduled event')
     expect(medium.html()).toBe('Showing 1 scheduled event')
@@ -1899,7 +1902,7 @@ describe('viewDesc', () => {
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('month', isoToday, 2)
+    calendar.viewDesc('month', keyToday, 2)
 
     expect(long.html()).toBe('Showing 2 scheduled events')
     expect(medium.html()).toBe('Showing 2 scheduled events')
@@ -1921,7 +1924,7 @@ describe('viewDesc', () => {
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('month', isoToday, 2)
+    calendar.viewDesc('month', keyToday, 2)
 
     expect(long.html()).toBe('Showing 2 scheduled events')
     expect(medium.html()).toBe('Showing 2 scheduled events')
@@ -1936,14 +1939,14 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('week', isoToday, 0)
+    calendar.viewDesc('week', keyToday, 0)
 
     expect(long.html()).toBe(`Showing 0 scheduled events for week of ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 0 events for week of ${title.day.medium}`)
@@ -1958,14 +1961,14 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('week', isoToday, 1)
+    calendar.viewDesc('week', keyToday, 1)
 
     expect(long.html()).toBe(`Showing 1 scheduled event for week of ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 1 event for week of ${title.day.medium}`)
@@ -1982,14 +1985,14 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('week', isoToday, 1)
+    calendar.viewDesc('week', keyToday, 1)
 
     expect(long.html()).toBe(`Showing 1 scheduled event for week of ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 1 event for week of ${title.day.medium}`)
@@ -2004,14 +2007,14 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('week', isoToday, 2)
+    calendar.viewDesc('week', keyToday, 2)
 
     expect(long.html()).toBe(`Showing 2 scheduled events for week of ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 2 events for week of ${title.day.medium}`)
@@ -2028,14 +2031,14 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('week', isoToday, 2)
+    calendar.viewDesc('week', keyToday, 2)
 
     expect(long.html()).toBe(`Showing 2 scheduled events for week of ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 2 events for week of ${title.day.medium}`)
@@ -2050,14 +2053,14 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('day', isoToday, 0)
+    calendar.viewDesc('day', keyToday, 0)
 
     expect(long.html()).toBe(`There no scheduled events on ${title.day.long}`)
     expect(medium.html()).toBe(`No scheduled events on ${title.day.medium}`)
@@ -2074,14 +2077,14 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('day', isoToday, 1)
+    calendar.viewDesc('day', keyToday, 1)
 
     expect(long.html()).toBe(`Showing 1 scheduled event on ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 1 event on ${title.day.medium}`)
@@ -2098,14 +2101,14 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: isoToday})
+    const title = calendar.title({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
     const abbr = desc.find('.abbr')
 
-    calendar.viewDesc('day', isoToday, 2)
+    calendar.viewDesc('day', keyToday, 2)
 
     expect(long.html()).toBe(`Showing 2 scheduled events on ${title.day.long}`)
     expect(medium.html()).toBe(`Showing 2 events on ${title.day.medium}`)
@@ -2313,8 +2316,8 @@ describe('populate', () => {
 
     testToday = '2027-01-01'
     
-    const isoBefore = '2026-12-30'
-    const isoAfter = '2027-01-03'
+    const keyBefore = '2026-12-30'
+    const keyAfter = '2027-01-03'
 
     const calendar = new CsvEventCalendar({
       target: '#test-cal',
