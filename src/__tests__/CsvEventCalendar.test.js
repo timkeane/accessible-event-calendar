@@ -808,32 +808,41 @@ describe('previousMonth', () => {
   })
 
   test('previousMonth - is not US', () => {
-    expect.assertions(0)
+    expect.assertions(2)
 
-    console.error('Write this test and fix the code')
 
-  //   CsvEventCalendar.IS_US = false
+    CsvEventCalendar.IS_US = false
 
-  //   const dates = []
+    const dates = []
 
-  //   const calendar = new CsvEventCalendar({
-  //     target: $('#test-cal'),
-  //     min: '1900-01-01',
-  //     max: '2100-01-01'
-  //   })
+    const calendar = new CsvEventCalendar({
+      target: $('#test-cal'),
+      min: '1900-01-01',
+      max: '2100-01-01'
+    })
 
-  //   calendar.updateState({key: '2023-01-01'})
-  //   calendar.previousMonth(dates)
-  //   expect(dates.length).toBe(0)
+    calendar.updateState({key: '2023-01-01'})
+    calendar.previousMonth(dates)
 
-  //   calendar.updateState({key: '2023-12-01'})
-  //   calendar.previousMonth(dates)
-  //   expect(dates).toEqual( [
-  //     {key: '2023-11-27', date: 27, monthClass: 'prev'},
-  //     {key: '2023-11-28', date: 28, monthClass: 'prev'},
-  //     {key: '2023-11-29', date: 29, monthClass: 'prev'},
-  //     {key: '2023-11-30', date: 30, monthClass: 'prev'}
-  //   ])
+    expect(dates).toEqual([
+      { key: '2022-12-26', date: 26, monthClass: 'prev' },
+      { key: '2022-12-27', date: 27, monthClass: 'prev' },
+      { key: '2022-12-28', date: 28, monthClass: 'prev' },
+      { key: '2022-12-29', date: 29, monthClass: 'prev' },
+      { key: '2022-12-30', date: 30, monthClass: 'prev' },
+      { key: '2022-12-31', date: 31, monthClass: 'prev' }
+    ])
+
+    dates.length = 0
+    calendar.updateState({key: '2023-12-01'})
+    calendar.previousMonth(dates)
+
+    expect(dates).toEqual([
+      { key: '2023-11-27', date: 27, monthClass: 'prev' },
+      { key: '2023-11-28', date: 28, monthClass: 'prev' },
+      { key: '2023-11-29', date: 29, monthClass: 'prev' },
+      { key: '2023-11-30', date: 30, monthClass: 'prev' }
+    ])
   })
 
 })

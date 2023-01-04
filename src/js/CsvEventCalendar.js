@@ -198,13 +198,26 @@ class CsvEventCalendar {
   }
 
   previousMonth(dates) {
-    const firstDay = new Date(this.state.year, this.state.month).getDay()
+    const firstDayIndex = new Date(this.state.year, this.state.month).getDay()
     const totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate()
-    for (let i = 1; i <= firstDay; i++) {
-      const prevMonthDate = totalDaysInPrevMonth - firstDay + i
+    const dayNames = CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
+    const firstDayName = CsvEventCalendar.DAY_NAMES_US[firstDayIndex]
+    const firstDayLocaleIndex = dayNames.indexOf(firstDayName)
+    
+    for (let i = firstDayLocaleIndex; i > 0; i--) {
+      const prevMonthDate = totalDaysInPrevMonth - Math.abs(i - firstDayIndex) + (CsvEventCalendar.IS_US ? 0 : 1)
       const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month - 1, prevMonthDate))
       dates.push({key: key, date: prevMonthDate, monthClass: 'prev'})
     }
+    dates.sort((d1, d2) => {
+      if (d1.key < d2.key) {
+        return -1
+      }
+      if (d1.key > d2.key) {
+        return 1
+      }
+      return 0
+    })
   }
 
   currentMonth(dates) {
@@ -790,8 +803,8 @@ CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
 CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
 
 CsvEventCalendar.localeDayNames = () => {
-  // return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
-  return CsvEventCalendar.DAY_NAMES_US
+  return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
+  // return CsvEventCalendar.DAY_NAMES_US
 }
 
 CsvEventCalendar.pad = n => {
