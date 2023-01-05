@@ -5,6 +5,7 @@
 import $ from 'jquery'
 import Papa from 'papaparse'
 import CalendarEvent from './CalendarEvent'
+import tz from 'countries-and-timezones'
 
 class CsvEventCalendar {
   /**
@@ -18,6 +19,7 @@ class CsvEventCalendar {
     this.eventsIndex = {ready: false, noData: false, events: {}}
     this.container = $(`<div id="${CsvEventCalendar.nextId('calendar')}" class="calendar"></div>`)
     this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
+    this.clientTimeZone = this.setTimeZone()
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventHtml = options.eventHtml || this.eventHtml
@@ -125,12 +127,12 @@ class CsvEventCalendar {
     }
     if (this.state.key() > this.max) {
       this.updateState({key: this.max})
-      this.alert('max')
+      this.alert({minMax: 'max'})
       return
     }
     if (this.state.key() < this.min) {
       this.updateState({key: this.min})
-      this.alert('min')
+      this.alert({minMax: 'min'})
       return
     }
     const key = this.state.key()
@@ -308,7 +310,7 @@ class CsvEventCalendar {
         if (this.eventsIndex.events[key]) {
           this.updateHash(`#${this.container.attr('id')}/day/${key}`)
         } else {
-          this.alert(key)
+          this.alert({key})
         }
       })
     const viewOptions = $('<fieldset></fieldset>')
@@ -697,14 +699,61 @@ class CsvEventCalendar {
     this.week()
   }
 
+  setTimeZone() {
+    if (this.differentTimeZone()) {
+      //TODO ask user which timezone to use
+      this.clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    } else {
+      this.clientTimeZone = this.timeZone
+    }
+  }
+
+  timeFromDateStr(date) {
+    if (date) {
+      return new Intl.DateTimeFormat('default', {
+        hour12: false,
+          hour: 'numeric',
+        minute: 'numeric'
+      }).format(new Date(date))  
+    }
+    return ''
+  }
+
+  differentTimeZone() {
+    if (this.clientTimeZone) {
+      return this.clientTimeZone !== this.timeZone
+    }
+    return Intl.DateTimeFormat().resolvedOptions().timeZone !== this.timeZone
+  }
+
+  adjustForTimeZone(calEvent) {
+    if (this.differentTimeZone()) {
+      const cols = this.csvColumns
+      const key = calEvent[cols.date]
+      const origStart = calEvent[cols.start]
+      const origEnd = calEvent[cols.end]
+      const origStart24 = origStart ? CalendarEvent.timeFormat(origStart) : origStart
+      const origEnd24 = origEnd ? CalendarEvent.timeFormat(origEnd) : origEnd
+      const offset = tz.getTimezone(this.timeZone).utcOffsetStr
+      const dateForKey = new Date(`${key}T${origStart24 || '12'}:00${offset}`)
+      const strForStart = origStart24 ? `${key}T${origStart24}:00${offset}` : ''
+      const strForEnd = origEnd24 ? `${key}T${origEnd24}:00${offset}` : ''
+      const newKey = CsvEventCalendar.dateKey(dateForKey)
+      calEvent[cols.date] = newKey
+      calEvent[cols.start] = this.timeFromDateStr(strForStart)
+      calEvent[cols.end] = this.timeFromDateStr(strForEnd)
+      return newKey
+    }
+  }
+
   indexData(response) {
-    const calEvents = response.data
-    calEvents.forEach(calEvent => {
-      const key = calEvent[this.csvColumns.date]
+    response.data.forEach(calEvent => {
+      let key = calEvent[this.csvColumns.date]
       if (key) { // papaparse parses blank lines at the end of file
+        key = this.adjustForTimeZone(calEvent) || key
         this.eventsIndex.events[key] = this.eventsIndex.events[key] || []
         this.eventsIndex.events[key].push(new CalendarEvent({
-          timeZone: this.timeZone,
+          timeZone: this.clientTimeZone,
           date: key,
           data: calEvent,
           properties: this.csvColumns
@@ -732,14 +781,15 @@ class CsvEventCalendar {
     }
   }
 
-  alert(minMaxKey) {
+  alert(options) {
     let msg
-    if (['min', 'max'].indexOf(minMaxKey) > -1) {
-      this.container.find(`.controls button.${(minMaxKey === 'min' ? 'back' : 'next')}`)
+    const minMax = options.minMax
+    if (['min', 'max'].indexOf(minMax) > -1) {
+      this.container.find(`.controls button.${(minMax === 'min' ? 'back' : 'next')}`)
         .attr('disabled', true)
-      msg = `No events scheduled ${(minMaxKey === 'min' ? 'before' : 'after')} ${this.title({key: this[minMaxKey]}).day.long}`
+      msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.title({key: this[minMax]}).day.long}`
     } else {
-      msg = `No events scheduled on ${this.title({key: minMaxKey}).day.long}`
+      msg = `No events scheduled on ${this.title({key: options.key}).day.long}`
     }
     this.container.find('.controls').attr('aria-hidden', true)
     this.container.find('.view').attr('aria-hidden', true)

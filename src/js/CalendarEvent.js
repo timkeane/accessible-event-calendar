@@ -93,7 +93,7 @@ class CalendarEvent {
 }
 
 CalendarEvent.timeFormat = (time, ampm) => {
-  if (time.trim().length === 0) return ''
+  if (!time || time.trim().length === 0) return ''
   const parts = time.split(':')
   for (let i = 0; i < parts.length; i++) {
     parts[i] = parseInt(parts[i])
