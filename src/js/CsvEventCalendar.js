@@ -27,6 +27,7 @@ class CsvEventCalendar {
     this.dateChanged = options.dateChanged || this.dateChanged
     this.csvColumns = options.csvColumns || CalendarEvent.DEFAULT_PROPERTIES
     this.today = CsvEventCalendar.getToday()
+    this.url = options.url
     this.search = null
     this.dateInput = null
     this.viewOptions = null
@@ -46,27 +47,28 @@ class CsvEventCalendar {
       }
     }
     this.controls()
-    this.clientTimeZone = this.setTimeZone()
-    if (options.url) {
-      this.loadCsv(options.url)
+    $(document).on('keyup', this.esc.bind(this))
+    $(window).on('resize', this.resize.bind(this))
+      .on('hashchange', this.hashChanged.bind(this))
+    this.resize()
+    if (this.url) {
+      this.loadCsv(this.url)
     } else {
       this.eventsIndex.noData = true
       this.view(CsvEventCalendar.VIEW_NAMES.month)
       this.container.find('.view').get(0).className = 'view-wo-events'
       this.container.find('.controls').addClass('controls-wo-views')
     }
-    $(document).on('keyup', this.esc.bind(this))
-    $(window).on('resize', this.resize.bind(this))
-      .on('hashchange', this.hashChanged.bind(this))
-    this.resize()
   }
 
-  loadCsv(url) {
-    Papa.parse(url, {
-      download: true,
-      header: true,
-      complete: this.indexData.bind(this)
-    })
+  loadCsv() {
+    if (this.sameTimeZone()) {
+      Papa.parse(this.url, {
+        download: true,
+        header: true,
+        complete: this.indexData.bind(this)
+      })
+    }
   }
 
   dateChanged() {}
@@ -387,11 +389,6 @@ class CsvEventCalendar {
     this.search.find('input').on('keyup', this.filterAutoComplete.bind(this))
     this.container.append(controls)
     const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button><button class="btn yes"><span>Yes</span></button><button class="btn no"><span>No</span></button></div></div></div>')
-    alert.find('.ok').on('click', () => {
-      alert.hide()
-      controls.removeAttr('aria-hidden')
-      this.container.find('.view').removeAttr('aria-hidden')
-    })
     this.container.append(alert)
   }
 
@@ -699,14 +696,16 @@ class CsvEventCalendar {
     this.week()
   }
 
-  setTimeZone() {
-    if (this.differentTimeZone()) {
-      this.alert({differentTimeZone: true})
-      //TODO ask user which timezone to use
-      this.clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    } else {
-      this.clientTimeZone = this.timeZone
+  sameTimeZone() {
+    if (this.eventsIndex.ready || this.clientTimeZone) {
+      return this.clientTimeZone === this.timeZone
     }
+    if (Intl.DateTimeFormat().resolvedOptions().timeZone === this.timeZone) {
+      this.clientTimeZone = this.timeZone
+      return true
+    }
+    this.alert({differentTimeZone: true})
+    return false
   }
 
   timeFromDateStr(date) {
@@ -720,15 +719,8 @@ class CsvEventCalendar {
     return ''
   }
 
-  differentTimeZone() {
-    if (this.clientTimeZone) {
-      return this.clientTimeZone !== this.timeZone
-    }
-    return Intl.DateTimeFormat().resolvedOptions().timeZone !== this.timeZone
-  }
-
   adjustForTimeZone(calEvent) {
-    if (this.differentTimeZone()) {
+    if (!this.sameTimeZone()) {
       const cols = this.csvColumns
       const key = calEvent[cols.date]
       const origStart = calEvent[cols.start]
@@ -787,30 +779,55 @@ class CsvEventCalendar {
     const alert = this.container.find('.alert').removeClass('input')
     const minMax = options.minMax
     const key = options.key
+    const view = this.container.find('.view')
+    const controls = this.container.find('.controls')
+    const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
     if (['min', 'max'].indexOf(minMax) > -1) {
-      this.container.find(`.controls button.${(minMax === 'min' ? 'back' : 'next')}`)
+      controls.find(`button.${(minMax === 'min' ? 'back' : 'next')}`)
         .attr('disabled', true)
       msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.title({key: this[minMax]}).day.long}`
     } else if (key) {
       msg = `No events scheduled on ${this.title({key}).day.long}`
     } else {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
       alert.addClass('input')
-      msg = `Your time zone is "${tz}" while the calendar was produced for the "${this.timeZone}" time zone.<br><br>Do you want to use "${tz}?"`
+      msg = `Your time zone is "${clientTimeZone}" while the calendar was produced for the "${this.timeZone}" time zone.<br><br>Do you want to use "${clientTimeZone}?"`
     }
-    this.container.find('.controls').attr('aria-hidden', true)
-    this.container.find('.view').attr('aria-hidden', true)
+    controls.attr('aria-hidden', true)
+    view.attr('aria-hidden', true)
     alert.find('p').html(msg)
     alert.attr({'aria-label': msg, tabindex: 0})
       .show()
       .trigger('focus')
-    const ok = alert.find('button.ok')
-    const timeout = setTimeout(() => {
-      ok.trigger('focus')
-    }, 6500)
-    ok.on('click', () => {
-      clearTimeout(timeout)
-    })
+    if (!options.differentTimeZone) {
+      const ok = alert.find('button.ok')
+      const timeout = setTimeout(() => {
+        ok.trigger('focus')
+      }, 6500)
+      ok.one('click', () => {
+        alert.hide()
+        controls.removeAttr('aria-hidden')
+        view.removeAttr('aria-hidden')
+        clearTimeout(timeout)
+      })
+    } else {
+      const yes = alert.find('button.yes').data('time-zone', clientTimeZone)
+      const no = alert.find('button.no').data('time-zone', this.timeZone)
+      const timeout = setTimeout(() => {
+        yes.trigger('focus')
+      }, 6500)
+      const tzFn = domEvent => {
+        console.warn(domEvent,$(domEvent.currentTarget).data('time-zone'))
+        alert.hide()
+        this.clientTimeZone = $(domEvent.currentTarget).data('time-zone')
+        this.loadCsv()
+        controls.removeAttr('aria-hidden')
+        view.removeAttr('aria-hidden')
+        clearTimeout(timeout)
+      }
+      yes.one('click', tzFn)
+      no.one('click', tzFn)
+    }
   }
 
   focus() {

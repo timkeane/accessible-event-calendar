@@ -31,7 +31,7 @@ const mockParse = (url, options) => {
   options.complete(mockData[mockResponse])
 }
 
-const setTimeZone = CsvEventCalendar.prototype.setTimeZone
+const sameTimeZone = CsvEventCalendar.prototype.sameTimeZone
 
 beforeEach(() => {
   const today = CsvEventCalendar.getToday()
@@ -39,8 +39,9 @@ beforeEach(() => {
   testLocale = 'en-US'
   mockResponse = 'csvResponse'
   Papa.parse = mockParse
-  CsvEventCalendar.prototype.setTimeZone = function() {
+  CsvEventCalendar.prototype.sameTimeZone = function() {
     this.clientTimeZone = this.timeZone
+    return true
   }
   CsvEventCalendar.getToday = () => {
     const parts = testToday.split('-')
@@ -57,7 +58,7 @@ afterEach(() => {
   Papa.parse = parse
   $('#test-cal').remove()
   CsvEventCalendar.getToday = getToday
-  CsvEventCalendar.prototype.setTimeZone = setTimeZone
+  CsvEventCalendar.prototype.sameTimeZone = sameTimeZone
 })
 
 describe('constructor', () => {
