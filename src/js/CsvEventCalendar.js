@@ -62,7 +62,7 @@ class CsvEventCalendar {
   }
 
   loadCsv() {
-    if (this.sameTimeZone()) {
+    if (this.clientTimeZone || this.sameTimeZone()) {
       Papa.parse(this.url, {
         download: true,
         header: true,
@@ -720,9 +720,9 @@ class CsvEventCalendar {
   }
 
   adjustForTimeZone(calEvent) {
-    if (!this.sameTimeZone()) {
-      const cols = this.csvColumns
-      const key = calEvent[cols.date]
+    const cols = this.csvColumns
+    const key = calEvent[cols.date]
+  if (!this.sameTimeZone()) {
       const origStart = calEvent[cols.start]
       const origEnd = calEvent[cols.end]
       const origStart24 = origStart ? CalendarEvent.timeFormat(origStart) : origStart
@@ -737,13 +737,14 @@ class CsvEventCalendar {
       calEvent[cols.end] = this.timeFromDateStr(strForEnd)
       return newKey
     }
+    return key
   }
 
   indexData(response) {
     response.data.forEach(calEvent => {
       let key = calEvent[this.csvColumns.date]
       if (key) { // papaparse parses blank lines at the end of file
-        key = this.adjustForTimeZone(calEvent) || key
+        key = this.adjustForTimeZone(calEvent)
         this.eventsIndex.events[key] = this.eventsIndex.events[key] || []
         this.eventsIndex.events[key].push(new CalendarEvent({
           timeZone: this.clientTimeZone,
