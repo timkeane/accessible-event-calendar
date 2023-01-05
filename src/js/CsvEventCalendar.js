@@ -19,7 +19,6 @@ class CsvEventCalendar {
     this.eventsIndex = {ready: false, noData: false, events: {}}
     this.container = $(`<div id="${CsvEventCalendar.nextId('calendar')}" class="calendar"></div>`)
     this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
-    this.clientTimeZone = this.setTimeZone()
     this.min = options.min || CsvEventCalendar.MIN_DEFAULT
     this.max = options.max || CsvEventCalendar.MAX_DEFAULT
     this.eventHtml = options.eventHtml || this.eventHtml
@@ -47,6 +46,7 @@ class CsvEventCalendar {
       }
     }
     this.controls()
+    this.clientTimeZone = this.setTimeZone()
     if (options.url) {
       this.loadCsv(options.url)
     } else {
@@ -386,7 +386,7 @@ class CsvEventCalendar {
       .append(viewOptions)
     this.search.find('input').on('keyup', this.filterAutoComplete.bind(this))
     this.container.append(controls)
-    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button></div></div></div>')
+    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button><button class="btn yes"><span>Yes</span></button><button class="btn no"><span>No</span></button></div></div></div>')
     alert.find('.ok').on('click', () => {
       alert.hide()
       controls.removeAttr('aria-hidden')
@@ -701,6 +701,7 @@ class CsvEventCalendar {
 
   setTimeZone() {
     if (this.differentTimeZone()) {
+      this.alert({differentTimeZone: true})
       //TODO ask user which timezone to use
       this.clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     } else {
@@ -783,19 +784,24 @@ class CsvEventCalendar {
 
   alert(options) {
     let msg
+    const alert = this.container.find('.alert').removeClass('input')
     const minMax = options.minMax
+    const key = options.key
     if (['min', 'max'].indexOf(minMax) > -1) {
       this.container.find(`.controls button.${(minMax === 'min' ? 'back' : 'next')}`)
         .attr('disabled', true)
       msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.title({key: this[minMax]}).day.long}`
+    } else if (key) {
+      msg = `No events scheduled on ${this.title({key}).day.long}`
     } else {
-      msg = `No events scheduled on ${this.title({key: options.key}).day.long}`
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      alert.addClass('input')
+      msg = `Your time zone is "${tz}" while the calendar was produced for the "${this.timeZone}" time zone.<br><br>Do you want to use "${tz}?"`
     }
     this.container.find('.controls').attr('aria-hidden', true)
     this.container.find('.view').attr('aria-hidden', true)
-    this.container.find('.alert p').html(msg)
-    const alert = this.container.find('.alert')
-      .attr({'aria-label': msg, tabindex: 0})
+    alert.find('p').html(msg)
+    alert.attr({'aria-label': msg, tabindex: 0})
       .show()
       .trigger('focus')
     const ok = alert.find('button.ok')

@@ -46,6 +46,18 @@
   margin: 0 0 10px;
   padding: 0;
 }
+.calendar div.alert .btn.yes,
+.calendar div.alert .btn.no,
+.calendar div.alert.input .btn.ok {
+  display: none;
+}
+.calendar div.alert.input .btn.yes,
+.calendar div.alert.input .btn.no {
+  display: inline-block;
+  margin: 0 3px;
+  width: 50px;
+}
+
 
 
 .calendar .controls {
