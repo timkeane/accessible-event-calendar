@@ -6,6 +6,7 @@ import getMockData from './getMockData'
 
 let testToday
 let mockData
+let testLocale
 
 const csvColumns = {
   date: 'Date',
@@ -33,12 +34,14 @@ beforeEach(() => {
   Papa.parse = mockParse
   const today = CsvEventCalendar.getToday()
   testToday = CsvEventCalendar.dateKey(today)
+  testLocale = 'en-US'
   CsvEventCalendar.getToday = () => {
     const parts = testToday.split('-')
     const today = new Date(parts[0] * 1, parts[1] * 1 - 1, parts[2] * 1)
     today.setHours(12, 0, 0, 0)
     return today
   }
+  CsvEventCalendar.getLocale = () => testLocale
   window.location.hash = ''
   $('body').append($('<div id="test-cal"></div>'))
 })
@@ -778,7 +781,7 @@ test('dayNode', () => {
 describe('previousMonth', () => {
 
   afterEach(() => {
-    CsvEventCalendar.IS_US = true
+    testLocale = 'en-US'
   })
 
   test('previousMonth - is US', () => {
@@ -811,7 +814,7 @@ describe('previousMonth', () => {
     expect.assertions(2)
 
 
-    CsvEventCalendar.IS_US = false
+    testLocale = 'fr-FR'
 
     const dates = []
 

@@ -200,8 +200,8 @@ class CsvEventCalendar {
   previousMonth(dates) {
     const firstDayIndex = new Date(this.state.year, this.state.month).getDay()
     const totalDaysInPrevMonth = new Date(this.state.year, this.state.month, 0).getDate()
-    const dayNames = CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
-    const firstDayName = CsvEventCalendar.DAY_NAMES_US[firstDayIndex]
+    const dayNames = CsvEventCalendar.localeDayNames()
+    const firstDayName = CsvEventCalendar.DAY_NAMES[firstDayIndex]
     const firstDayLocaleIndex = dayNames.indexOf(firstDayName)
     
     for (let i = 1; i <= firstDayLocaleIndex; i++) {
@@ -787,15 +787,30 @@ CsvEventCalendar.getLocale = () => {
 CsvEventCalendar.IS_US = CsvEventCalendar.getLocale() === 'en-US'
 CsvEventCalendar.VIEW_NAMES = {month: 'month', week: 'week', day: 'day'}
 CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-CsvEventCalendar.DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-CsvEventCalendar.DAY_NAMES_US = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
 CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
 CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
 
 CsvEventCalendar.localeDayNames = () => {
-  return CsvEventCalendar.IS_US ? CsvEventCalendar.DAY_NAMES_US : CsvEventCalendar.DAY_NAMES
-  // return CsvEventCalendar.DAY_NAMES_US
+  const startOfWeekByCountry = {
+    AE: 7, AF: 7, AG: 1, AS: 1, AU: 1, BD: 1, BH: 7, BR: 1, BS: 1, BT: 1, BW: 1, BZ: 1, CA: 1, CN: 1, CO: 1,
+    DJ: 7, DM: 1, DO: 1, DZ: 7, EG: 7, ET: 1, GT: 1, GU: 1, HK: 1, HN: 1, ID: 1, IL: 1, IN: 1, IQ: 7, IR: 7,
+    JM: 1, JO: 7, JP: 1, KE: 1, KH: 1, KR: 1, KW: 7, LA: 1, LY: 7, MH: 1, MM: 1, MO: 1, MT: 1, MV: 6, MX: 1,
+    MZ: 1, NI: 1, NP: 1, OM: 7, PA: 1, PE: 1, PH: 1, PK: 1, PR: 1, PT: 1, PY: 1, QA: 7, SA: 1, SD: 7,
+    SG: 1, SV: 1, SY: 7, TH: 1, TT: 1, TW: 1, UM: 1, US: 1, VE: 1, VI: 1, WS: 1, YE: 1, ZA: 1, ZW: 0
+  }
+  const country = CsvEventCalendar.getLocale().split('-')[1]
+  const startOfWeek = (startOfWeekByCountry[country] || 2) - 1
+  const week = [...CsvEventCalendar.DAY_NAMES]
+  if (startOfWeek === 0) {
+    return week
+  }
+  const week0 = [...week]
+  const week1 = [...week0]
+  week0.splice(0, startOfWeek)
+  week1.splice(startOfWeek)
+  return week0.concat(week1)
 }
 
 CsvEventCalendar.pad = n => {
@@ -829,7 +844,7 @@ CsvEventCalendar.dayNumber = key => {
 
 CsvEventCalendar.dayName = key => {
   const day = CsvEventCalendar.dayNumber(key)
-  return CsvEventCalendar.DAY_NAMES_US[day]
+  return CsvEventCalendar.DAY_NAMES[day]
 }
 
 CsvEventCalendar.monthNumber = key => {
