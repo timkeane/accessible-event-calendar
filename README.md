@@ -4,6 +4,7 @@
 
 ### To build the deployable javascript and example implementation:
 
+  * Clone `git clone https://github.com/timkeane/accessible-event-calendar`
   * Run `npm install`
   * Run `npm run build`
   * Deployable files will be located in the `dist` folder
