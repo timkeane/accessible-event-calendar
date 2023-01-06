@@ -22,14 +22,13 @@
   bottom: 0;
   right: 0;
 }
-.calendar div.alert div,
+.calendar div.alert div.container,
 .calendar .controls .search ul {
   box-shadow: 4px 4px 8px #333;
   border-radius: 4px;
 }
 
-
-.calendar div.alert div {
+.calendar div.alert div.container {
   position: absolute;
   max-width: 280px;
   top: 45%;
@@ -46,19 +45,28 @@
   margin: 0 0 10px;
   padding: 0;
 }
-.calendar div.alert .btn.yes,
-.calendar div.alert .btn.no,
-.calendar div.alert.input .btn.ok {
+.calendar div.alert form {
   display: none;
 }
-.calendar div.alert.input .btn.yes,
-.calendar div.alert.input .btn.no {
-  display: inline-block;
-  margin: 0 3px;
-  width: 50px;
+.calendar div.alert.input form {
+  display: block;
+  border: 1px solid black;
+  border-radius: 3px;
 }
-
-
+.calendar div.alert.input form input {
+  float: left;
+  margin-top: 20px;
+}
+.calendar div.alert.input form label {
+  font-weight: normal;
+}
+.calendar div.alert.input form div {
+    width: 250px;
+}
+.calendar div.alert .ok {
+    display: block;
+    margin: auto;
+}
 
 .calendar .controls {
   position: relative;
