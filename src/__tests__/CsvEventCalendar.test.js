@@ -3,6 +3,7 @@ import CsvEventCalendar from '../js/CsvEventCalendar'
 import CalendarEvent from '../js/CalendarEvent'
 import Papa from 'papaparse'
 import getMockData from './getMockData'
+import tz from 'countries-and-timezones'
 
 let testToday
 let mockData
@@ -2477,6 +2478,45 @@ describe('populate', () => {
       expect($(dayNode).hasClass('selected')).toBe(key === testToday)
       expect(a.attr('href')).toBe(`#${container.attr('id')}/day/${key}`)
     })
+  })
+
+})
+
+describe('adjustForTimeZone', () => {
+
+  beforeEach(() => {
+    CsvEventCalendar.prototype.sameTimeZone = sameTimeZone
+  })
+
+  test('adjustForTimeZone', () => {
+    expect.assertions(4)
+    //THIS TEST ASSUMES IT's NOT BEING RUN IN THE 'Pacific/Chatham' TIME ZONE
+
+    const calendar = new CsvEventCalendar({
+      target: '#test-cal',
+      timeZone: 'Pacific/Chatham'
+    })
+
+    calendar.clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+    const calEvent = {date: '2022-12-31', name: 'event 1', about: 'about 1', start: '2pm', end: '3pm', sponsor: 'sponsor 1', location: 'location 1'}
+    const offset = tz.getTimezone(calendar.timeZone).utcOffsetStr
+    const dateForKey = new Date(`2022-12-31T14:00:00${offset}`)
+    const newKey = CsvEventCalendar.dateKey(dateForKey)
+
+    const key = calendar.adjustForTimeZone(calEvent)
+
+    const timeFromDateStr = date => {
+      return new Intl.DateTimeFormat('default', {
+        hour12: false,
+          hour: 'numeric',
+        minute: 'numeric'
+      }).format(new Date(date))  
+    }
+    expect(key).toBe(newKey)
+    expect(calEvent.date).toBe(newKey)
+    expect(calEvent.start).toBe(timeFromDateStr(`2022-12-31T14:00:00${offset}`))
+    expect(calEvent.end).toBe(timeFromDateStr(`2022-12-31T15:00:00${offset}`))
   })
 
 })

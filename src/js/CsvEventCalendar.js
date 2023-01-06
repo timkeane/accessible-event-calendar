@@ -999,7 +999,7 @@ class CsvEventCalendar {
       const origStart24 = origStart ? CalendarEvent.timeFormat(origStart) : origStart
       const origEnd24 = origEnd ? CalendarEvent.timeFormat(origEnd) : origEnd
       const offset = tz.getTimezone(this.timeZone).utcOffsetStr
-      const dateForKey = new Date(`${key}T${origStart24 || '12'}:00${offset}`)
+      const dateForKey = new Date(`${key}T${origStart24 || '12:00'}:00${offset}`)
       const strForStart = origStart24 ? `${key}T${origStart24}:00${offset}` : ''
       const strForEnd = origEnd24 ? `${key}T${origEnd24}:00${offset}` : ''
       const newKey = CsvEventCalendar.dateKey(dateForKey)

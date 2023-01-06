@@ -3,7 +3,8 @@ import CsvEventCalendar from '../js/CsvEventCalendar'
 
 const getMockData = (today) => {
 
-  const data = [{name: 'event 1', about: 'about 1', start: '2pm', end: '3pm', sponsor: 'sponsor 1', location: 'location 1'},
+  const data = [
+    {name: 'event 1', about: 'about 1', start: '2pm', end: '3pm', sponsor: 'sponsor 1', location: 'location 1'},
     {name: 'event 2', about: 'about 2', start: '11am', end: '1pm', sponsor: 'sponsor 2', location: 'location 2'},
     {name: 'event 3', about: 'about 3', start: '12pm', end: '1pm', sponsor: 'sponsor 3', location: 'location 3'},
     {}
