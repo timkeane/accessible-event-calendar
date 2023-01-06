@@ -15,16 +15,60 @@ class CalendarEvent {
     const fmt = CalendarEvent.timeFormat
     const data = options.data
     const props = options.properties || CalendarEvent.DEFAULT_PROPERTIES
+    
+    /**
+     * @private
+     * @member {string}
+     */
     this.name = data[props.name]
+    
+    /**
+     * @private
+     * @member {string}
+     */
     this.about = data[props.about] || ''
+    
+    /**
+     * @private
+     * @member {string}
+     */
     this.location = data[props.location] || ''
+
+    /**
+     * @private
+     * @member {string}
+     */
     this.date = options.date
+
+    /**
+     * @private
+     * @member {string}
+     */
     this.start = fmt(data[props.start], true)
+
+    /**
+     * @private
+     * @member {string}
+     */
     this.end = fmt(data[props.end], true) || ''
+
+    /**
+     * @private
+     * @member {string}
+     */
     this.sponsor = data[props.sponsor] || ''
+
+    /**
+     * @private
+     * @member {string}
+     */
     this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
   }
 
+  /**
+   * @private
+   * @method
+   */
   download() {
     const e = encodeURIComponent
     const ics = 'data:text/calendar,' +
@@ -43,6 +87,10 @@ class CalendarEvent {
       return ics
   }
 
+  /**
+   * @private
+   * @method
+   */
   desc() {
     const sponsor = this.sponsor
     const about = this.about
@@ -56,6 +104,11 @@ class CalendarEvent {
     return ''
   }
 
+  /**
+   * @private
+   * @method
+   * @param {string}
+   */
   time(t) {
     const date = this.date.replace(/-/g, '')
     const hh24 = CalendarEvent.timeFormat(t)
@@ -65,6 +118,10 @@ class CalendarEvent {
     return date
   }
 
+  /**
+   * @private
+   * @method
+   */
   html() {
     const name = this.name
     const location = this.location
@@ -83,15 +140,22 @@ class CalendarEvent {
    return $('<div class="event"></div>')
     .append(download)
     .append(`<div class="title">${name}</div>`)
-      .append(`<h4>${name}</h4>`)
-      .append(time)
-      .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '<br>')
-      .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
-      .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
-    }
-
+    .append(`<h4>${name}</h4>`)
+    .append(time)
+    .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '<br>')
+    .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
+    .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
+  }
 }
 
+/**
+ * @private
+ * @static
+ * @method
+ * @param {string} time
+ * @param {boolean} ampm
+ * @return {string}
+ */
 CalendarEvent.timeFormat = (time, ampm) => {
   if (!time || time.trim().length === 0) return ''
   const parts = time.split(':')
@@ -124,6 +188,11 @@ CalendarEvent.timeFormat = (time, ampm) => {
   return parts.join(':') + suffix
 }
 
+/**
+ * @desc Default mapping for CSV columns
+ * @public
+ * @const {Object<string, string>}
+ */
 CalendarEvent.DEFAULT_PROPERTIES = {
   date: 'date',
   name: 'name',
@@ -134,6 +203,11 @@ CalendarEvent.DEFAULT_PROPERTIES = {
   sponsor: 'sponsor'
 }
 
+/**
+ * @desc Default time zone
+ * @public
+ * @const {string}
+ */
 CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'
 
 /**
