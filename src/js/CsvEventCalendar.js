@@ -46,7 +46,7 @@ class CsvEventCalendar {
         return `${this.state.year}-${mm}-${dd}`
       }
     }
-    this.controls()
+    this.createControls()
     $(document).on('keyup', this.esc.bind(this))
     $(window).on('resize', this.resize.bind(this))
       .on('hashchange', this.hashChanged.bind(this))
@@ -167,7 +167,7 @@ class CsvEventCalendar {
     }
   }
 
-  title(options) {
+  getTitle(options) {
     const key = options.key || this.state.key()
     const dateStr = CsvEventCalendar.dateFromKey(key).toLocaleDateString(CsvEventCalendar.getLocale())
     const year = CsvEventCalendar.yearNumber(key)
@@ -294,7 +294,7 @@ class CsvEventCalendar {
     this.updateHash(`#${this.container.attr('id')}/day/${this.state.key()}`)
   }
 
-  controls() {
+  createControls() {
     const back = $('<button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button>')
       .data('delta', -1)
       .on('click', this.navigate.bind(this))
@@ -391,7 +391,7 @@ class CsvEventCalendar {
 
     const id0 = CsvEventCalendar.nextId('tz')
     const id1 = CsvEventCalendar.nextId('tz')
-    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div class="container"><p></p><form><div class="tz0 btn"><input type="radio" name="timezone" checked><label></label></div><div class="tz1 btn"><input type="radio" name="timezone"><label></label></div></form><button class="btn ok"><span>OK</span></button></div></div>')
+    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div class="content"><p></p><form><div class="tz0 btn"><input type="radio" name="timezone" checked><label></label></div><div class="tz1 btn"><input type="radio" name="timezone"><label></label></div></form><button class="btn ok"><span>OK</span></button></div></div>')
     alert.find('.tz0 input').attr('id', id0)
     alert.find('.tz1 input').attr('id', id1)
     alert.find('.tz0 label').attr('for', id0)
@@ -521,7 +521,7 @@ class CsvEventCalendar {
 
   day(date, week, month) {
     const key = date.key
-    const title = this.title({key: key}).day
+    const title = this.getTitle({key: key}).day
     const prevView = $('<a class="prev-view"></a>')
     const h3 = $('<h3></h3>')
     const a = $('<a class="name"></a>')
@@ -562,7 +562,7 @@ class CsvEventCalendar {
       .removeClass(CsvEventCalendar.VIEW_NAMES.week)
       .removeClass(CsvEventCalendar.VIEW_NAMES.day)
       .addClass(view)
-    this.title({node: this.container.find('.controls h2')})
+    this.getTitle({node: this.container.find('.controls h2')})
     this.container.find('.controls .next').attr({
       'aria-label': `next ${view}`,
       title: `next ${view}`
@@ -591,7 +591,7 @@ class CsvEventCalendar {
   }
 
   viewDesc(view, key, count) {
-    const title = this.title({key: key})
+    const title = this.getTitle({key: key})
     const desc = this.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
@@ -666,7 +666,7 @@ class CsvEventCalendar {
     const dayNodes = this.container.find('.view li.day')
     dayNodes.each((i, dayNode) => {
       const key = $(dayNode).attr('data-date-key')
-      const title = this.title({key: key}).day.long
+      const title = this.getTitle({key: key}).day.long
       const events = this.eventsIndex.events[key]
       const eventCount = events && events.length || 0
       const eventsNode = $(dayNode).find('.events')
@@ -681,7 +681,7 @@ class CsvEventCalendar {
               eventsNode.append(calEvent.html())
             } else {
               const a = $('<a class="title"></a>')
-                .html(`+${events.length - 4} for ${this.title({key}).day.abbr.split(' ')[1]}`)
+                .html(`+${events.length - 4} for ${this.getTitle({key}).day.abbr.split(' ')[1]}`)
                 .attr('href', `#${this.container.attr('id')}/day/${key}`)
               eventsNode.append($('<div class="event more"></div>').append(a))            
               eventsNode.append(calEvent.html().addClass('overflow'))
@@ -794,9 +794,9 @@ class CsvEventCalendar {
     if (['min', 'max'].indexOf(minMax) > -1) {
       controls.find(`button.${(minMax === 'min' ? 'back' : 'next')}`)
         .attr('disabled', true)
-      msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.title({key: this[minMax]}).day.long}`
+      msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.getTitle({key: this[minMax]}).day.long}`
     } else if (key) {
-      msg = `No events scheduled on ${this.title({key}).day.long}`
+      msg = `No events scheduled on ${this.getTitle({key}).day.long}`
     } else {
       alert.addClass('input')
       msg = 'Your time zone does not match the calendar events. Please choose a time zone to continue.'

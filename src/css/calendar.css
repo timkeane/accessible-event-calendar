@@ -29,13 +29,13 @@
   bottom: 0;
   right: 0;
 }
-.calendar div.alert div.container,
+.calendar div.alert div.content,
 .calendar .controls .search ul {
   box-shadow: 4px 4px 8px #333;
   border-radius: 4px;
 }
 
-.calendar div.alert div.container {
+.calendar div.alert div.content {
   position: absolute;
   max-width: 280px;
   top: 45%;

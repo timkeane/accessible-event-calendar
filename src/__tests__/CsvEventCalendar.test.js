@@ -67,7 +67,7 @@ describe('constructor', () => {
   const resize = CsvEventCalendar.prototype.resize
   const loadCsv = CsvEventCalendar.prototype.loadCsv
   beforeEach(() => {
-    controlsSpy = jest.spyOn(CsvEventCalendar.prototype, 'controls')
+    controlsSpy = jest.spyOn(CsvEventCalendar.prototype, 'createControls')
     CsvEventCalendar.prototype.resize = jest.fn()
     CsvEventCalendar.prototype.loadCsv = jest.fn()
   })
@@ -104,7 +104,7 @@ describe('constructor', () => {
     expect(calendar.dateChanged).toBe('mock-date-changed')
     expect(calendar.viewChanged).toBe('mock-view-changed')
     expect(calendar.csvColumns).toEqual(CalendarEvent.DEFAULT_PROPERTIES)
-    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.createControls).toHaveBeenCalledTimes(1)
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
@@ -147,7 +147,7 @@ describe('constructor', () => {
     expect(calendar.dateChanged).toBe('mock-date-changed')
     expect(calendar.viewChanged).toBe('mock-view-changed')
     expect(calendar.csvColumns).toEqual(csvColumns)
-    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.  createControls).toHaveBeenCalledTimes(1)
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
@@ -188,7 +188,7 @@ describe('constructor', () => {
     expect(calendar.dateChanged).toBe('mock-date-changed')
     expect(calendar.viewChanged).toBe('mock-view-changed')
     expect(calendar.csvColumns).toEqual(CalendarEvent.DEFAULT_PROPERTIES)
-    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.  createControls).toHaveBeenCalledTimes(1)
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(0)
 
@@ -233,7 +233,7 @@ describe('loadCsv', () => {
 
 describe('indexData', () => {
 
-  const controls = CsvEventCalendar.prototype.controls
+  const createControls = CsvEventCalendar.prototype.createControls
   const resize = CsvEventCalendar.prototype.resize
   const loadCsv = CsvEventCalendar.prototype.loadCsv
   const autoCompleteOptions = CsvEventCalendar.prototype.autoCompleteOptions
@@ -241,7 +241,7 @@ describe('indexData', () => {
   const minMax = CsvEventCalendar.prototype.minMax
 
   beforeEach(() => {
-    CsvEventCalendar.prototype.controls = jest.fn()
+    CsvEventCalendar.prototype.createControls = jest.fn()
     CsvEventCalendar.prototype.resize = jest.fn()
     CsvEventCalendar.prototype.loadCsv = jest.fn()
     CsvEventCalendar.prototype.autoCompleteOptions = jest.fn()
@@ -250,7 +250,7 @@ describe('indexData', () => {
  })
 
   afterEach(() => {
-    CsvEventCalendar.prototype.controls = controls
+    CsvEventCalendar.prototype.createControls = createControls
     CsvEventCalendar.prototype.resize = resize
     CsvEventCalendar.prototype.loadCsv = loadCsv
     CsvEventCalendar.prototype.autoCompleteOptions = autoCompleteOptions
@@ -277,7 +277,7 @@ describe('indexData', () => {
     expect(calendar.csvColumns).toBe(CalendarEvent.DEFAULT_PROPERTIES)
     expect(ready).toHaveBeenCalledTimes(0)
     expect(calendar.minMax).toHaveBeenCalledTimes(0)
-    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.  createControls).toHaveBeenCalledTimes(1)
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
@@ -326,7 +326,7 @@ describe('indexData', () => {
     expect(calendar.csvColumns).toBe(csvColumns)
     expect(ready).toHaveBeenCalledTimes(0)
     expect(calendar.minMax).toHaveBeenCalledTimes(0)
-    expect(calendar.controls).toHaveBeenCalledTimes(1)
+    expect(calendar.  createControls).toHaveBeenCalledTimes(1)
     expect(calendar.resize).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv).toHaveBeenCalledTimes(1)
     expect(calendar.loadCsv.mock.calls[0][0]).toBe('mock-url')
@@ -687,13 +687,13 @@ describe('updateState', () => {
 
 })
 
-describe('title', () => {
+describe('getTitle', () => {
   
   afterEach(() => {
     CsvEventCalendar.IS_US = true
   })
 
-  test('title - no key - is US', () => {
+  test('getTitle - no key - is US', () => {
     expect.assertions(11)
 
     const today = CsvEventCalendar.getToday()
@@ -714,7 +714,7 @@ describe('title', () => {
       target: $('#test-cal')
     })
 
-    const title = calendar.title({node})
+    const title = calendar.getTitle({node})
 
     expect(title.month.long).toBe(`${month} ${year}`)
     expect(title.month.medium).toBe(`${mo} ${year}`)
@@ -731,7 +731,7 @@ describe('title', () => {
     expect(node.attr('aria-label')).toBe(title.month.long)
   })
 
-  test('title - no key - is not US', () => {
+  test('getTitle - no key - is not US', () => {
     expect.assertions(11)
 
     CsvEventCalendar.IS_US = false
@@ -754,7 +754,7 @@ describe('title', () => {
       target: $('#test-cal')
     })
 
-    const title = calendar.title({node})
+    const title = calendar.getTitle({node})
 
     expect(title.month.long).toBe(`${month} ${year}`)
     expect(title.month.medium).toBe(`${mo} ${year}`)
@@ -1167,7 +1167,7 @@ test('dayNavigate', () => {
   expect(calendar.updateHash.mock.calls[3][0]).toBe(`#${id}/day/2023-01-01`)
 })
 
-test('controls', () => {
+test('createControls', () => {
   expect.assertions(1)
 
   const calendar = new CsvEventCalendar({
@@ -1176,9 +1176,9 @@ test('controls', () => {
 
   calendar.container.empty()
 
-  calendar.controls()
+  calendar.createControls()
 
-  expect(calendar.container.html()).toBe(`<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete${CsvEventCalendar.ids.autoComplete}"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete${CsvEventCalendar.ids.autoComplete}"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 2}" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 2}" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 1}" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 1}" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view}" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view}" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div><p></p><button class="btn ok"><span>OK</span></button><button class="btn yes"><span>Yes</span></button><button class="btn no"><span>No</span></button></div></div>`)})
+  expect(calendar.container.html()).toBe(`<div class="controls"><button class="btn back"><span class="long">Previous</span><span class="short">&lt;</span></button><h2 aria-live="assertive"><span class="month"><span class="long"></span><span class="short"></span><span class="abbr"></span></span></h2><button class="btn next"><span class="long">Next</span><span class="short">&gt;</span></button><input type="date"><div class="search"><input role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" type="text" placeholder="Find events by name..." aria-label="Find events by name. Begin typing then press down arrow to access search results" aria-owns="autoComplete${CsvEventCalendar.ids.autoComplete}"><div class="out"></div><div class="filtered" role="listbox" id="autoComplete${CsvEventCalendar.ids.autoComplete}"></div><p class="screenreader message" aria-live="polite"></p></div><fieldset><button class="btn" aria-label="showing month view" aria-expanded="false"><span>View by month</span></button><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 2}" value="month" aria-checked="true" aria-label="View by month"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 2}" aria-label="View by month">month</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view - 1}" value="week" aria-checked="false" aria-label="View by week"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view - 1}" aria-label="View by week">week</label></div><div class="view-choice"><input name="view-choice" type="radio" id="view${CsvEventCalendar.ids.view}" value="day" aria-checked="false" aria-label="View by day"><label aria-hidden="true" for="view${CsvEventCalendar.ids.view}" aria-label="View by day">day</label></div></fieldset></div><div class="alert" aria-live="assertive" aria-modal="true"><div class="content"><p></p><form><div class="tz0 btn"><input type="radio" name="timezone" checked="" id="tz${CsvEventCalendar.ids.tz - 1}"><label for="tz${CsvEventCalendar.ids.tz - 1}"></label></div><div class="tz1 btn"><input type="radio" name="timezone" id="tz${CsvEventCalendar.ids.tz}"><label for="tz${CsvEventCalendar.ids.tz}"></label></div></form><button class="btn ok"><span>OK</span></button></div></div>`)})
 
 test('clearSearch', () => {
   expect.assertions(6)
@@ -1529,7 +1529,7 @@ test('day', () => {
 
   calendar.updateHash = jest.fn()
 
-  calendar.title = jest.fn(options => {
+  calendar.getTitle = jest.fn(options => {
     expect(options.key).toBe(keyToday)
     return {
       day: {
@@ -1964,7 +1964,7 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -1986,7 +1986,7 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -2010,7 +2010,7 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -2032,7 +2032,7 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -2056,7 +2056,7 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -2078,7 +2078,7 @@ describe('viewDesc', () => {
       target: '#test-cal'
     })
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -2102,7 +2102,7 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
@@ -2126,7 +2126,7 @@ describe('viewDesc', () => {
 
     calendar.state.foundEvent = 'mock-event-name'
 
-    const title = calendar.title({key: keyToday})
+    const title = calendar.getTitle({key: keyToday})
 
     const desc = calendar.container.find('.view-desc a')
     const long = desc.find('.long')
