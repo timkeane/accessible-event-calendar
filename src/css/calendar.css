@@ -1,4 +1,11 @@
-.calendar {
+/*!
+ *
+ *  accessible-event-calendar v1.2.1 (2023-01-06)
+ * https://github.com/timkeane/accessible-event-calendar
+ * @license Apache-2.0
+ *
+ */
+ .calendar {
   position: relative;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
@@ -50,8 +57,9 @@
 }
 .calendar div.alert.input form {
   display: block;
-  border: 1px solid black;
+  border: 1px solid #333;
   border-radius: 3px;
+  margin-bottom: 5px;
 }
 .calendar div.alert.input form input {
   float: left;
@@ -61,11 +69,11 @@
   font-weight: normal;
 }
 .calendar div.alert.input form div {
-    width: 250px;
+  width: 250px;
 }
 .calendar div.alert .ok {
-    display: block;
-    margin: auto;
+  display: block;
+  margin: auto;
 }
 
 .calendar .controls {
@@ -239,7 +247,7 @@
 .calendar .view.month .day.has-events,
 .calendar .view-wo-events .day,
 .calendar .controls .search li {
-    cursor: pointer;
+  cursor: pointer;
 }
 .calendar .view .day a.name:focus {
   background-color: #fff;
@@ -288,11 +296,11 @@
   padding: 10px;
   background-color: #add8e6;
   box-shadow: 
-    1px 0 0 0 #0000ff, 
-    0 1px 0 0 #0000ff, 
-    1px 1px 0 0 #0000ff,   /* Just to fix the corner */
-    1px 0 0 0 #0000ff inset, 
-    0 1px 0 0 #0000ff inset;
+  1px 0 0 0 #0000ff, 
+  0 1px 0 0 #0000ff, 
+  1px 1px 0 0 #0000ff,   /* Just to fix the corner */
+  1px 0 0 0 #0000ff inset, 
+  0 1px 0 0 #0000ff inset;
 }
 
 .calendar .view.month .day .event * {
@@ -323,11 +331,11 @@
 .calendar .view-wo-events li {
   list-style: none;
   box-shadow: 
-    1px 0 0 0 #888, 
-    0 1px 0 0 #888, 
-    1px 1px 0 0 #888,   /* Just to fix the corner */
-    1px 0 0 0 #888 inset, 
-    0 1px 0 0 #888 inset;
+  1px 0 0 0 #888, 
+  0 1px 0 0 #888, 
+  1px 1px 0 0 #888,   /* Just to fix the corner */
+  1px 0 0 0 #888 inset, 
+  0 1px 0 0 #888 inset;
 }
 .calendar .view.month .day,
 .calendar .view-wo-events .day {
@@ -345,11 +353,11 @@
   background-color: #333;
   color: #fff;
   box-shadow: 
-    1px 0 0 0 #888, 
-    0 1px 0 0 #888, 
-    1px 1px 0 0 #888,   /* Just to fix the corner */
-    1px 0 0 0 #888 inset, 
-    0 1px 0 0 #888 inset;
+  1px 0 0 0 #888, 
+  0 1px 0 0 #888, 
+  1px 1px 0 0 #888,   /* Just to fix the corner */
+  1px 0 0 0 #888 inset, 
+  0 1px 0 0 #888 inset;
 }
 .calendar .view.month .day h3 span.short,
 .calendar .view-wo-events .day h3 span.short {
@@ -370,7 +378,7 @@
 .calendar .view.month ul span.medium,
 .calendar .view-wo-events ul span.short,
 .calendar .view-wo-events ul span.medium {
-    display: none;
+  display: none;
 }
 .calendar .view.month .day .event,
 .calendar .view-wo-events .day .event {
@@ -448,7 +456,7 @@
 }
 .calendar .view.day a.prev-view,
 .calendar .view.week a.prev-view {
-    display: block;
+  display: block;
 }
 
 
