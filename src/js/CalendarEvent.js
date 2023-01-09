@@ -9,7 +9,7 @@ class CalendarEvent {
   * @desc Create an instance of CalendarEvent
   * @public
   * @constructor
-  * @param {module:CalendarEvent.Options} options CalendarEvent options
+  * @param {module:CalendarEvent~CalendarEvent.Options} options CalendarEvent options
   */
   constructor(options) {
     const fmt = CalendarEvent.timeFormat
@@ -79,6 +79,7 @@ class CalendarEvent {
   /**
    * @private
    * @method
+   * @returns {JQuery}
    */
   download() {
     const download = $('<a class="download" aria-label="Add event to my calendar"></a>')
@@ -103,6 +104,7 @@ class CalendarEvent {
   /**
    * @private
    * @method
+   * @returns {string}
    */
   desc() {
     const sponsor = this.sponsor
@@ -134,6 +136,7 @@ class CalendarEvent {
   /**
    * @private
    * @method
+   * @returns {JQuery}
    */
   html() {
     const name = this.name
@@ -200,7 +203,7 @@ CalendarEvent.timeFormat = (time, ampm) => {
 }
 
 /**
- * @desc Default mapping for CSV columns
+ * @desc Default mapping for CSV columns <div><code>CalendarEvent.DEFAULT_PROPERTIES = {<br>&nbsp;&nbsp;date: 'date',<br>&nbsp;&nbsp;name: 'name',<br>&nbsp;&nbsp;about: 'about',<br>&nbsp;&nbsp;start: 'start',<br>&nbsp;&nbsp;end: 'end',<br>&nbsp;&nbsp;location: 'location',<br>&nbsp;&nbsp;sponsor: 'sponsor'<br>}</code></div>
  * @public
  * @const {Object<string, string>}
  */
@@ -215,20 +218,21 @@ CalendarEvent.DEFAULT_PROPERTIES = {
 }
 
 /**
- * @desc Default time zone
+ * @desc Default time zone <div><code>CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'</code></div>
  * @public
  * @const {string}
  */
 CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'
 
 /**
- * @desc Constructor options for {@link module:CalendarEvent}
+ * @desc Constructor options for {@link module:CalendarEvent~CalendarEvent}
  * @public
  * @typedef {Object}
  * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {string} date Event date (yyyy-mm-dd)
  * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] Event date (yyyy-mm-dd)
  * @property {Object} data The event data
+ * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  */
  CalendarEvent.Options
 

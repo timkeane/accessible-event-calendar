@@ -12,7 +12,7 @@ class CsvEventCalendar {
    * @desc Create an instance of CsvEventCalendar
    * @public
    * @constructor
-   * @param {module:CsvEventCalendar.Options} options CsvEventCalendar options
+   * @param {module:CsvEventCalendar~CsvEventCalendar.Options} options CsvEventCalendar options
    */
   constructor(options) {
     /**
@@ -25,14 +25,14 @@ class CsvEventCalendar {
      * @private
      * @member {Object<string, Object>}
      */
-    this.eventsIndex = {ready: false, noData: false, events: {}}
+    this.eventsIndex = { ready: false, noData: false, events: {} }
 
     /**
      * @private
      * @member {JQuery}
      */
     this.container = $(`<div id="${CsvEventCalendar.nextId('calendar')}" class="calendar"></div>`)
-    
+
     /**
      * @private
      * @member {string}
@@ -57,22 +57,8 @@ class CsvEventCalendar {
      */
     this.eventHtml = options.eventHtml
 
-    /**
-     * @private
-     * @member {function}
-     */
     this.ready = options.ready || this.ready
-
-    /**
-     * @private
-     * @member {function}
-     */
     this.viewChanged = options.viewChanged || this.viewChanged
-
-    /**
-     * @private
-     * @member {function}
-     */
     this.dateChanged = options.dateChanged || this.dateChanged
 
     /**
@@ -127,7 +113,7 @@ class CsvEventCalendar {
       foundEvent: null,
       key: () => {
         let mm = CsvEventCalendar.pad(this.state.month + 1)
-        let dd =  CsvEventCalendar.pad(this.state.date)
+        let dd = CsvEventCalendar.pad(this.state.date)
         return `${this.state.year}-${mm}-${dd}`
       }
     }
@@ -165,22 +151,25 @@ class CsvEventCalendar {
    * @desc Default date change handler to be optionally injected with constructor options
    * @public
    * @method
+   * @param {string} dateKey The new date key
    */
-  dateChanged() {}
+  dateChanged(dateKey) { }
 
   /**
    * @desc Default vew change handler to be optionally injected with constructor options
    * @public
    * @method
+   * @param {string} viewName The new view  name
    */
-  viewChanged() {}
+  viewChanged(viewName) { }
 
   /**
    * @desc Default ready handler to be optionally injected with constructor options
    * @public
    * @method
+   * @param {module:CsvEventCalendar~CsvEventCalendar} calendar This calendar instance
    */
-  ready() {}
+  ready(calendar) { }
 
   /**
    * @private
@@ -258,13 +247,13 @@ class CsvEventCalendar {
       this.state.date = CsvEventCalendar.dateNumber(options.key)
     }
     if (this.state.key() > this.max) {
-      this.updateState({key: this.max})
-      this.alert({minMax: 'max'})
+      this.updateState({ key: this.max })
+      this.alert({ minMax: 'max' })
       return
     }
     if (this.state.key() < this.min) {
-      this.updateState({key: this.min})
-      this.alert({minMax: 'min'})
+      this.updateState({ key: this.min })
+      this.alert({ minMax: 'min' })
       return
     }
     const key = this.state.key()
@@ -352,11 +341,11 @@ class CsvEventCalendar {
     const dayNames = CsvEventCalendar.localeDayNames()
     const firstDayName = CsvEventCalendar.DAY_NAMES[firstDayIndex]
     const firstDayLocaleIndex = dayNames.indexOf(firstDayName)
-    
+
     for (let i = 1; i <= firstDayLocaleIndex; i++) {
       const prevMonthDate = totalDaysInPrevMonth - Math.abs(firstDayLocaleIndex - i)
       const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month - 1, prevMonthDate))
-      dates.push({key: key, date: prevMonthDate, monthClass: 'prev'})
+      dates.push({ key: key, date: prevMonthDate, monthClass: 'prev' })
     }
   }
 
@@ -369,7 +358,7 @@ class CsvEventCalendar {
     const totalDaysInMonth = new Date(this.state.year, this.state.month + 1, 0).getDate()
     for (let i = 1; i <= totalDaysInMonth; i++) {
       const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month, i))
-      dates.push({key: key, date: i, monthClass: 'current'})
+      dates.push({ key: key, date: i, monthClass: 'current' })
     }
   }
 
@@ -380,11 +369,11 @@ class CsvEventCalendar {
    */
   nextMonth(dates) {
     const gridsize = 42
-    if(dates.length < gridsize) {
+    if (dates.length < gridsize) {
       const count = gridsize - dates.length
-      for(let i = 1; i <= count; i++) {
+      for (let i = 1; i <= count; i++) {
         const key = CsvEventCalendar.dateKey(new Date(this.state.year, this.state.month + 1, i))
-        dates.push({key: key, date: i, monthClass: 'next'})
+        dates.push({ key: key, date: i, monthClass: 'next' })
       }
     }
   }
@@ -416,7 +405,7 @@ class CsvEventCalendar {
    * @param {Event} domEvent
    */
   navigate(domEvent) {
-    const delta =  $(domEvent.currentTarget).data('delta')
+    const delta = $(domEvent.currentTarget).data('delta')
     const view = this.state.view
     this.container.find('.controls button').removeAttr('disabled')
     this[`${view}Navigate`](delta)
@@ -441,7 +430,7 @@ class CsvEventCalendar {
     } else {
       month = this.state.month + delta
     }
-    this.updateState({month: month, year: year})
+    this.updateState({ month: month, year: year })
     this.updateHash(`#${this.container.attr('id')}/month/${this.state.key()}`)
   }
 
@@ -454,7 +443,7 @@ class CsvEventCalendar {
     const key = this.state.key()
     const date = CsvEventCalendar.dateFromKey(key)
     date.setDate(date.getDate() + (delta * 7))
-    this.updateState({key: CsvEventCalendar.dateKey(date)})
+    this.updateState({ key: CsvEventCalendar.dateKey(date) })
     const dayNode = this.dayNode(this.state.key())
     if (dayNode.length === 0) {
       this.monthView()
@@ -474,10 +463,10 @@ class CsvEventCalendar {
     const key = this.state.key()
     const date = CsvEventCalendar.dateFromKey(key)
     date.setDate(date.getDate() + delta)
-  
+
     const nextKey = CsvEventCalendar.dateKey(date)
-    this.updateState({key: nextKey})
-  
+    this.updateState({ key: nextKey })
+
     const dayNode = this.dayNode(this.state.key())
     if (dayNode.length === 0) {
       this.monthView()
@@ -513,7 +502,7 @@ class CsvEventCalendar {
         if (this.eventsIndex.events[key]) {
           this.updateHash(`#${this.container.attr('id')}/day/${key}`)
         } else {
-          this.alert({key})
+          this.alert({ key })
         }
       })
     const viewOptions = $('<fieldset></fieldset>')
@@ -710,7 +699,7 @@ class CsvEventCalendar {
         .append('<span class="long">' + name + '</span>')
         .append('<span class="medium">' + name.substring(0, 3) + '</span>')
         .append('<span class="short">' + name.substring(0, 1) + '</span>')
-        dayNames.append(li)
+      dayNames.append(li)
     })
     return month
   }
@@ -740,7 +729,7 @@ class CsvEventCalendar {
    */
   day(date, week, month) {
     const key = date.key
-    const title = this.getTitle({key: key}).day
+    const title = this.getTitle({ key: key }).day
     const prevView = $('<a class="prev-view"></a>')
     const h3 = $('<h3></h3>')
     const a = $('<a class="name"></a>')
@@ -764,15 +753,15 @@ class CsvEventCalendar {
           this.updateHash(a.attr('href'))
         }
       })
-      month.append(day)
-      return day
+    month.append(day)
+    return day
   }
 
   /**
    * @private
    * @method
    * @param {string} view
-   */  
+   */
   view(view) {
     const key = this.state.key()
     const dayNode = this.dayNode(key)
@@ -786,7 +775,7 @@ class CsvEventCalendar {
       .removeClass(CsvEventCalendar.VIEW_NAMES.week)
       .removeClass(CsvEventCalendar.VIEW_NAMES.day)
       .addClass(view)
-    this.getTitle({node: this.container.find('.controls h2')})
+    this.getTitle({ node: this.container.find('.controls h2') })
     this.container.find('.controls .next').attr({
       'aria-label': `next ${view}`,
       title: `next ${view}`
@@ -810,7 +799,7 @@ class CsvEventCalendar {
     this[`${view}View`]()
     this.container.find('.view .day[aria-hidden="true"] a.prev-view').attr('tabindex', -1)
     this.container.find(`.view .day[data-date-key="${this.state.today}"]`).addClass('today')
-    this.updateState({view})
+    this.updateState({ view })
     this.focus()
   }
 
@@ -823,7 +812,7 @@ class CsvEventCalendar {
    * @param {number} count
    */
   viewDesc(view, key, count) {
-    const title = this.getTitle({key: key})
+    const title = this.getTitle({ key: key })
     const desc = this.container.find('.view-desc a')
     const long = desc.find('.long')
     const medium = desc.find('.medium')
@@ -914,7 +903,7 @@ class CsvEventCalendar {
     const dayNodes = this.container.find('.view li.day')
     dayNodes.each((i, dayNode) => {
       const key = $(dayNode).attr('data-date-key')
-      const title = this.getTitle({key: key}).day.long
+      const title = this.getTitle({ key: key }).day.long
       const events = this.eventsIndex.events[key]
       const eventCount = events && events.length || 0
       const eventsNode = $(dayNode).find('.events')
@@ -929,9 +918,9 @@ class CsvEventCalendar {
               eventsNode.append(calEvent.html())
             } else {
               const a = $('<a class="title"></a>')
-                .html(`+${events.length - 4} for ${this.getTitle({key}).day.abbr.split(' ')[1]}`)
+                .html(`+${events.length - 4} for ${this.getTitle({ key }).day.abbr.split(' ')[1]}`)
                 .attr('href', `#${this.container.attr('id')}/day/${key}`)
-              eventsNode.append($('<div class="event more"></div>').append(a))            
+              eventsNode.append($('<div class="event more"></div>').append(a))
               eventsNode.append(calEvent.html().addClass('overflow'))
             }
           })
@@ -964,7 +953,7 @@ class CsvEventCalendar {
       this.clientTimeZone = this.timeZone
       return true
     }
-    this.alert({differentTimeZone: true})
+    this.alert({ differentTimeZone: true })
     return false
   }
 
@@ -978,9 +967,9 @@ class CsvEventCalendar {
     if (date) {
       return new Intl.DateTimeFormat('default', {
         hour12: false,
-          hour: 'numeric',
+        hour: 'numeric',
         minute: 'numeric'
-      }).format(new Date(date))  
+      }).format(new Date(date))
     }
     return ''
   }
@@ -1030,7 +1019,7 @@ class CsvEventCalendar {
           properties: this.csvColumns,
           eventHtml: this.eventHtml
         }))
-        CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])  
+        CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])
       }
     })
 
@@ -1075,9 +1064,9 @@ class CsvEventCalendar {
     if (['min', 'max'].indexOf(minMax) > -1) {
       controls.find(`button.${(minMax === 'min' ? 'back' : 'next')}`)
         .attr('disabled', true)
-      msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.getTitle({key: this[minMax]}).day.long}`
+      msg = `No events scheduled ${(minMax === 'min' ? 'before' : 'after')} ${this.getTitle({ key: this[minMax] }).day.long}`
     } else if (key) {
-      msg = `No events scheduled on ${this.getTitle({key}).day.long}`
+      msg = `No events scheduled on ${this.getTitle({ key }).day.long}`
     } else {
       alert.addClass('input')
       msg = 'Your time zone does not match the calendar events. Please choose a time zone to continue.'
@@ -1089,7 +1078,7 @@ class CsvEventCalendar {
     controls.attr('aria-hidden', true)
     view.attr('aria-hidden', true)
     alert.find('p').html(msg)
-    alert.attr({'aria-label': msg, tabindex: 0})
+    alert.attr({ 'aria-label': msg, tabindex: 0 })
       .show()
       .trigger('focus')
     const ok = alert.find('button.ok')
@@ -1145,18 +1134,64 @@ class CsvEventCalendar {
   }
 }
 
+/**
+ * @private
+ * @static
+ * @method
+ * @returns {string}
+ */
 CsvEventCalendar.getLocale = () => {
   return window.navigator.language
 }
 
+/**
+ * @private
+ * @const {boolean}
+ */
 CsvEventCalendar.IS_US = CsvEventCalendar.getLocale() === 'en-US'
+
+/**
+ * @private
+ * @const {Object<string, string>}
+ */
 CsvEventCalendar.VIEW_NAMES = {month: 'month', week: 'week', day: 'day'}
+
+/**
+ * @private
+ * @const {Array<string>}
+ */
 CsvEventCalendar.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+/**
+ * @private
+ * @const {Array<string>}
+ */
 CsvEventCalendar.DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+/**
+ * @private
+ * @const {Array<number>}
+ */
 CsvEventCalendar.CSS_WIDTHS = [645, 500, 400, 375, 340, 300, 280]
+
+/**
+ * @private
+ * @const {string}
+ */
 CsvEventCalendar.MIN_DEFAULT = '1900-01-01'
+
+/**
+ * @private
+ * @const {string}
+ */
 CsvEventCalendar.MAX_DEFAULT = '2200-01-01'
 
+/**
+ * @private
+ * @static
+ * @method
+ * @returns {Array<string>}
+ */
 CsvEventCalendar.localeDayNames = () => {
   const startOfWeekByCountry = {
     AE: 7, AF: 7, AG: 1, AS: 1, AU: 1, BD: 1, BH: 7, BR: 1, BS: 1, BT: 1, BW: 1, BZ: 1, CA: 1, CN: 1, CO: 1,
@@ -1351,7 +1386,7 @@ CsvEventCalendar.nextId = prefix => {
 CsvEventCalendar.filter = (out, filtered, typed) => {
   const long = typed.length > 1
   const veryLong = typed.length > 6
-  const tested = {exact: [], possible: []}
+  const tested = { exact: [], possible: [] }
   const matchers = CsvEventCalendar.regexp(typed)
   const all = []
   const test = CsvEventCalendar.filterTest
@@ -1423,19 +1458,20 @@ CsvEventCalendar.getToday = () => {
 }
 
 /**
- * @desc Constructor options for {@link module:CsvEventCalendar}
+ * @desc Constructor options for {@link module:CsvEventCalendar~CsvEventCalendar}
  * @public
  * @typedef {Object}
  * @property {jQuery|Element|string} target The target DOM node for creating the calendar
  * @property {string} url The URL to the CSV event data
- * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] The calendar time zone
- * @property {string} min The minimum date formatted as yyyy-mm-dd
- * @property {string} max The maximum date formatted as yyyy-mm-dd
- * @property {function} dateChanged Handler for date changed event
- * @property {function} viewChanged Handler for state changed event
- * @property {Object<string, string>} [csvColumns=CalendarEvent.DEFAULT_PROPERTIES] A map of CSV column names keyed to the necessary property names
- * @property {function=} eventHtml Custom render for the event details
+ * @property {string} [timeZone={@link module:CalendarEvent~CalendarEvent.DEFAULT_TIME_ZONE}] The calendar time zone
+ * @property {Object<string, string>} [csvColumns={@link module:CalendarEvent~CalendarEvent.DEFAULT_PROPERTIES}] A map of CSV column names keyed to the necessary property names
+ * @property {function(string)} dateChanged Handler for date changed event
+ * @property {function(string)} viewChanged Handler for state changed event
+ * @property {function(module:CsvEventCalendar~CsvEventCalendar)} ready Fires once data is loaded
+ * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
+ * @property {string=} min The minimum date formatted as yyyy-mm-dd (defaults to the lower bound of events)
+ * @property {string=} max The maximum date formatted as yyyy-mm-dd (defaults to the upper bound of events)
  */
- CsvEventCalendar.Options
+CsvEventCalendar.Options
 
 export default CsvEventCalendar
