@@ -70,7 +70,7 @@ class CalendarEvent {
         this[prop] = data[prop]
       }
     })
-    
+
     if (typeof options.eventHtml === 'function') {
       this.html = options.eventHtml
     }
