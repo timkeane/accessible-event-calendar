@@ -63,6 +63,10 @@ class CalendarEvent {
      * @member {string}
      */
     this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
+
+    if (typeof options.eventHtml === 'function') {
+      this.html = options.eventHtl
+    }
   }
 
   /**

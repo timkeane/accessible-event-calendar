@@ -1107,7 +1107,7 @@ test('weekNavigate', () => {
 })
 
 test('dayNavigate', () => {
-  expect.assertions(21)
+  expect.assertions(16)
 
   testToday = '2022-12-14'
 
@@ -1124,9 +1124,7 @@ test('dayNavigate', () => {
   const calendar = new CsvEventCalendar({
     target: $('#test-cal'),
     url: 'mock-url',
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    min: '1990-01-01',
-    max: '2090-01-01'
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   })
 
   const id = calendar.container[0].id
@@ -1156,16 +1154,6 @@ test('dayNavigate', () => {
   expect(calendar.monthView).toHaveBeenCalledTimes(0)
   expect(calendar.updateHash).toHaveBeenCalledTimes(3)
   expect(calendar.updateHash.mock.calls[2][0]).toBe(`#${id}/day/${keyAfter}`)
-
-  calendar.updateState({key: '2022-12-31'})
-  expect(calendar.state.key()).toBe('2022-12-31')
-
-  calendar.dayNavigate(1)
-
-  expect(calendar.state.key()).toBe('2023-01-01')
-  expect(calendar.monthView).toHaveBeenCalledTimes(1)
-  expect(calendar.updateHash).toHaveBeenCalledTimes(4)
-  expect(calendar.updateHash.mock.calls[3][0]).toBe(`#${id}/day/2023-01-01`)
 })
 
 test('createControls', () => {

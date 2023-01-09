@@ -481,7 +481,8 @@ class CsvEventCalendar {
     const dayNode = this.dayNode(this.state.key())
     if (dayNode.length === 0) {
       this.monthView()
-    } else if (!dayNode.hasClass('has-events')) {
+    }
+    if (!dayNode.hasClass('has-events')) {
       this.dayNavigate(delta)
       return
     }
@@ -1026,7 +1027,8 @@ class CsvEventCalendar {
           timeZone: this.clientTimeZone,
           date: key,
           data: calEvent,
-          properties: this.csvColumns
+          properties: this.csvColumns,
+          eventHtml: this.eventHtml
         }))
         CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])  
       }
@@ -1432,6 +1434,7 @@ CsvEventCalendar.getToday = () => {
  * @property {function} dateChanged Handler for date changed event
  * @property {function} viewChanged Handler for state changed event
  * @property {Object<string, string>} [csvColumns=CalendarEvent.DEFAULT_PROPERTIES] A map of CSV column names keyed to the necessary property names
+ * @property {function=} eventHtml Custom render for the event details
  */
  CsvEventCalendar.Options
 
