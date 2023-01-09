@@ -64,8 +64,15 @@ class CalendarEvent {
      */
     this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
 
+    const customPropNames = Object.values(props)
+    Object.keys(data).forEach(prop => {
+      if (customPropNames.indexOf(prop) === -1) {
+        this[prop] = data[prop]
+      }
+    })
+    
     if (typeof options.eventHtml === 'function') {
-      this.html = options.eventHtl
+      this.html = options.eventHtml
     }
   }
 
@@ -74,6 +81,8 @@ class CalendarEvent {
    * @method
    */
   download() {
+    const download = $('<a class="download" aria-label="Add event to my calendar"></a>')
+      .attr('download', `${this.name.replace(/ /g, '-')}.ics`)
     const e = encodeURIComponent
     const ics = 'data:text/calendar,' +
       encodeURIComponent('BEGIN:VCALENDAR\n' +
@@ -88,7 +97,7 @@ class CalendarEvent {
         'END:VEVENT\n' +
         'END:VCALENDAR\n'
       )
-      return ics
+    return download.attr('href', ics)
   }
 
   /**
@@ -131,9 +140,7 @@ class CalendarEvent {
     const location = this.location
     const sponsor = this.sponsor
     const about = this.about
-    const download = $('<a class="download" aria-label="Add event to my calendar"></a>')
-      .attr('download', `${name.replace(/ /g, '-')}.ics`)
-      .attr('href', this.download())
+    const download = this.download()
     const time = $('<div class="time"></div>')
       .append('<strong>Start:</strong>')
       .append(`<span>${this.start}</span>`)

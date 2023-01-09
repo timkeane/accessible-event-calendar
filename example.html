@@ -71,17 +71,34 @@
     try {
       var search = window.location.search.substring(1)
       var multi = search.split('=')[1] === 'true'
-      function eventHtml(calEvent) {
-        var html = CsvEventCalendar.prototype.eventHtml.call(this, calEvent);
-        var sponsor = $('<div class="sponsor"></div>')
-          .html('<strong>Sponsor:</strong> ' + calEvent.sponsor);
-        sponsor.insertAfter(html.find('h4'));
-        return html;
-      };
+
       if (multi) {
+        var eventHtml = function() {
+          const name = this.name;
+          const location = this.location;
+          const sponsor = this.sponsor;
+          const guest = this['Guest Speaker'];
+          const about = this.about;
+          const download = this.download();
+          const time = $('<div class="time"></div>')
+            .append('<strong>Start:</strong>')
+            .append(`<span>${this.start}</span>`);
+          if (this.end) {
+            time.append('<strong>End:</strong>')
+              .append(`<span>${this.end}</span>`);
+          }
+          return $('<div class="event"></div>')
+            .append(download)
+            .append(`<div class="title">${name}</div>`)
+            .append(`<h4>${name}</h4>`)
+            .append(time)
+            .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '<br>')
+            .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
+            .append(guest ? `<h5>Special Guest:</h5> <div class="guest">${guest}</div>` :  '<br>')
+            .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>');
+        };
         var calendar1 = new CsvEventCalendar({
           target: $('#calendar-1'), 
-          url: './calendar.csv',
           eventHtml: eventHtml,
           dateChanged: function(day) {
             console.log('calendar1 dateChanged', day);

@@ -55,7 +55,7 @@ class CsvEventCalendar {
      * @private
      * @member {function}
      */
-    this.eventHtml = options.eventHtml || this.eventHtml
+    this.eventHtml = options.eventHtml
 
     /**
      * @private
