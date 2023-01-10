@@ -1501,7 +1501,7 @@ test('week', () => {
 })
 
 test('day', () => {
-  expect.assertions(16)
+  expect.assertions(18)
 
   const today = CsvEventCalendar.getToday()
   const keyToday = CsvEventCalendar.dateKey(today)
@@ -1530,7 +1530,7 @@ test('day', () => {
     }
   })
 
-  const day = calendar.day(date, weekOfMonth, month)
+  let day = calendar.day(date, weekOfMonth, month)
 
   expect(month.children().length).toBe(1)
   expect(month.children().get(0)).toBe(day.get(0))
@@ -1539,15 +1539,19 @@ test('day', () => {
   expect(day.hasClass('current-mo')).toBe(true)
   expect(day.hasClass(`week-${weekOfMonth}`)).toBe(true)
   expect(day.attr('data-date-key')).toBe(date.key)
-  expect(day.html()).toBe(`<a class="prev-view"></a><h3><a class="name" href="#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}"><span class="long">long title</span><span class="medium">medium title</span><span class="abbr">abbr title</span><span class="short">short title</span></a></h3><div class="events"></div>`)
+  expect(day.html()).toBe('<a class="prev-view"></a><h3><a class="name"><span class="long">long title</span><span class="medium">medium title</span><span class="abbr">abbr title</span><span class="short">short title</span></a></h3><div class="events"></div>')
 
   day.trigger(domEvent)
 
   expect(calendar.updateHash).toHaveBeenCalledTimes(0)
   expect(domEvent.preventDefault).toHaveBeenCalledTimes(0)
 
-  day.addClass('has-events').trigger(domEvent)
+  calendar.eventsIndex.ready = true
+  day = calendar.day(date, weekOfMonth, month)
+    .addClass('has-events')
+    .trigger(domEvent)
 
+  expect(day.html()).toBe(`<a class="prev-view"></a><h3><a class="name" href="#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}"><span class="long">long title</span><span class="medium">medium title</span><span class="abbr">abbr title</span><span class="short">short title</span></a></h3><div class="events"></div>`)
   expect(calendar.updateHash).toHaveBeenCalledTimes(1)
   expect(calendar.updateHash.mock.calls[0][0]).toBe(`#calendar${CsvEventCalendar.ids.calendar}/day/${date.key}`)
   expect(domEvent.preventDefault).toHaveBeenCalledTimes(1)
@@ -2464,7 +2468,7 @@ describe('populate', () => {
       expect(eventsNode.parent()[0]).toBe(dayNode)
       expect(container.find(`[data-date-key="${key}"]`).hasClass('has-events')).toBe(false)
       expect($(dayNode).hasClass('selected')).toBe(key === testToday)
-      expect(a.attr('href')).toBe(`#${container.attr('id')}/day/${key}`)
+      expect(a.attr('href')).toBeUndefined()
     })
   })
 

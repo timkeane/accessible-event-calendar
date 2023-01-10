@@ -471,7 +471,7 @@ class CsvEventCalendar {
     if (dayNode.length === 0) {
       this.monthView()
     }
-    if (!dayNode.hasClass('has-events')) {
+    if (!this.container.find('.view-wo-events').length && !dayNode.hasClass('has-events')) {
       this.dayNavigate(delta)
       return
     }
@@ -738,7 +738,9 @@ class CsvEventCalendar {
       .append(`<span class="medium">${title.medium}</span>`)
       .append(`<span class="abbr">${title.abbr}</span>`)
       .append(`<span class="short">${title.short}</span>`)
-      .attr('href', `#${this.container.attr('id')}/day/${key}`)
+    if (this.eventsIndex.ready) {
+      a.attr('href', `#${this.container.attr('id')}/day/${key}`)
+    }
     const day = $('<li class="day"></li>')
       .data(CsvEventCalendar.VIEW_NAMES.week, week)
       .addClass(`${date.monthClass}-mo`)
