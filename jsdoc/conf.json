@@ -6,7 +6,7 @@
   "sourceType": "module",
   "opts": {
     "destination": "./dist/doc",
-    "readme": "./README.md",
+    "readme": "./jsdoc/HOME.md",
     "encoding": "utf8",
     "recurse": true,
     "verbose": true

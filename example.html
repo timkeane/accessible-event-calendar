@@ -69,18 +69,12 @@
   <div id="calendar-3"></div>
   <script>
     try {
-      var search = window.location.search.substring(1)
-      var multi = search.split('=')[1] === 'true'
-
+      var search = window.location.search.substring(1);
+      var multi = search.split('=')[1] === 'true';
       if (multi) {
-        var eventHtml = function() {
-          var html = CalendarEvent.prototype.call(this)
-          var guest = this['Guest Speaker'];
-          return html.append(guest ? `<h5>Special Guest:</h5> <div class="guest">${guest}</div>` :  '<br>');
-        };
         var calendar1 = new CsvEventCalendar({
           target: $('#calendar-1'), 
-          eventHtml: eventHtml,
+          url: './calendar.csv',
           dateChanged: function(day) {
             console.log('calendar1 dateChanged', day);
           },
@@ -91,7 +85,11 @@
         var calendar2 = new CsvEventCalendar({
           target: $('#calendar-2'), 
           url: './different-calendar.csv',
-          eventHtml: eventHtml,
+          eventHtml: function() {
+            var html = CalendarEvent.prototype.html.call(this);
+            var guest = this['Guest Speaker'];
+            return html.append(guest ? `<h5>Special Guest:</h5> <div class="guest">${guest}</div>` :  '');
+          },
           csvColumns: {
             date: 'Date',
             name: 'Event Name',
