@@ -32,9 +32,11 @@
 
 <br>
 
-### <a href="#build">Build</a> or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
+### Basic javascript usage
 
-### Include the javascript and css on your page:
+#### <a href="#build">Build</a> or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
+
+#### Include the javascript and css on your page:
 
 ```
   <script src="./calendar.min.js"></script>
@@ -42,13 +44,13 @@
 
 ```
 
-### Create a target DIV on your page into which the calendar will be rendered:
+#### Create a target DIV on your page into which the calendar will be rendered:
 
 ```
     <div id="calendar-demo"></div>
 ```
 
-### Instantiate the calendar
+#### Instantiate the calendar
 
 ```
   var calendar = new CsvEventCalendar({
@@ -64,6 +66,35 @@
       sponsor: 'Sponsor'
     }
   });
+```
+
+### Node.js
+
+#### package.json
+```
+{
+  ...
+    "dependencies": {
+      "accessible-event-calendar": "latest",
+      "jquery": "^3.6.2",
+      "papaparse": "^5.3.2",
+      ...
+    }
+  ...
+}
+```
+
+#### index.js
+
+```
+
+import CsvEventCalendar from 'accessible-event-calendar/CsvEventCalendar'
+
+const calendar = new CsvEventCalendar({
+  target: '#calendar-demo',
+  url: './calendar.csv'
+})
+
 ```
 
 ## CSV Format Requirements<a name="csv-format-requirements"></a>

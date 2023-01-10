@@ -14,7 +14,7 @@
     "postrelease": "npm run jsdoc",
     "jsdoc": "jsdoc -c ./jsdoc/conf.json && node release.js",
     "prepkg": "npm run clean && mkdir dist",
-    "pkg": "cp ./package.json ./dist/ && cp ./src/js/CsvEventCalendar.js ./dist/index.js  && cp ./src/css/* ./dist/",
+    "pkg": "cp ./package.json ./dist/ && cp ./src/js/CsvEventCalendar.js ./dist/ && cp ./src/js/CalendarEvent.js ./dist/  && cp ./src/css/* ./dist/",
     "postpkg": "cd dist && npm pack"
   },
   "author": "Tim Keane <t.d.keane@gmail.com> (https://timkeane.github.io/)",

@@ -31,8 +31,13 @@
 |2023-01-16|MLK Day Event|1200|1700|
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
 
-### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
-### Include the javascript and css on your page:
+<br>
+
+### Basic javascript usage
+
+#### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
+
+#### Include the javascript and css on your page:
 
 ```
   <script src="./calendar.min.js"></script>
@@ -40,13 +45,13 @@
 
 ```
 
-### Create a target DIV on your page into which the calendar will be rendered:
+#### Create a target DIV on your page into which the calendar will be rendered:
 
 ```
     <div id="calendar-demo"></div>
 ```
 
-### Instantiate the calendar
+#### Instantiate the calendar
 
 ```
   var calendar = new CsvEventCalendar({
@@ -62,6 +67,35 @@
       sponsor: 'Sponsor'
     }
   });
+```
+
+### Node.js
+
+#### package.json
+```
+{
+  ...
+    "dependencies": {
+      "accessible-event-calendar": "latest",
+      "jquery": "^3.6.2",
+      "papaparse": "^5.3.2",
+      ...
+    }
+  ...
+}
+```
+
+#### index.js
+
+```
+
+import CsvEventCalendar from 'accessible-event-calendar/CsvEventCalendar'
+
+const calendar = new CsvEventCalendar({
+  target: '#calendar-demo',
+  url: './calendar.csv'
+})
+
 ```
 
 ## CSV Format Requirements
