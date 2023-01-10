@@ -1,16 +1,15 @@
 # accessible-event-calendar
 
-[About](#about)
+<ul style="font-size:150%">
+  <li><a href="#about">About</a></li>
+  <li><a href="#build">Build</a></li>
+  <li><a href="#usage">Usage</a></li>
+  <li><a href="#csv-format-requirements">CSV Format Requirements</a></li>
+</ul>
 
-[Build](#build)
+## About<a name="about"></a>
 
-[Usage](#usage)
-
-[CSV Format Requirements](#csv-format-requirements)
-
-## About
-
-## Build
+## Build<a name="build"></a>
 
 ### To build the deployable javascript and example implementation:
 
@@ -19,7 +18,7 @@
   * Run `npm run build`
   * Deployable files will be located in the `dist` folder
 
-## Usage
+## Usage<a name="useage"></a>
 
 ### Generate your calendar data:
 
@@ -30,6 +29,8 @@
 |2023-01-01|New Year's Day Brunch|11am|3:30PM|
 |2023-01-16|MLK Day Event|1200|1700|
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
+
+<br>
 
 ### Include the javascript and css on your page:
 
@@ -63,7 +64,7 @@
   });
 ```
 
-## CSV Format Requirements
+## CSV Format Requirements<a name="csv-format-requirements"></a>
 
 ### File must include a header row with column names for the following event properties:
 * Event date
