@@ -35,6 +35,7 @@
 
 #### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
 
+#### Example page
 ```
   <!DOCTYPE html>
   <html>
