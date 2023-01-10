@@ -168,7 +168,7 @@ const calendar = new CsvEventCalendar({
 ```
 
 ### File may contain additional column names as necessary for the specific implementation
-  * All additional CSV columns will become [`CalendarEvent`](./src/js/CalendarEvent.js#L67) properties
+  * All additional CSV columns will become [`CalendarEvent`](./src/js/CalendarEvent.js#L67-L70) properties
   * Use the [`CsvEventCalendar.Options.eventHtml`](./src/js/CalendarEvent.js#L235) constructor option when creating an instance of [`CsvEventCalendar`](./src/js/CalendarEvent.js#L1) to alter the HTML rendering of events
 
 #### Example CSV
