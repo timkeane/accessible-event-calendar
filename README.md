@@ -54,7 +54,7 @@
 
 ### CSV columns may alternatively be mapped to the required format
 
-  * Use the [`CsvEventCalendar.Options.csvColumns`](module-CsvEventCalendar-CsvEventCalendar.html#.Options) constructor option when creating an instance of [`CsvEventCalendar`](module-CsvEventCalendar-CsvEventCalendar.html)
+  * Use the [`CsvEventCalendar.Options.csvColumns`](./src/js/CsvEventCalendar.js#L1467) constructor option when creating an instance of [`CsvEventCalendar`](./src/js/CsvEventCalendar.js#L1)
 
 #### Example CSV:
 
@@ -85,8 +85,8 @@
 ```
 
 ### File may contain additional column names as necessary for the specific implementation
-  * All additional CSV columns will become [`CalendarEvent`](module-CalendarEvent-CalendarEvent.html) properties
-  * Use the [`CsvEventCalendar.Options.eventHtml`](module-CsvEventCalendar-CsvEventCalendar.html#.Options) constructor option when creating an instance of [`CsvEventCalendar`](module-CsvEventCalendar-CsvEventCalendar.html) to alter the HTML rendering of events
+  * All additional CSV columns will become [`CalendarEvent`](./src/js/CalendarEvent.js#L67) properties
+  * Use the [`CsvEventCalendar.Options.eventHtml`](./src/js/CalendarEvent.js#L235) constructor option when creating an instance of [`CsvEventCalendar`](./src/js/CalendarEvent.js#L1) to alter the HTML rendering of events
 
 #### Example CSV:
 
