@@ -11,7 +11,7 @@
 
 ## Build<a name="build"></a>
 
-### To build the deployable javascript and example implementation:
+### Build the deployable javascript and example implementation
 
   * Clone `git clone https://github.com/timkeane/accessible-event-calendar`
   * Run `npm install`
@@ -20,9 +20,9 @@
 
 ## Usage<a name="usage"></a>
 
-### Generate your calendar data:
+### Generate your calendar data
 
-#### Example CSV:
+#### Example CSV
 
 |date|name|start|end|
 |---|---|---|---|
@@ -34,38 +34,33 @@
 
 ### Basic javascript usage
 
-#### <a href="#build">Build</a> or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
-
-#### Include the javascript and css on your page:
+#### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
 
 ```
-  <script src="./calendar.min.js"></script>
-  <link href="./calendar.min.css" rel="stylesheet">
-
-```
-
-#### Create a target DIV on your page into which the calendar will be rendered:
-
-```
-    <div id="calendar-demo"></div>
-```
-
-#### Instantiate the calendar
-
-```
-  var calendar = new CsvEventCalendar({
-    target: $('#calendar-demo'), 
-    url: './calendar.csv',
-    csvColumns: {
-      date: 'Event date',
-      name: 'Title',
-      about: 'Description',
-      start: 'Begins',
-      end: 'Ends',
-      location: 'Address',
-      sponsor: 'Sponsor'
-    }
-  });
+  <html>
+    <head>
+      <title></title>
+      <!-- 
+        Include the javascript and css on your page
+      -->
+      <script src="./calendar.min.js"></script>
+      <link href="./calendar.min.css" rel="stylesheet">
+    </head>
+    <body>
+      <!-- 
+        Create a target DIV on your page into which the
+        calendar will be rendered
+      -->
+      <div id="calendar-demo"></div>
+      <script>
+        /* Instantiate the calendar */
+        var calendar = new CsvEventCalendar({
+          target: $('#calendar-demo'), 
+          url: './calendar.csv'
+        });
+      </script>
+    </body>
+  </html>
 ```
 
 ### Node.js
@@ -112,7 +107,7 @@ const calendar = new CsvEventCalendar({
   * Recommended column name `end`
   * 12 hr or 24 hr format
 
-#### Example CSV:
+#### Example CSV
 
 |date|name|start|end|
 |---|---|---|---|
@@ -130,7 +125,7 @@ const calendar = new CsvEventCalendar({
 * Event description
   * Recommended column name `about`
 
-#### Example CSV:
+#### Example CSV
 
 |date|name|start|end|location|sponsor|about
 |---|---|---|---|---|---|---|
@@ -140,11 +135,11 @@ const calendar = new CsvEventCalendar({
 
 <br>
 
-### CSV columns may alternatively be mapped to the required format:
+### CSV columns may alternatively be mapped to the required format
 
   * Use the [`CsvEventCalendar.Options.csvColumns`](module-CsvEventCalendar-CsvEventCalendar.html#.Options) constructor option when creating an instance of [`CsvEventCalendar`](module-CsvEventCalendar-CsvEventCalendar.html)
 
-#### Example CSV:
+#### Example CSV
 
 |Event date|Title|Begins|Ends|Address|Sponsor|Description
 |---|---|---|---|---|---|---|
@@ -154,7 +149,7 @@ const calendar = new CsvEventCalendar({
 
 <br>
 
-#### Column mappings:
+#### Column mappings
 
 ```
   var calendar = new CsvEventCalendar({
@@ -176,7 +171,7 @@ const calendar = new CsvEventCalendar({
   * All additional CSV columns will become [`CalendarEvent`](module-CalendarEvent-CalendarEvent.html) properties
   * Use the [`CsvEventCalendar.Options.eventHtml`](module-CsvEventCalendar-CsvEventCalendar.html#.Options) constructor option when creating an instance of [`CsvEventCalendar`](module-CsvEventCalendar-CsvEventCalendar.html) to alter the HTML rendering of events
 
-#### Example CSV:
+#### Example CSV
 
 |date|name|start|end|url
 |---|---|---|---|---|
@@ -186,7 +181,7 @@ const calendar = new CsvEventCalendar({
 
 <br>
 
-#### Specify an `eventHtml` function:
+#### Specify an `eventHtml` function
 
 ```
   var calendar = new CsvEventCalendar({
