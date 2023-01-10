@@ -1,5 +1,15 @@
 # accessible-event-calendar
 
+[About](#about)
+
+[Build](#build)
+
+[Usage](#usage)
+
+[CSV Format Requirements](#csv-format-requirements)
+
+## About
+
 ## Build
 
 ### To build the deployable javascript and example implementation:
@@ -8,6 +18,50 @@
   * Run `npm install`
   * Run `npm run build`
   * Deployable files will be located in the `dist` folder
+
+## Usage
+
+### Generate your calendar data:
+
+#### Example CSV:
+
+|date|name|start|end|
+|---|---|---|---|
+|2023-01-01|New Year's Day Brunch|11am|3:30PM|
+|2023-01-16|MLK Day Event|1200|1700|
+|2023-03-17|St. Patrick's Day Parade|9a|5p|
+
+### Include the javascript and css on your page:
+
+```
+  <script src="./calendar.min.js"></script>
+  <link href="./calendar.min.css" rel="stylesheet">
+
+```
+
+### Create a target DIV on your page into which the calendar will be rendered:
+
+```
+    <div id="calendar-demo"></div>
+```
+
+### Instantiate the calendar
+
+```
+  var calendar = new CsvEventCalendar({
+    target: $('#calendar-demo'), 
+    url: './calendar.csv',
+    csvColumns: {
+      date: 'Event date',
+      name: 'Title',
+      about: 'Description',
+      start: 'Begins',
+      end: 'Ends',
+      location: 'Address',
+      sponsor: 'Sponsor'
+    }
+  });
+```
 
 ## CSV Format Requirements
 
@@ -70,7 +124,7 @@
 
 ```
   var calendar = new CsvEventCalendar({
-    target: $('#calendar'), 
+    target: $('#calendar-demo'), 
     url: './calendar.csv',
     csvColumns: {
       date: 'Event date',
@@ -102,7 +156,7 @@
 
 ```
   var calendar = new CsvEventCalendar({
-    target: $('#calendar'), 
+    target: $('#calendar-demo'), 
     url: './calendar.csv',
     eventHtml: function() {
       var html = CalendarEvent.prototype.html.call(this);
