@@ -31,8 +31,6 @@
 |2023-01-16|MLK Day Event|1200|1700|
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
 
-<br>
-
 ### Basic javascript usage
 
 #### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
@@ -122,8 +120,6 @@ const calendar = new CsvEventCalendar({
 |2023-01-16|MLK Day Event|1200|1700|
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
 
-<br>
-
 ### File may contain optional column names for the following event properties:
 * Event sponsor
   * Recommended column name `sponsor`
@@ -140,8 +136,6 @@ const calendar = new CsvEventCalendar({
 |2023-01-16|MLK Day Event|1200|1700|Central Park|Parks Department|Many speakers
 |2023-03-17|St. Patrick's Day Parade|9a|5p|5th Ave|Guinness|Long walk
 
-<br>
-
 ### CSV columns may alternatively be mapped to the required format
 
   * Use the [`CsvEventCalendar.Options.csvColumns`](./src/js/CsvEventCalendar.js#L1467) constructor option when creating an instance of [`CsvEventCalendar`](./src/js/CsvEventCalendar.js#L1)
@@ -153,8 +147,6 @@ const calendar = new CsvEventCalendar({
 |2023-01-01|New Year's Day Brunch|11am|3:30PM|Someplace fancy|The New Year Committee|Green eggs and ham
 |2023-01-16|MLK Day Event|1200|1700|Central Park|Parks Department|Many speakers
 |2023-03-17|St. Patrick's Day Parade|9a|5p|5th Ave|Guinness|Long walk
-
-<br>
 
 #### Column mappings
 
@@ -185,8 +177,6 @@ const calendar = new CsvEventCalendar({
 |2023-01-01|New Year's Day Brunch|11am|3:30PM|https://new.year.day/
 |2023-01-16|MLK Day Event|1200|1700|https://mlk.2023.day/
 |2023-03-17|St. Patrick's Day Parade|9a|5p|https://weargreen.org
-
-<br>
 
 #### Specify an `eventHtml` function
 
