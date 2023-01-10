@@ -10,6 +10,7 @@
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
 }
+.calendar *,
 .calendar .controls button,
 .calendar .controls input,
 .calendar .alert *,

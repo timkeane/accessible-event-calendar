@@ -37,9 +37,15 @@
 #### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
 
 ```
+  <!DOCTYPE html>
   <html>
     <head>
-      <title></title>
+      <title>calendar-demo</title>
+      <!-- 
+        Include javascript dependencies
+      -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
       <!-- 
         Include the javascript and css on your page
       -->
