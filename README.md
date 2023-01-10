@@ -31,6 +31,7 @@
 |2023-01-16|MLK Day Event|1200|1700|
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
 
+### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
 ### Include the javascript and css on your page:
 
 ```

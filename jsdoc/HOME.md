@@ -18,7 +18,7 @@
   * Run `npm run build`
   * Deployable files will be located in the `dist` folder
 
-## Usage<a name="useage"></a>
+## Usage<a name="usage"></a>
 
 ### Generate your calendar data:
 
@@ -31,6 +31,8 @@
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
 
 <br>
+
+### <a href="#build">Build</a> or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
 
 ### Include the javascript and css on your page:
 
