@@ -9,6 +9,9 @@
 
 ## About<a name="about"></a>
 
+This project was built to deliver a simple, light weight and low tech event calendar for use within the nyc.gov web site. Among the requirements were ease of updating events by non programmers, as well as accessible screen reader performance and keyboard navigation. The event data is created as simple CSV in a spreadsheet or text editor. Screen reader performance and keyboard navigation were acheived 
+through a series of agile accessible design working sessions with visually impaired screen reader users.
+
 ## Build<a name="build"></a>
 
 ### Build the deployable javascript and example implementation
