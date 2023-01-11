@@ -33,7 +33,7 @@
 
 #### Know the time zone for the data
   * Run `Intl.supportedValuesOf('timeZone')` in the browser console to get a list of all time zones
-  * Run `Intl.DateTimeFormat().resolvedOptions().timeZone` in the browser console to get the systemll time zone
+  * Run `Intl.DateTimeFormat().resolvedOptions().timeZone` in the browser console to get the system time zone
 
 ### Basic javascript usage
 
