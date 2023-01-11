@@ -3,7 +3,18 @@
   "version": "1.3.2",
   "description": "Accessible event calendar backed by CSV data",
   "homepage": "https://github.com/timkeane/accessible-event-calendar",
-  "keywords": ["accessible", "event", "calendar", "screen reader"],
+  "keywords": [
+    "accessible",
+    "accessibility",
+    "keyboard navigation",
+    "event",
+    "calendar",
+    "screen reader",
+    "inclusive design",
+    "HTML",
+    "javascript",
+    "WAI-ARIA"
+  ],
   "scripts": {
     "test": "jest",
     "clean": "rm -rf ./dist",
