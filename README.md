@@ -21,7 +21,7 @@
 
 ## Usage
 
-### Generate your calendar data
+### Generate the calendar data
 
 #### Example CSV
 
@@ -30,6 +30,10 @@
 |2023-01-01|New Year's Day Brunch|11am|3:30PM|
 |2023-01-16|MLK Day Event|1200|1700|
 |2023-03-17|St. Patrick's Day Parade|9a|5p|
+
+#### Know the time zone for the data
+  * Run `Intl.supportedValuesOf('timeZone')` in the browser console to get a list of all time zones
+  * Run `Intl.DateTimeFormat().resolvedOptions().timeZone` in the browser console to get the systemll time zone
 
 ### Basic javascript usage
 
@@ -47,22 +51,24 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
       <!-- 
-        Include the javascript and css on your page
+        Include the accessible-event-calendar
+        javascript and css on the page
       -->
       <script src="./calendar.min.js"></script>
       <link href="./calendar.min.css" rel="stylesheet">
     </head>
     <body>
       <!-- 
-        Create a target DIV on your page into which the
-        calendar will be rendered
+        Create a target DIV on the page 
+        into which the calendar will be rendered
       -->
       <div id="calendar-demo"></div>
       <script>
         /* Instantiate the calendar */
         var calendar = new CsvEventCalendar({
           target: $('#calendar-demo'), 
-          url: './calendar.csv'
+          url: './calendar.csv',
+          timeZone: 'America/New_York'
         });
       </script>
     </body>
@@ -93,7 +99,8 @@ import CsvEventCalendar from 'accessible-event-calendar/CsvEventCalendar'
 
 const calendar = new CsvEventCalendar({
   target: '#calendar-demo',
-  url: './calendar.csv'
+  url: './calendar.csv',
+  timeZone: 'America/New_York'
 })
 
 ```
@@ -155,6 +162,7 @@ const calendar = new CsvEventCalendar({
   var calendar = new CsvEventCalendar({
     target: $('#calendar-demo'), 
     url: './calendar.csv',
+    timeZone: 'America/New_York',
     csvColumns: {
       date: 'Event date',
       name: 'Title',
@@ -185,6 +193,7 @@ const calendar = new CsvEventCalendar({
   var calendar = new CsvEventCalendar({
     target: $('#calendar-demo'), 
     url: './calendar.csv',
+    timeZone: 'America/New_York',
     eventHtml: function() {
       var html = CalendarEvent.prototype.html.call(this);
       var a = $('<a></a>')

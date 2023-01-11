@@ -3,11 +3,17 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>accessible-event-calendar</title>
+  <!-- 
+    Include javascript dependencies
+  -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <!-- 
+    Include the accessible-event-calendar
+    javascript and css on the page
+  -->
   <script src="./calendar.min.js"></script>
   <link href="./calendar.min.css" rel="stylesheet">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <style>
     body {
       padding: 20px;
@@ -64,6 +70,7 @@
     This example must be served from the <span>dist</span> folder
     after running <span>npm run build</span>
   </div>
+  <!-- target elements -->
   <div id="calendar-1"></div>
   <div id="calendar-2"></div>
   <div id="calendar-3"></div>
@@ -75,6 +82,7 @@
         var calendar1 = new CsvEventCalendar({
           target: $('#calendar-1'), 
           url: './calendar.csv',
+          timeZone: 'America/New_York',
           dateChanged: function(day) {
             console.log('calendar1 dateChanged', day);
           },
@@ -85,6 +93,7 @@
         var calendar2 = new CsvEventCalendar({
           target: $('#calendar-2'), 
           url: './different-calendar.csv',
+          timeZone: 'America/New_York',
           eventHtml: function() {
             var html = CalendarEvent.prototype.html.call(this);
             var guest = this['Guest Speaker'];
@@ -113,6 +122,7 @@
       var calendar3 = new CsvEventCalendar({
         target: $('#calendar-3'), 
         url: './calendar.csv',
+        timeZone: 'America/New_York',
         dateChanged: function(day) {
           console.log('calendar3 dateChanged', day);
         },

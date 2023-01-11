@@ -134,9 +134,10 @@ class CalendarEvent {
   }
 
   /**
-   * @private
+   * @desc Returns The HTML rendering of the event. Use the [`CsvEventCalendar.Options.eventHtml`](./src/js/CalendarEvent.js#L235) constructor option when creating an instance of [`CsvEventCalendar`](./src/js/CalendarEvent.js#L1) to alter the HTML rendering.
+   * @public
    * @method
-   * @returns {JQuery}
+   * @returns {JQuery} The HTML rendering of the event
    */
   html() {
     const name = this.name
