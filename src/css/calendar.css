@@ -66,15 +66,21 @@
   border-radius: 3px;
   margin-bottom: 5px;
 }
+.calendar div.alert.input form div {
+  height: 35px;
+  padding: 10px;
+}
+.calendar div.alert.input form div:first-of-type {
+  border-bottom: 1px solid #333;
+}
 .calendar div.alert.input form input {
   float: left;
-  margin-top: 20px;
+  margin-top: 10px;
+  width: 20px;
+  height: 20px;
 }
 .calendar div.alert.input form label {
   font-weight: normal;
-}
-.calendar div.alert.input form div {
-  width: 250px;
 }
 .calendar div.alert .ok {
   display: block;
