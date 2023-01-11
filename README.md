@@ -42,45 +42,47 @@ This project was built to deliver a simple, light weight and low tech event cale
 #### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
 
 #### Example page
-```
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>calendar-demo</title>
-      <!-- 
-        Include javascript dependencies
-      -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-      <!-- 
-        Include the accessible-event-calendar
-        javascript and css on the page
-      -->
-      <script src="./calendar.min.js"></script>
-      <link href="./calendar.min.css" rel="stylesheet">
-    </head>
-    <body>
-      <!-- 
-        Create a target DIV on the page 
-        into which the calendar will be rendered
-      -->
-      <div id="calendar-demo"></div>
-      <script>
-        /* Instantiate the calendar */
-        var calendar = new CsvEventCalendar({
-          target: $('#calendar-demo'), 
-          url: './calendar.csv',
-          timeZone: 'America/New_York'
-        });
-      </script>
-    </body>
-  </html>
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>calendar-demo</title>
+    <!-- 
+      Include javascript dependencies
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <!-- 
+      Include the accessible-event-calendar
+      javascript and css on the page
+    -->
+    <script src="./calendar.min.js"></script>
+    <link href="./calendar.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <!-- 
+      Create a target DIV on the page 
+      into which the calendar will be rendered
+    -->
+    <div id="calendar-demo"></div>
+    <script>
+      /* Instantiate the calendar */
+      var calendar = new CsvEventCalendar({
+        target: $('#calendar-demo'), 
+        url: './calendar.csv',
+        timeZone: 'America/New_York'
+      });
+    </script>
+  </body>
+</html>
 ```
 
 ### Node.js
 
 #### package.json
-```
+
+```json
 {
   ...
     "dependencies": {
@@ -95,16 +97,14 @@ This project was built to deliver a simple, light weight and low tech event cale
 
 #### index.js
 
-```
-
-import CsvEventCalendar from 'accessible-event-calendar/CsvEventCalendar'
+```javascript
+import CsvEventCalendar from 'accessible-event-calendar/CsvEventCalendar';
 
 const calendar = new CsvEventCalendar({
   target: '#calendar-demo',
   url: './calendar.csv',
   timeZone: 'America/New_York'
-})
-
+});
 ```
 
 ## CSV Format Requirements
@@ -160,21 +160,21 @@ const calendar = new CsvEventCalendar({
 
 #### Column mappings
 
-```
-  var calendar = new CsvEventCalendar({
-    target: $('#calendar-demo'), 
-    url: './calendar.csv',
-    timeZone: 'America/New_York',
-    csvColumns: {
-      date: 'Event date',
-      name: 'Title',
-      about: 'Description',
-      start: 'Begins',
-      end: 'Ends',
-      location: 'Address',
-      sponsor: 'Sponsor'
-    }
-  });
+```javascript
+var calendar = new CsvEventCalendar({
+  target: $('#calendar-demo'), 
+  url: './calendar.csv',
+  timeZone: 'America/New_York',
+  csvColumns: {
+    date: 'Event date',
+    name: 'Title',
+    about: 'Description',
+    start: 'Begins',
+    end: 'Ends',
+    location: 'Address',
+    sponsor: 'Sponsor'
+  }
+});
 ```
 
 ### File may contain additional column names as necessary for the specific implementation
@@ -191,17 +191,17 @@ const calendar = new CsvEventCalendar({
 
 #### Specify an `eventHtml` function
 
-```
-  var calendar = new CsvEventCalendar({
-    target: $('#calendar-demo'), 
-    url: './calendar.csv',
-    timeZone: 'America/New_York',
-    eventHtml: function() {
-      var html = CalendarEvent.prototype.html.call(this);
-      var a = $('<a></a>')
-        .html('Find out more...')
-        .attr('href', this.url);
-      return html.append(a);
-    }
-  });
+```javascript
+var calendar = new CsvEventCalendar({
+  target: $('#calendar-demo'), 
+  url: './calendar.csv',
+  timeZone: 'America/New_York',
+  eventHtml: function() {
+    var html = CalendarEvent.prototype.html.call(this);
+    var a = $('<a></a>')
+      .html('Find out more...')
+      .attr('href', this.url);
+    return html.append(a);
+  }
+});
 ```
