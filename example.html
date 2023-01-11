@@ -84,7 +84,7 @@
       var multi = search.split('=')[1] === 'true';
       if (multi) {
         var calendar1 = new CsvEventCalendar({
-          target: $('#calendar-1'), 
+          target: '#calendar-1',
           url: './calendar.csv',
           timeZone: 'America/New_York',
           dateChanged: function(day) {
@@ -95,7 +95,7 @@
           }
         });
         var calendar2 = new CsvEventCalendar({
-          target: $('#calendar-2'), 
+          target: '#calendar-2',
           url: './different-calendar.csv',
           timeZone: 'America/New_York',
           eventHtml: function() {
@@ -124,7 +124,7 @@
         $('#one').addClass('selected');
       }
       var calendar3 = new CsvEventCalendar({
-        target: $('#calendar-3'), 
+        target: '#calendar-3',
         url: './calendar.csv',
         timeZone: 'America/New_York',
         dateChanged: function(day) {

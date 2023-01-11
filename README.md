@@ -54,8 +54,7 @@ This project was built to deliver a simple, light weight and low tech event cale
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <!-- 
-      Include the accessible-event-calendar
-      javascript and css on the page
+      Include the accessible-event-calendar javascript and css
     -->
     <script src="./calendar.min.js"></script>
     <link href="./calendar.min.css" rel="stylesheet">
@@ -69,7 +68,7 @@ This project was built to deliver a simple, light weight and low tech event cale
     <script>
       /* Instantiate the calendar */
       var calendar = new CsvEventCalendar({
-        target: $('#calendar-demo'), 
+        target: '#calendar-demo',
         url: './calendar.csv',
         timeZone: 'America/New_York'
       });
@@ -162,7 +161,7 @@ const calendar = new CsvEventCalendar({
 
 ```javascript
 var calendar = new CsvEventCalendar({
-  target: $('#calendar-demo'), 
+  target: '#calendar-demo',
   url: './calendar.csv',
   timeZone: 'America/New_York',
   csvColumns: {
@@ -193,7 +192,7 @@ var calendar = new CsvEventCalendar({
 
 ```javascript
 var calendar = new CsvEventCalendar({
-  target: $('#calendar-demo'), 
+  target: '#calendar-demo', 
   url: './calendar.csv',
   timeZone: 'America/New_York',
   eventHtml: function() {
