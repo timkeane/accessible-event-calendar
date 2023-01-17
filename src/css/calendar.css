@@ -327,7 +327,7 @@
   display: block;
 }
 .calendar .view.month .day .event .title {
-  padding: 1px 0 1px 3px;
+  padding: 4px;
   color: #000;
   text-decoration: none;
 }
