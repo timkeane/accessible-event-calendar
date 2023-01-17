@@ -8,6 +8,7 @@
     "destination": "./dist/doc",
     "readme": "./jsdoc/HOME.md",
     "encoding": "utf8",
+    "template": "./node_modules/docdash",
     "recurse": true,
     "verbose": true
   },
