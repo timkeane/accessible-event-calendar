@@ -581,7 +581,7 @@ class CsvEventCalendar {
 
     const id0 = CsvEventCalendar.nextId('tz')
     const id1 = CsvEventCalendar.nextId('tz')
-    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div class="content"><p></p><form><div class="tz0 btn"><input type="radio" name="timezone" checked><label></label></div><div class="tz1 btn"><input type="radio" name="timezone"><label></label></div></form><button class="btn ok"><span>OK</span></button></div></div>')
+    const alert = $('<div class="alert" aria-live="assertive" aria-modal="true"><div class="content"><p></p><form><div class="tz tz0 btn"><input type="radio" name="timezone" checked><label></label></div><div class="tz tz1 btn"><input type="radio" name="timezone"><label></label></div></form><button class="btn ok"><span>OK</span></button></div></div>')
     alert.find('.tz0 input').attr('id', id0)
     alert.find('.tz1 input').attr('id', id1)
     alert.find('.tz0 label').attr('for', id0)

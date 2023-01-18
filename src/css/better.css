@@ -642,6 +642,24 @@
   transform: translateX(-50%);
   z-index: -1;
 }
+.calendar .alert .content form {
+  display: none;
+}
+.calendar .alert.input .content form {
+  display: block;
+}
+.calendar .alert.input .content form div.tz {
+  margin: 0 0 10px 0;
+  width: 250px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.calendar div.alert.input form input[type="radio"] {
+  float: left;
+  margin: 10px 10px 0 0;
+  width: 20px;
+  height: 20px;
+}
 .calendar .alert > div {
   background: rgb(var(--calendar-bg));
   color: rgb(var(--calendar-fg));
