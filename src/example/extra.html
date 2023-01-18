@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>accessible-event-calendar - extra</title>
+  <!-- 
+    Include javascript dependencies
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <!-- 
+    Include the accessible-event-calendar
+    javascript and css on the page
+  -->
+  <script src="../js/calendar.min.js"></script>
+  <link href="../css/calendar.min.css" rel="stylesheet">
+
+  <link href="./css/example.css" rel="stylesheet">
+</head>
+<body>
+  <div id="error">
+    This example must be served from the <code>dist</code> folder
+    after running <code>npm run build</code>
+  </div>
+  <!-- target element -->
+  <div id="calendar"></div>
+  <script>
+    try {
+      var calendar = new CsvEventCalendar({
+          target: '#calendar',
+          url: '../data/different-calendar.csv',
+          timeZone: 'America/New_York',
+          eventHtml: function() {
+            var html = CalendarEvent.prototype.html.call(this);
+            var guest = this['Guest Speaker'];
+            if (guest) {
+              return html
+                .append('<h5>Special Guest:</h5> <div class="guest">' + guest + '</div>')
+            }
+            return html
+          },
+          csvColumns: {
+            date: 'Date',
+            name: 'Event Name',
+            about: 'Description',
+            start: 'Start Time',
+            end: 'End Time',
+            location: 'Address',
+            sponsor: 'Sponsor'
+          },
+          dateChanged: function(day) {
+            console.log('calendar2 dateChanged', day);
+          },
+          viewChanged: function(view) {
+            console.log('calendar2 viewChanged', view);
+          },
+          ready: function(calendar) {
+            console.log('ready', calendar);
+          }
+        });
+    } catch (err) {
+      $('body *').hide();
+      $('#error, #error *').show();
+    }
+  </script>
+</body>
+</html>

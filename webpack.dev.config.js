@@ -1,8 +1,8 @@
 const { merge } = require('webpack-merge')
-const common = require('./webpack.mini.config.js')
+const mini = require('./webpack.mini.config.js')
 const path = require('path')
 
-module.exports = merge(common, {
+module.exports = merge(mini, {
     mode: 'development',
     devtool: 'eval-source-map',
     devServer: {

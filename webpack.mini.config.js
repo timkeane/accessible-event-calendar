@@ -1,28 +1,19 @@
-const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const { merge } = require('webpack-merge')
+const unmini = require('./webpack.unmini.config.js')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-module.exports =  {
-  entry: './src/js/index.js',
+module.exports =  merge(unmini,{
   devtool: 'source-map',
   output: {
-    filename: 'calendar.min.js',
-    path: path.resolve(__dirname, 'dist')
-  },
-  externals: {
-    jquery: 'jQuery',
-    papaparse: 'Papa'
+    filename: 'js/calendar.min.js'
   },
   plugins: [
     new MiniCssExtractPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        {from: './data/calendar.csv'},
-        {from: './data/different-calendar.csv'},
-        {from: './src/css/calendar.css', to: 'calendar.min.css'},
-        {from: './src/css/better.css', to: 'better.min.css'},
-        {from: './src/index.html', to: 'index.html'}
+        {from: './src/css/calendar.css', to: 'css/calendar.min.css'},
       ]
     })
   ],
@@ -33,9 +24,10 @@ module.exports =  {
     }]
   },
   optimization: {
+    minimize: true,
     minimizer: [
       `...`,
       new CssMinimizerPlugin()
     ]
   }
-}
+})

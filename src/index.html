@@ -1,143 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>accessible-event-calendar</title>
-  <!-- 
-    Include javascript dependencies
-  -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-  <!-- 
-    Include the accessible-event-calendar
-    javascript and css on the page
-  -->
-  <script src="./calendar.min.js"></script>
-  <link href="./better.min.css" rel="stylesheet">
   <style>
     body {
       padding: 20px;
-    }
-    body>div {
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 50px;
-    }
-    .calendar .event .sponsor {
-      color: blue;
-      margin: 5px 0;
-    }
-    #calendar-1 {
-      width: 450px;
-      max-height: 500px;
-      overflow-y: auto;
-      padding: 1px;
-    }
-    #calendar-2 {
-      width: 645px;
-    }
-    body>div>a {
-      padding: 5px;
-      border: 2px solid;
-      border-radius: 4px;
-    }    
-    body>div>a.selected {
-      background-color: #337ab7;
-      color: #fff;
-    }
-    #one, #multi {
-      font-family: Arial, Helvetica, sans-serif;
-      text-decoration: none;
-    }
-    #one {
-      float: left
-    }
-    #multi {
-      float: right;
-    }
-    #error {
-      display: none;
-      text-align: center;
-    }
-    #error span {
-      font-family: 'Courier New', Courier, monospace;
-      font-weight: 700;
+      font-family: 'helvetica neue', helvetica, arial, sans-serif;
     }
   </style>
 </head>
 <body>
-  <div>
-    <a id="one" href="./example.html">One calendar</a>
-    <a id="multi" href="./example.html?multi=true">Multiple calendars</a>
-  </div>
-  <div id="error">
-    This example must be served from the <span>dist</span> folder
-    after running <span>npm run build</span>
-  </div>
-  <!-- target elements -->
-  <div id="calendar-1"></div>
-  <div id="calendar-2"></div>
-  <div id="calendar-3"></div>
-  <script>
-    try {
-      var search = window.location.search.substring(1);
-      var multi = search.split('=')[1] === 'true';
-      if (multi) {
-        var calendar1 = new CsvEventCalendar({
-          target: '#calendar-1',
-          url: './calendar.csv',
-          timeZone: 'America/New_York',
-          dateChanged: function(day) {
-            console.log('calendar1 dateChanged', day);
-          },
-          viewChanged: function(view) {
-            console.log('calendar1 viewChanged', view);
-          }
-        });
-        var calendar2 = new CsvEventCalendar({
-          target: '#calendar-2',
-          url: './different-calendar.csv',
-          timeZone: 'America/New_York',
-          eventHtml: function() {
-            var html = CalendarEvent.prototype.html.call(this);
-            var guest = this['Guest Speaker'];
-            return html.append(guest ? `<h5>Special Guest:</h5> <div class="guest">${guest}</div>` :  '');
-          },
-          csvColumns: {
-            date: 'Date',
-            name: 'Event Name',
-            about: 'Description',
-            start: 'Start Time',
-            end: 'End Time',
-            location: 'Address',
-            sponsor: 'Sponsor'
-          },
-          dateChanged: function(day) {
-            console.log('calendar2 dateChanged', day);
-          },
-          viewChanged: function(view) {
-            console.log('calendar2 viewChanged', view);
-          }
-        });
-        $('#multi').addClass('selected');
-      } else {
-        $('#one').addClass('selected');
-      }
-      var calendar3 = new CsvEventCalendar({
-        target: '#calendar-3',
-        url: './calendar.csv',
-        timeZone: 'America/New_York',
-        dateChanged: function(day) {
-          console.log('calendar3 dateChanged', day);
-        },
-        viewChanged: function(view) {
-          console.log('calendar3 viewChanged', view);
-        }
-      });
-    } catch (err) {
-      $('body *').hide();
-      $('#error, #error *').show();
-    }
-  </script>
+  <h1><a href="./doc">Documentation</a></h1>
+  <h1><a href="./example/standard.html">Standard CSV</a></h1>
+  <h1><a href="./example/mapped.html">Mapped CSV</a></h1>
+  <h1><a href="./example/extra.html">Extra Event Properties</a></h1>
+  <a href="https://github.com/timkeane/accessible-event-calendar">https://github.com/timkeane/accessible-event-calendar</a>
 </body>
 </html>

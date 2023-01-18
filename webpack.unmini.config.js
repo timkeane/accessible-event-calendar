@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
   entry: './src/js/index.js',
   output: {
-    filename: 'calendar.js',
+    filename: 'js/calendar.js',
     path: path.resolve(__dirname, 'dist')
   },
   externals: {
@@ -14,10 +14,10 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
-        {from: './data/calendar.csv'},
-        {from: './data/different-calendar.csv'},
-        {from: './src/css/calendar.css'},
-        {from: './example.html'}
+        {from: './data/', to: 'data/'},
+        {from: './src/index.html'},
+        {from: './src/example/', to: 'example/'},
+        {from: './src/css/calendar.css', to: 'css/calendar.css'}
       ]
     })
   ],

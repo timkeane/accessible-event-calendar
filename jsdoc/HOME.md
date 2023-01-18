@@ -40,7 +40,11 @@ This project was built to deliver a simple, light weight and low tech event cale
 
 ### Basic javascript usage
 
+<br>
+
 #### [Build](#build) or [download the latest release](https://github.com/timkeane/accessible-event-calendar/releases)
+
+<br>
 
 #### Example page
 
@@ -79,6 +83,8 @@ This project was built to deliver a simple, light weight and low tech event cale
 ```
 
 ### Node.js
+
+<br>
 
 #### package.json
 
