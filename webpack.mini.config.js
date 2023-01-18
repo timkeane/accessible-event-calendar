@@ -21,7 +21,8 @@ module.exports =  {
         {from: './data/calendar.csv'},
         {from: './data/different-calendar.csv'},
         {from: './src/css/calendar.css', to: 'calendar.min.css'},
-        {from: './example.html'}
+        {from: './src/css/better.css', to: 'better.min.css'},
+        {from: './src/index.html', to: 'index.html'}
       ]
     })
   ],

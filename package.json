@@ -16,6 +16,8 @@
     "WAI-ARIA"
   ],
   "scripts": {
+    "predev": "npm run clean",
+    "dev": "webpack serve --config ./webpack.dev.config.js",
     "test": "jest",
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
@@ -47,6 +49,7 @@
     "mini-css-extract-plugin": "^2.4.5",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1",
     "zip-a-folder": "^1.1.5"
   },
   "jest": {
