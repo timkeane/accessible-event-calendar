@@ -4,6 +4,7 @@
 
  import $ from 'jquery'
  import LocationMgr from 'nyc-lib/nyc/ol/LocationMgr'
+ import CencusGeocoder from 'nyc-lib/nyc/CensusGeocoder'
  import olms from 'ol-mapbox-style'
 
 class CalendarEvent {
@@ -26,7 +27,15 @@ class CalendarEvent {
 
     if (this.geoclientUrl !== undefined) {
       this.geoclientUrl = `${this.geoclientUrl}&page=${encodeURIComponent(document.location.pathname)}`
+    } else {
     }
+
+    /**
+     * @private
+     * @member {CencusGeocoder}
+     */
+    this.cencusGeocoder = this.geoclientUrl ? null : new CencusGeocoder()
+
 
     /**
      * @private
@@ -106,11 +115,11 @@ class CalendarEvent {
     }
 
     if (typeof options.showMap === 'function') {
-      this.html = options.showMap
+      this.showMap = options.showMap
     }
 
     if (typeof options.geocode === 'function') {
-      this.html = options.geocode
+      this.geocode = options.geocode
     }
   }
 
@@ -197,6 +206,11 @@ class CalendarEvent {
    */
   geocode() {
     this.locationMgr = this.locationMgr || new LocationMgr({map: this.map, url: this.geoclientUrl})
+    if (this.cencusGeocoder !== undefined) {
+      const locator = this.locationMgr.locator
+      locator.geocoder = this.cencusGeocoder
+      this.cencusGeocoder.one('geocoded', locator.proxyEvent.bind(locator))
+    }
     this.locationMgr.goTo(this.location)
   }
 
