@@ -35,10 +35,10 @@
             var guest = this['Guest Speaker'];
             if (guest) {
                 $('<h5>Special Guest:</h5> <div class="guest">' + guest + '</div>')
-                  .insertBefore(html.find('h5').last())
-                return html
+                  .insertAfter(html.find('.description'));
+                return html;
             }
-            return html
+            return html;
           },
           csvColumns: {
             date: 'Date',
