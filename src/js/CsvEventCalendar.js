@@ -53,9 +53,29 @@ class CsvEventCalendar {
 
     /**
      * @private
+     * @member {string}
+     */
+    this.geoclientUrl = options.geoclientUrl
+
+    /**
+     * @private
      * @member {function}
      */
     this.eventHtml = options.eventHtml
+
+
+    /**
+     * @private
+     * @member {function}
+     */
+    this.showMap = options.showMap
+
+
+    /**
+     * @private
+     * @member {function}
+     */
+    this.geocode = options.geocode
 
     this.ready = options.ready || this.ready
     this.viewChanged = options.viewChanged || this.viewChanged
@@ -1019,7 +1039,10 @@ class CsvEventCalendar {
           date: key,
           data: calEvent,
           properties: this.csvColumns,
-          eventHtml: this.eventHtml
+          eventHtml: this.eventHtml,
+          geoclientUrl: this.geoclientUrl,
+          showMap: this.showMap,
+          geocode: this.geocode,
         }))
         CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])
       }
@@ -1467,10 +1490,13 @@ CsvEventCalendar.getToday = () => {
  * @property {string} url The URL to the CSV event data
  * @property {string} [timeZone={@link module:CalendarEvent~CalendarEvent.DEFAULT_TIME_ZONE}] The calendar time zone
  * @property {Object<string, string>} [csvColumns={@link module:CalendarEvent~CalendarEvent.DEFAULT_PROPERTIES}] A map of CSV column names keyed to the necessary property names
- * @property {function(string)} dateChanged Handler for date changed event
- * @property {function(string)} viewChanged Handler for state changed event
- * @property {function(module:CsvEventCalendar~CsvEventCalendar)} ready Fires once data is loaded
+ * @property {function(string)=} dateChanged Handler for date changed event
+ * @property {function(string=)} viewChanged Handler for state changed event
+ * @property {function(module:CsvEventCalendar~CsvEventCalendar)=} ready Fires once data is loaded
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
+ * @property {function()=} showMap A showMap implemtation
+ * @property {function()=} geocode A geocode implemtation
+ * @property {string=} geoclientUrl The geoclient URL
  * @property {string=} min The minimum date formatted as yyyy-mm-dd (defaults to the lower bound of events)
  * @property {string=} max The maximum date formatted as yyyy-mm-dd (defaults to the upper bound of events)
  */

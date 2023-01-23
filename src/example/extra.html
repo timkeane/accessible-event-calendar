@@ -29,6 +29,7 @@
           target: '#calendar',
           url: '../data/different-calendar.csv',
           timeZone: 'America/New_York',
+          geoclientUrl: 'https://maps.nyc.gov/geoclient/v2/search.json?' + location.search.substring(1),
           eventHtml: function() {
             var html = CalendarEvent.prototype.html.call(this);
             var guest = this['Guest Speaker'];

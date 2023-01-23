@@ -3,6 +3,8 @@
  */
 
  import $ from 'jquery'
+ import Basemap from 'nyc-lib/nyc/ol/Basemap'
+ import LocationMgr from 'nyc-lib/nyc/ol/LocationMgr'
  
 class CalendarEvent {
   /**
@@ -16,6 +18,12 @@ class CalendarEvent {
     const data = options.data
     const props = options.properties || CalendarEvent.DEFAULT_PROPERTIES
     
+    /**
+     * @private
+     * @member {string}
+     */
+    this.geoclientUrl = options.geoclientUrl
+
     /**
      * @private
      * @member {string}
@@ -64,6 +72,18 @@ class CalendarEvent {
      */
     this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
 
+    /**
+     * @private
+     * @member {Basemap}
+     */
+    this.map = null
+
+    /**
+     * @private
+     * @member {LocationMgr}
+     */
+    this.locationMgr = null
+
     const customPropNames = Object.values(props)
     Object.keys(data).forEach(prop => {
       if (customPropNames.indexOf(prop) === -1) {
@@ -73,6 +93,14 @@ class CalendarEvent {
 
     if (typeof options.eventHtml === 'function') {
       this.html = options.eventHtml
+    }
+
+    if (typeof options.showMap === 'function') {
+      this.html = options.showMap
+    }
+
+    if (typeof options.geocode === 'function') {
+      this.html = options.geocode
     }
   }
 
@@ -122,7 +150,7 @@ class CalendarEvent {
   /**
    * @private
    * @method
-   * @param {string}
+   * @param {string} t
    */
   time(t) {
     const date = this.date.replace(/-/g, '')
@@ -131,6 +159,34 @@ class CalendarEvent {
       return `${date}T${hh24.replace(/:/g, '')}00`
     }
     return date
+  }
+
+  /**
+   * @desc Shows a map of the event location. May be optionally injected with constructor options.
+   * @public
+   * @method
+   */
+  showMap() {
+    this.map = this.map || new Basemap({target: this.mapDiv.show()[0]})
+    this.geocode()
+  }
+
+  /**
+   * @desc Geocodes the event location for display on the map. May be optionally injected with constructor options.
+   * @public
+   * @method
+   */
+  geocode() {
+    this.locationMgr = new LocationMgr({map: this.map, url: this.geoclientUrl})
+    this.locationMgr.goTo(this.location)
+  }
+
+  /**
+   * @private
+   * @method
+   */
+  directions() {
+    window.open(`https://www.google.com/maps/dir//${encodeURIComponent(this.location)}/`)
   }
 
   /**
@@ -152,14 +208,19 @@ class CalendarEvent {
       time.append('<strong>End:</strong>')
         .append(`<span>${this.end}</span>`)
     }
-   return $('<div class="event"></div>')
-    .append(download)
-    .append(`<div class="title">${name}</div>`)
-    .append(`<h4>${name}</h4>`)
-    .append(time)
-    .append(location ? `<h5>Location:</h5> <div class="location">${location}</div>` : '<br>')
-    .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
-    .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
+    const loc = $(location ? `<h5>Location:</h5> <div class="location">${location}<a class="btn show-map" aria-label="Map">Map</a><a class="btn directions" aria-label="Directions">Directions</a></div>` : '')
+    loc.find('.show-map').on('click', this.showMap.bind(this))
+    loc.find('.directions').on('click', this.directions.bind(this))
+    this.mapDiv = $('<div class="map"></div>')
+    loc.append(this.mapDiv)
+    return $('<div class="event"></div>')
+      .append(download)
+      .append(`<div class="title">${name}</div>`)
+      .append(`<h4>${name}</h4>`)
+      .append(time)
+      .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
+      .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
+      .append(loc)
   }
 }
 
@@ -193,10 +254,10 @@ CalendarEvent.timeFormat = (time, ampm) => {
   }
   const hh24 = parts.join(':')
   let suffix = ' AM'
-  if (!ampm) return hh24;
+  if (!ampm) return hh24
   if (parseInt(parts[0]) > 12) {
     suffix = ' PM'
-    parts[0] = parts[0] - 12;
+    parts[0] = parts[0] - 12
   } else if (parseInt(parts[0]) === 12) {
     suffix = ' PM'
   }
@@ -231,8 +292,11 @@ CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'
  * @typedef {Object}
  * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {string} date Event date (yyyy-mm-dd)
- * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] Event date (yyyy-mm-dd)
  * @property {Object} data The event data
+ * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] Event date (yyyy-mm-dd)
+ * @property {function()=} showMap A showMap implemtation
+ * @property {function()=} geocode A geocode implemtation
+ * @property {string=} geoclientUrl The geoclient URL
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  */
  CalendarEvent.Options
