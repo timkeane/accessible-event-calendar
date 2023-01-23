@@ -37,7 +37,7 @@ class CsvEventCalendar {
      * @private
      * @member {string}
      */
-    this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
+    this.timeZone = options.timeZone
 
     /**
      * @private
@@ -1024,6 +1024,23 @@ class CsvEventCalendar {
   }
 
   /**
+   * @public
+   * @method
+   * @param {Object<string, string} calEvent
+   */
+  createCalendarEvent(key, calEvent) {
+    return new CalendarEvent({
+      timeZone: this.clientTimeZone,
+      date: key,
+      data: calEvent,
+      properties: this.csvColumns,
+      eventHtml: this.eventHtml,
+      showMap: this.showMap,
+      geocode: this.geocode,
+    })
+  }
+
+  /**
    * @private
    * @method
    * @param {Object} response
@@ -1034,16 +1051,7 @@ class CsvEventCalendar {
       if (key) { // papaparse parses blank lines at the end of file
         key = this.adjustForTimeZone(calEvent)
         this.eventsIndex.events[key] = this.eventsIndex.events[key] || []
-        this.eventsIndex.events[key].push(new CalendarEvent({
-          timeZone: this.clientTimeZone,
-          date: key,
-          data: calEvent,
-          properties: this.csvColumns,
-          eventHtml: this.eventHtml,
-          geoclientUrl: this.geoclientUrl,
-          showMap: this.showMap,
-          geocode: this.geocode,
-        }))
+        this.eventsIndex.events[key].push(this.createCalendarEvent(key, calEvent))
         CsvEventCalendar.sortByStartTime(this.eventsIndex.events[key])
       }
     })

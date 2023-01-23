@@ -5,7 +5,9 @@
  import $ from 'jquery'
  import LocationMgr from 'nyc-lib/nyc/ol/LocationMgr'
  import CencusGeocoder from 'nyc-lib/nyc/CensusGeocoder'
- import olms from 'ol-mapbox-style'
+ import Map from 'ol/Map'
+ import Layer from 'ol/layer/Tile'
+ import OSM from 'ol/source/OSM'
 
 class CalendarEvent {
   /**
@@ -21,21 +23,9 @@ class CalendarEvent {
     
     /**
      * @private
-     * @member {string}
-     */
-    this.geoclientUrl = options.geoclientUrl
-
-    if (this.geoclientUrl !== undefined) {
-      this.geoclientUrl = `${this.geoclientUrl}&page=${encodeURIComponent(document.location.pathname)}`
-    } else {
-    }
-
-    /**
-     * @private
      * @member {CencusGeocoder}
      */
-    this.cencusGeocoder = this.geoclientUrl ? null : new CencusGeocoder()
-
+    this.cencusGeocoder = new CencusGeocoder()
 
     /**
      * @private
@@ -83,7 +73,7 @@ class CalendarEvent {
      * @private
      * @member {string}
      */
-    this.timeZone = options.timeZone || CalendarEvent.DEFAULT_TIME_ZONE
+    this.timeZone = options.timeZone
 
     /**
      * @private
@@ -187,10 +177,9 @@ class CalendarEvent {
    */
   showMap() {
     if (this.map === null) {
-      olms(this.mapDiv.show()[0], this.mapUrl).then(map => {
-        this.map = map
-        this.geocode()
-      }).catch(err => console.error(err))
+      this.map = new Map({target: this.mapDiv.show()[0]})
+      this.map.addLayer(new Layer({source: new OSM()}))
+      this.geocode()
     } else if (this.mapDiv.is(':visible')) {
       this.mapDiv.hide()
     } else {
@@ -205,11 +194,11 @@ class CalendarEvent {
    * @method
    */
   geocode() {
-    this.locationMgr = this.locationMgr || new LocationMgr({map: this.map, url: this.geoclientUrl})
-    if (this.cencusGeocoder !== undefined) {
+    if (this.locationMgr === null) {
+      this.locationMgr = new LocationMgr({map: this.map})
       const locator = this.locationMgr.locator
       locator.geocoder = this.cencusGeocoder
-      this.cencusGeocoder.one('geocoded', locator.proxyEvent.bind(locator))
+      this.cencusGeocoder.on('geocoded', locator.proxyEvent.bind(locator))
     }
     this.locationMgr.goTo(this.location)
   }
@@ -313,25 +302,15 @@ CalendarEvent.DEFAULT_PROPERTIES = {
 }
 
 /**
- * @desc Default time zone <div><code>CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'</code></div>
- * @public
- * @const {string}
- */
-CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'
-
-CalendarEvent.DEFAULT_MAP_URL = 'https://www.arcgis.com/sharing/rest/content/items/df7862bfd7984baab51ff9df8e214278/resources/styles/root.json?f=json'
-
-/**
  * @desc Constructor options for {@link module:CalendarEvent~CalendarEvent}
  * @public
  * @typedef {Object}
  * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {string} date Event date (yyyy-mm-dd)
  * @property {Object} data The event data
- * @property {string} [timeZone=CalendarEvent.DEFAULT_TIME_ZONE] Event date (yyyy-mm-dd)
+ * @property {string} timeZone Event date (yyyy-mm-dd)
  * @property {function()=} showMap A showMap implemtation
  * @property {function()=} geocode A geocode implemtation
- * @property {string=} geoclientUrl The geoclient URL
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  */
  CalendarEvent.Options
