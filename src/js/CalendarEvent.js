@@ -3,9 +3,9 @@
  */
 
  import $ from 'jquery'
- import Basemap from 'nyc-lib/nyc/ol/Basemap'
  import LocationMgr from 'nyc-lib/nyc/ol/LocationMgr'
- 
+ import olms from 'ol-mapbox-style'
+
 class CalendarEvent {
   /**
   * @desc Create an instance of CalendarEvent
@@ -23,6 +23,10 @@ class CalendarEvent {
      * @member {string}
      */
     this.geoclientUrl = options.geoclientUrl
+
+    if (this.geoclientUrl !== undefined) {
+      this.geoclientUrl = `${this.geoclientUrl}&page=${encodeURIComponent(document.location.pathname)}`
+    }
 
     /**
      * @private
@@ -74,7 +78,13 @@ class CalendarEvent {
 
     /**
      * @private
-     * @member {Basemap}
+     * @member {string}
+     */
+    this.mapUrl = options.mapUrl || CalendarEvent.DEFAULT_MAP_URL
+
+    /**
+     * @private
+     * @member {Map}
      */
     this.map = null
 
@@ -167,8 +177,17 @@ class CalendarEvent {
    * @method
    */
   showMap() {
-    this.map = this.map || new Basemap({target: this.mapDiv.show()[0]})
-    this.geocode()
+    if (this.map === null) {
+      olms(this.mapDiv.show()[0], this.mapUrl).then(map => {
+        this.map = map
+        this.geocode()
+      }).catch(err => console.error(err))
+    } else if (this.mapDiv.is(':visible')) {
+      this.mapDiv.hide()
+    } else {
+      this.mapDiv.show()
+      this.geocode()
+    }
   }
 
   /**
@@ -177,7 +196,7 @@ class CalendarEvent {
    * @method
    */
   geocode() {
-    this.locationMgr = new LocationMgr({map: this.map, url: this.geoclientUrl})
+    this.locationMgr = this.locationMgr || new LocationMgr({map: this.map, url: this.geoclientUrl})
     this.locationMgr.goTo(this.location)
   }
 
@@ -285,6 +304,8 @@ CalendarEvent.DEFAULT_PROPERTIES = {
  * @const {string}
  */
 CalendarEvent.DEFAULT_TIME_ZONE = 'America/New_York'
+
+CalendarEvent.DEFAULT_MAP_URL = 'https://www.arcgis.com/sharing/rest/content/items/df7862bfd7984baab51ff9df8e214278/resources/styles/root.json?f=json'
 
 /**
  * @desc Constructor options for {@link module:CalendarEvent~CalendarEvent}

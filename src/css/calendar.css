@@ -965,7 +965,23 @@ body {
   border: none;
   border-radius: .25em;
 }
+.calendar .event .location .map .ol-attribution {
+  position: absolute;
+  bottom: 0px;
+}
+.calendar .event .location .map .ol-attribution button {
+  display: inline;
+}
+.calendar .event .location .map .ol-attribution ul {
+  background: rgb(var(--calendar-page-bg));
+  float: right;
+  list-style-type: none;
+  margin: 5px 0 0 0;
+  padding-inline-start: 0;
+  padding: 0 5px;
+}
 .calendar .event .location .map .ol-control .ol-rotate-reset,
+.calendar .event .location .map .ol-attribution.ol-collapsed ul,
 .calendar .event .location .map .srch-ctl,
 .calendar .event .location .map .zoom,
 .calendar .event .location .map .geoloc,
