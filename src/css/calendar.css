@@ -947,14 +947,19 @@ body {
   padding: 2px 5px;
   margin: 0 0 0 10px;
   cursor: pointer;
+  text-align: center;
 }
-.calendar .event .location .map {
+.calendar .event .location .btn.show-map.pressed {
+  background: rgb(var(--calendar-page-bg));
+  border: 1px solid rgb(var(--calendar-btn-bg));
+  color: rgb(var(--calendar-btn-bg));
+}
+.calendar .event .map {
   display: none;
-  width: 100%;
   height: 600px;
   margin-top: 15px;
 }
-.calendar .event .location .map .ol-control button {
+.calendar .event .map .ol-control button {
   display: block;
   margin: 5px;
   width: 24px;
@@ -965,14 +970,14 @@ body {
   border: none;
   border-radius: .25em;
 }
-.calendar .event .location .map .ol-attribution {
+.calendar .event .map .ol-attribution {
   position: absolute;
   bottom: 0px;
 }
-.calendar .event .location .map .ol-attribution button {
+.calendar .event .map .ol-attribution button {
   display: inline;
 }
-.calendar .event .location .map .ol-attribution ul {
+.calendar .event .map .ol-attribution ul {
   background: rgb(var(--calendar-page-bg));
   float: right;
   list-style-type: none;
@@ -980,11 +985,11 @@ body {
   padding-inline-start: 0;
   padding: 0 5px;
 }
-.calendar .event .location .map .ol-control .ol-rotate-reset,
-.calendar .event .location .map .ol-attribution.ol-collapsed ul,
-.calendar .event .location .map .srch-ctl,
-.calendar .event .location .map .zoom,
-.calendar .event .location .map .geoloc,
+.calendar .event .map .ol-control .ol-rotate-reset,
+.calendar .event .map .ol-attribution.ol-collapsed ul,
+.calendar .event .map .srch-ctl,
+.calendar .event .map .zoom,
+.calendar .event .map .geoloc,
 .dia-container .dia {
   display: none;
 }

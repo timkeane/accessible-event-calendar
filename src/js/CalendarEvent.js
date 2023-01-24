@@ -230,19 +230,20 @@ class CalendarEvent {
       time.append('<strong>End:</strong>')
         .append(`<span>${this.end}</span>`)
     }
-    const loc = $(location ? `<h5>Location:</h5> <div class="location">${location}<a class="btn show-map" aria-label="Map">Map</a><a class="btn directions" aria-label="Directions">Directions</a></div>` : '')
+    const loc = $(location ? `<h5>Location:</h5><div class="location">${location}<a class="btn show-map" aria-hidden="true">Map</a><a class="btn directions" aria-label="Directions">Directions</a></div>` : '')
     loc.find('.show-map').on('click', this.showMap.bind(this))
+    loc.find('.show-map').on('click', event => $(event.currentTarget).toggleClass('pressed'))
     loc.find('.directions').on('click', this.directions.bind(this))
     this.mapDiv = $('<div class="map"></div>')
-    loc.append(this.mapDiv)
     return $('<div class="event"></div>')
       .append(download)
       .append(`<div class="title">${name}</div>`)
       .append(`<h4>${name}</h4>`)
       .append(time)
-      .append(sponsor ? `<h5>Sponsor:</h5> <div class="sponsor">${sponsor}</div>` :  '<br>')
-      .append(about ? `<h5>Description:</h5> <div class="description">${about}</div>` :  '<br>')
+      .append(sponsor ? `<h5>Sponsor:</h5><div class="sponsor">${sponsor}</div>` :  '<br>')
+      .append(about ? `<h5>Description:</h5><div class="description">${about}</div>` :  '<br>')
       .append(loc)
+      .append(this.mapDiv)
   }
 }
 

@@ -34,7 +34,7 @@
             var html = CalendarEvent.prototype.html.call(this);
             var guest = this['Guest Speaker'];
             if (guest) {
-                $('<h5>Special Guest:</h5> <div class="guest">' + guest + '</div>')
+                $('<h5>Special Guest:</h5><div class="guest">' + guest + '</div>')
                   .insertAfter(html.find('.description'));
                 return html;
             }
