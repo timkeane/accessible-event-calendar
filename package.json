@@ -26,8 +26,8 @@
     "prerelease": "npm run clean",
     "release": "webpack --config ./webpack.mini.config.js && webpack --config ./webpack.unmini.config.js",
     "postrelease": "npm run jsdoc",
-    "jsdoc": "jsdoc -c ./jsdoc/conf.json && cp ./screenshot.png ./dist/doc && node release.js",
-    "prepkg": "npm run clean && mkdir dist && cp ./README.md ./dist/ && cp ./screenshot.png ./dist/",
+    "jsdoc": "jsdoc -c ./jsdoc/conf.json && cp ./jsdoc/screenshot.png ./dist/doc && node release.js",
+    "prepkg": "npm run clean && mkdir dist && cp ./README.md ./dist/",
     "pkg": "cp ./package.json ./dist/ && cp -r ./src/js/*.js ./dist/ && cp -r ./src/js/nyc/ ./dist/ && rm -rf ./dist/index.js && cp ./src/css/* ./dist/"
   },
   "author": "Tim Keane <t.d.keane@gmail.com>",
