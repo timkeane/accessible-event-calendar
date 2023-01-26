@@ -8,6 +8,7 @@
  import Map from 'ol/Map'
  import Layer from 'ol/layer/Tile'
  import OSM from 'ol/source/OSM'
+import Geocoder from 'nyc-lib/nyc/Geocoder'
 
 class CalendarEvent {
   /**
@@ -71,15 +72,21 @@ class CalendarEvent {
 
     /**
      * @private
-     * @member {string}
+     * @member {Geocoder}
      */
-    this.mapUrl = options.mapUrl || CalendarEvent.DEFAULT_MAP_URL
+    this.geocoder = options.geocoder
 
     /**
      * @private
      * @member {Map}
      */
     this.map = null
+
+        /**
+     * @private
+     * @member {Map}
+     */
+        this.map = null
 
     /**
      * @private
@@ -188,7 +195,9 @@ class CalendarEvent {
    * @method
    */
   geocode() {
-      this.locationMgr = this.locationMgr || new LocationMgr({map: this.map, geocoder: new OsmGeocoder()})
+    const map = this.map
+    const geocoder = this.geocoder || new OsmGeocoder()
+    this.locationMgr = this.locationMgr || new LocationMgr({map, geocoder})
     this.locationMgr.goTo(this.location)
   }
 
@@ -299,8 +308,9 @@ CalendarEvent.DEFAULT_PROPERTIES = {
  * @property {string} date Event date (yyyy-mm-dd)
  * @property {Object} data The event data
  * @property {string} timeZone Event date (yyyy-mm-dd)
- * @property {function()=} showMap A showMap implemtation
- * @property {function()=} geocode A geocode implemtation
+ * @property {function()=} showMap A function to create and show the map
+ * @property {function()=} geocode A function to geocode the event location and show it on the map
+ * @property {Geocoder=} geocoder A geocoder implemtating nyc-lib/nyc/Geocoder
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  */
  CalendarEvent.Options
