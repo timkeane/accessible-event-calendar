@@ -120,7 +120,7 @@ class CalendarEvent {
    * @returns {JQuery}
    */
   download() {
-    const download = $('<a class="download" aria-label="Add event to my calendar"></a>')
+    const download = $('<a class="download" tabindex="0" aria-label="Add event to my calendar" title="Add event to my calendar"></a>')
       .attr('download', `${this.name.replace(/ /g, '-')}.ics`)
     const e = encodeURIComponent
     const ics = 'data:text/calendar,' +
@@ -228,7 +228,7 @@ class CalendarEvent {
       time.append('<strong>End:</strong>')
         .append(`<span>${this.end}</span>`)
     }
-    const loc = $(location ? `<h5>Location:</h5><div class="location">${location}<a class="btn show-map" aria-hidden="true">Map</a><a class="btn directions" aria-label="Directions">Directions</a></div>` : '')
+    const loc = $(location ? `<h5>Location:</h5><div class="location">${location}<button class="btn show-map" aria-hidden="true">Map</button><button class="btn directions" aria-label="Directions">Directions</button></div>` : '')
     loc.find('.show-map').on('click', this.showMap.bind(this))
     loc.find('.show-map').on('click', event => $(event.currentTarget).toggleClass('pressed'))
     loc.find('.directions').on('click', this.directions.bind(this))

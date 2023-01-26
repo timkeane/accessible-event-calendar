@@ -65,7 +65,7 @@
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/js/**/*.js"
+      "src/js/**/*.js"
     ],
     "transformIgnorePatterns": []
   }
