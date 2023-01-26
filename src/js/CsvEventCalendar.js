@@ -59,6 +59,12 @@ class CsvEventCalendar {
 
     /**
      * @private
+     * @member {Geocoder}
+     */
+    this.geocoder = options.geocoder
+
+    /**
+     * @private
      * @member {function}
      */
     this.eventHtml = options.eventHtml
@@ -69,7 +75,6 @@ class CsvEventCalendar {
      * @member {function}
      */
     this.showMap = options.showMap
-
 
     /**
      * @private
@@ -1026,7 +1031,8 @@ class CsvEventCalendar {
   /**
    * @public
    * @method
-   * @param {Object<string, string} calEvent
+   * @param {string} key The date key
+   * @param {Object<string, string>} calEvent The CSV calendar event row
    */
   createCalendarEvent(key, calEvent) {
     return new CalendarEvent({
@@ -1037,6 +1043,7 @@ class CsvEventCalendar {
       eventHtml: this.eventHtml,
       showMap: this.showMap,
       geocode: this.geocode,
+      geocoder: this.geocoder
     })
   }
 
@@ -1504,6 +1511,7 @@ CsvEventCalendar.getToday = () => {
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  * @property {function()=} showMap A showMap implemtation
  * @property {function()=} geocode A geocode implemtation
+ * @property {Geocoder=} geocoder A geocoder implemtating <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.76/doc/module-nyc_Geocoder-Geocoder.html">nyc-lib/nyc/Geocoder</a></code> (try <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.76/doc/module-nyc_OsmGeocoder-OsmGeocoder.html">nyc-lib/nyc/OsmGeocoder</a></code> with implementation specific <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.76/doc/module-nyc_OsmGeocoder-OsmGeocoder.html#.Options">constructor options</a></code>)
  * @property {string=} geoclientUrl The geoclient URL
  * @property {string=} min The minimum date formatted as yyyy-mm-dd (defaults to the lower bound of events)
  * @property {string=} max The maximum date formatted as yyyy-mm-dd (defaults to the upper bound of events)

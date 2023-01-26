@@ -7,10 +7,12 @@ import NycCalendarEvent from "./NycEvent"
 
 class NycCalendar extends CsvEventCalendar {
   /**
-   * @desc Create an instance of CsvEventCalendar
+   * @desc Create an instance of NycCalendar
    * @public
+   * @class
+   * @extends {module:CsvEventCalendar~CsvEventCalendar}
    * @constructor
-   * @param {module:CsvEventCalendar~NycCalendar.Options} options NycCalendar options
+   * @param {module:NycCalendar~NycCalendar.Options} options NycCalendar options
    */
   constructor(options) {
     options.timeZone = options.timeZone || NycCalendarEvent.DEFAULT_TIME_ZONE
@@ -19,8 +21,10 @@ class NycCalendar extends CsvEventCalendar {
   }
   /**
    * @public
+   * @override
    * @method
-   * @param {Object<string, string} calEvent
+   * @param {string} key The date key
+   * @param {Object<string, string>} calEvent The CSV calendar event row
    */
   createCalendarEvent(key, calEvent) {
     return new NycCalendarEvent({
@@ -31,7 +35,7 @@ class NycCalendar extends CsvEventCalendar {
       eventHtml: this.eventHtml,
       geoclientUrl: this.geoclientUrl,
       showMap: this.showMap,
-      geocode: this.geocode,
+      geocode: this.geocode
     })
   }
 }

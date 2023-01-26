@@ -11,6 +11,10 @@
 
 This project was built to deliver a simple, light weight and low tech event calendar for use within the nyc.gov web site. Among the requirements were ease of updating events by non programmers, as well as accessible screen reader performance and keyboard navigation. The event data is created as simple CSV in a spreadsheet or text editor. Screen reader performance and keyboard navigation were acheived through a series of agile accessible design working sessions with visually impaired screen reader users.
 
+## Now with OSM event location maps!
+
+![Now with OSM event location maps!](./screenshot.png)
+
 ## Build<a name="build"></a>
 
 ### Build the deployable javascript and example implementation
@@ -110,6 +114,20 @@ const calendar = new CsvEventCalendar({
   target: '#calendar-demo',
   url: './calendar.csv',
   timeZone: 'America/New_York'
+});
+```
+
+#### Change the time zone and the country for geocoding
+
+```javascript
+import CsvEventCalendar from 'accessible-event-calendar/CsvEventCalendar';
+import OsmGeocoder from 'nyc-lib/nyc/OsmGeocoder';
+
+const calendar = new CsvEventCalendar({
+  target: '#calendar-demo',
+  url: './calendar.csv',
+  timeZone: 'Europe/London',
+  geocoder: new OsmGeocoder({countryCodes: ['gb']})
 });
 ```
 

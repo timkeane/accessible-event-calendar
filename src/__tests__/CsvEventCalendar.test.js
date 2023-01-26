@@ -1632,7 +1632,9 @@ describe('view', () => {
     container.find('.view .day a').each((i, a) => {
       const aria = $(a).attr('aria-hidden')
       const download = $(a).attr('download')
-      if (aria !== 'true' && !download) {
+      const map = $(a).html() === 'Map'
+      const directions = $(a).html() === 'Directions'
+      if (aria !== 'true' && !download && !map && !directions) {
         expect($(a).attr('tabindex')).toBeUndefined()
       }
     })
@@ -1697,7 +1699,9 @@ describe('view', () => {
     container.find('.view .day a').each((i, a) => {
       const aria = $(a).attr('aria-hidden')
       const download = $(a).attr('download')
-      if (aria !== 'true' && !download) {
+      const map = $(a).html() === 'Map'
+      const directions = $(a).html() === 'Directions'
+      if (aria !== 'true' && !download && !map && !directions) {
         expect($(a).attr('tabindex')).toBeUndefined()
       }
     })
@@ -1762,7 +1766,9 @@ describe('view', () => {
     container.find('.view .day a').each((i, a) => {
       const aria = $(a).attr('aria-hidden')
       const download = $(a).attr('download')
-      if (aria !== 'true' && !download) {
+      const map = $(a).html() === 'Map'
+      const directions = $(a).html() === 'Directions'
+      if (aria !== 'true' && !download && !map && !directions) {
         expect($(a).attr('tabindex')).toBeUndefined()
       }
     })
@@ -1828,7 +1834,9 @@ describe('view', () => {
     container.find('.view .day a').each((i, a) => {
       const aria = $(a).attr('aria-hidden')
       const download = $(a).attr('download')
-      if (aria !== 'true' && !download) {
+      const map = $(a).html() === 'Map'
+      const directions = $(a).html() === 'Directions'
+      if (aria !== 'true' && !download && !map && !directions) {
         expect($(a).attr('tabindex')).toBeUndefined()
       }
     })

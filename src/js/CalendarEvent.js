@@ -8,15 +8,15 @@
  import Map from 'ol/Map'
  import Layer from 'ol/layer/Tile'
  import OSM from 'ol/source/OSM'
-import Geocoder from 'nyc-lib/nyc/Geocoder'
 
 class CalendarEvent {
   /**
-  * @desc Create an instance of CalendarEvent
-  * @public
-  * @constructor
-  * @param {module:CalendarEvent~CalendarEvent.Options} options CalendarEvent options
-  */
+   * @desc Create an instance of CalendarEvent
+   * @public
+   * @class
+   * @constructor
+   * @param {module:CalendarEvent~CalendarEvent.Options} options CalendarEvent options
+   */
   constructor(options) {
     const fmt = CalendarEvent.timeFormat
     const data = options.data
@@ -304,13 +304,13 @@ CalendarEvent.DEFAULT_PROPERTIES = {
  * @desc Constructor options for {@link module:CalendarEvent~CalendarEvent}
  * @public
  * @typedef {Object}
- * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {string} date Event date (yyyy-mm-dd)
  * @property {Object} data The event data
  * @property {string} timeZone Event date (yyyy-mm-dd)
+ * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {function()=} showMap A function to create and show the map
  * @property {function()=} geocode A function to geocode the event location and show it on the map
- * @property {Geocoder=} geocoder A geocoder implemtating nyc-lib/nyc/Geocoder
+ * @property {Geocoder=} geocoder A geocoder implemtating <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.76/doc/module-nyc_Geocoder-Geocoder.html">nyc-lib/nyc/Geocoder</a></code> (try <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.76/doc/module-nyc_OsmGeocoder-OsmGeocoder.html">nyc-lib/nyc/OsmGeocoder</a></code> with implementation specific <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.76/doc/module-nyc_OsmGeocoder-OsmGeocoder.html#.Options">constructor options</a></code>)
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  */
  CalendarEvent.Options

@@ -9,8 +9,10 @@ import olms from 'ol-mapbox-style'
 class NycEvent extends CalendarEvent {
   /**
   * @desc Create an instance of NycEvent
-  * @public
-  * @constructor
+   * @public
+   * @class
+   * @extends {module:CalendarEvent~CalendarEvent}
+   * @constructor
   * @param {module:NycEvent~NycEvent.Options} options NycEvent options
   */
   constructor(options) {
@@ -24,6 +26,7 @@ class NycEvent extends CalendarEvent {
   }
   /**
    * @desc Shows a map of the event location. May be optionally injected with constructor options.
+   * @override
    * @public
    * @method
    */
@@ -44,6 +47,7 @@ class NycEvent extends CalendarEvent {
   /**
    * @desc Geocodes the event location for display on the map. May be optionally injected with constructor options.
    * @public
+   * @override
    * @method
    */
   geocode() {
