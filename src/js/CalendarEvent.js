@@ -4,7 +4,7 @@
 
  import $ from 'jquery'
  import LocationMgr from 'nyc-lib/nyc/ol/LocationMgr'
- import CencusGeocoder from 'nyc-lib/nyc/CensusGeocoder'
+ import OsmGeocoder from 'nyc-lib/nyc/OsmGeocoder'
  import Map from 'ol/Map'
  import Layer from 'ol/layer/Tile'
  import OSM from 'ol/source/OSM'
@@ -20,12 +20,6 @@ class CalendarEvent {
     const fmt = CalendarEvent.timeFormat
     const data = options.data
     const props = options.properties || CalendarEvent.DEFAULT_PROPERTIES
-    
-    /**
-     * @private
-     * @member {CencusGeocoder}
-     */
-    this.cencusGeocoder = new CencusGeocoder()
 
     /**
      * @private
@@ -194,12 +188,7 @@ class CalendarEvent {
    * @method
    */
   geocode() {
-    if (this.locationMgr === null) {
-      this.locationMgr = new LocationMgr({map: this.map})
-      const locator = this.locationMgr.locator
-      locator.geocoder = this.cencusGeocoder
-      this.cencusGeocoder.on('geocoded', locator.proxyEvent.bind(locator))
-    }
+      this.locationMgr = this.locationMgr || new LocationMgr({map: this.map, geocoder: new OsmGeocoder()})
     this.locationMgr.goTo(this.location)
   }
 
