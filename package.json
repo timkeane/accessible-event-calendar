@@ -1,6 +1,6 @@
 {
   "name": "accessible-event-calendar",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Accessible event calendar backed by CSV data",
   "homepage": "https://github.com/timkeane/accessible-event-calendar",
   "keywords": [
