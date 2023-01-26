@@ -310,7 +310,7 @@ CalendarEvent.DEFAULT_PROPERTIES = {
  * @property {Object<string, string>} [properties=CalendarEvent.DEFAULT_PROPERTIES] Mapping of the event properties
  * @property {function()=} showMap A function to create and show the map
  * @property {function()=} geocode A function to geocode the event location and show it on the map
- * @property {Geocoder=} geocoder A geocoder implemtating <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.77/doc/module-nyc_Geocoder-Geocoder.html">nyc-lib/nyc/Geocoder</a></code> (try <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.77/doc/module-nyc_OsmGeocoder-OsmGeocoder.html">nyc-lib/nyc/OsmGeocoder</a></code> with implementation specific <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.77/doc/module-nyc_OsmGeocoder-OsmGeocoder.html#.Options">constructor options</a></code>)
+ * @property {Geocoder=} geocoder A geocoder implemtating <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.78/doc/module-nyc_Geocoder-Geocoder.html">nyc-lib/nyc/Geocoder</a></code> (try <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.78/doc/module-nyc_OsmGeocoder-OsmGeocoder.html">nyc-lib/nyc/OsmGeocoder</a></code> with implementation specific <code><a href="https://maps.nyc.gov/nyc-lib/v1.4.78/doc/module-nyc_OsmGeocoder-OsmGeocoder.html#.Options">constructor options</a></code>)
  * @property {function():JQuery=} eventHtml Custom render for the event details (must return a JQuery DIV with class="event")
  */
  CalendarEvent.Options
