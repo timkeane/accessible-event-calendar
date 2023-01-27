@@ -1,6 +1,6 @@
 {
   "name": "accessible-event-calendar",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Accessible event calendar backed by CSV data",
   "homepage": "https://github.com/timkeane/accessible-event-calendar",
   "keywords": [
@@ -13,7 +13,11 @@
     "inclusive design",
     "HTML",
     "javascript",
-    "WAI-ARIA"
+    "WAI-ARIA",
+    "maps",
+    "OSM",
+    "OpenStreetMap",
+    "Nominatim"
   ],
   "scripts": {
     "predev": "npm run clean",
@@ -27,7 +31,7 @@
     "release": "webpack --config ./webpack.mini.config.js && webpack --config ./webpack.unmini.config.js",
     "postrelease": "npm run jsdoc",
     "jsdoc": "jsdoc -c ./jsdoc/conf.json && cp ./jsdoc/screenshot.png ./dist/doc && node release.js",
-    "prepkg": "npm run clean && mkdir dist && cp ./README.md ./dist/",
+    "prepkg": "npm run clean && npm run jsdoc && cp ./README.md ./dist/",
     "pkg": "cp ./package.json ./dist/ && cp -r ./src/js/*.js ./dist/ && cp -r ./src/js/nyc/ ./dist/ && rm -rf ./dist/index.js && cp ./src/css/* ./dist/"
   },
   "author": "Tim Keane <t.d.keane@gmail.com>",
