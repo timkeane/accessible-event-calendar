@@ -14,6 +14,11 @@ This project was built to deliver a simple, light weight and low tech event cale
 
 ## Now with OSM event location maps!
 
+Data © OpenStreetMap contributors, ODbL 1.0.<br>
+https://osm.org/copyright<br>
+https://www.openstreetmap.org/<br>
+https://nominatim.org/
+
 ![Now with OSM event location maps!](https://raw.githubusercontent.com/timkeane/accessible-event-calendar/main/jsdoc/screenshot.png)
 
 ## Build
